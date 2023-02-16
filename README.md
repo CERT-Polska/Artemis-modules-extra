@@ -1,7 +1,7 @@
 # Artemis-modules-extra
 
 Additional modules for Artemis (https://github.com/CERT-Polska/Artemis) that weren't included in
-in the core repository for licensing reasone.
+in the core repository for licensing reasons.
 
 To run, clone this repository **inside the Artemis directory** and run the following command in the
 Artemis directory:
