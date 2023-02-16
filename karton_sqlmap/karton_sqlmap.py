@@ -19,7 +19,7 @@ class SQLmap(ArtemisBase):  # type: ignore
 
     identity = "sqlmap"
     filters = [
-        # Run only on UNKNOWN webapps, i.e. homegrown CMS
+        # Run only on UNKNOWN webapps, e.g. homegrown CMS
         {"type": TaskType.WEBAPP.value, "webapp": WebApplication.UNKNOWN.value},
     ]
 
