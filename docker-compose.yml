@@ -1,0 +1,29 @@
+version: "3"
+
+services:
+  karton-dns_reaper:
+    build:
+      context: Artemis-modules-extra
+      dockerfile: karton_dns_reaper/Dockerfile
+    volumes: ["./docker/karton.ini:/etc/karton/karton.ini"]
+    depends_on: [karton-logger, redis]
+    env_file: .env
+    command: "python3 -m artemis.modules.karton_dns_reaper"
+
+  karton-sqlmap:
+    build:
+      context: Artemis-modules-extra
+      dockerfile: karton_sqlmap/Dockerfile
+    volumes: ["./docker/karton.ini:/etc/karton/karton.ini"]
+    depends_on: [karton-logger, redis]
+    env_file: .env
+    command: "python3 -m artemis.modules.karton_sqlmap"
+
+  karton-sslyze:
+    build:
+      context: Artemis-modules-extra
+      dockerfile: karton_sslyze/Dockerfile
+    volumes: ["./docker/karton.ini:/etc/karton/karton.ini"]
+    depends_on: [karton-logger, redis]
+    env_file: .env
+    command: "python3 -m artemis.modules.karton_sslyze"
