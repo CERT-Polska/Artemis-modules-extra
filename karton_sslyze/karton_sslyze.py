@@ -60,9 +60,7 @@ class SSLyze(ArtemisBase):  # type: ignore
                 ],
                 stderr=subprocess.STDOUT,
             ).decode("ascii", errors="ignore")
-            if (
-                "SSL error code 1, net_error -202" in output
-            ):  # -202 is ERR_CERT_AUTHORITY_INVALID
+            if "SSL error code 1, net_error -202" in output:  # -202 is ERR_CERT_AUTHORITY_INVALID
                 messages.append(f"{domain}: certificate authority invalid")
                 result["certificate_authority_invalid"] = True
         except Exception as e:
@@ -80,9 +78,9 @@ class SSLyze(ArtemisBase):  # type: ignore
                 )
             )
             result["response_status_code"] = response.status_code
-            result["response_content_prefix"] = response.content.decode(
-                "utf-8", errors="ignore"
-            )[: Config.CONTENT_PREFIX_SIZE]
+            result["response_content_prefix"] = response.content.decode("utf-8", errors="ignore")[
+                : Config.CONTENT_PREFIX_SIZE
+            ]
 
             redirect_url = response.url
             if redirect_url:
@@ -119,37 +117,26 @@ class SSLyze(ArtemisBase):  # type: ignore
             certinfo_result = server_scan_result.scan_result.certificate_info.result
 
             for cert_deployment in certinfo_result.certificate_deployments:
-                names = get_common_names(
-                    cert_deployment.received_certificate_chain[0].subject
-                )
+                names = get_common_names(cert_deployment.received_certificate_chain[0].subject)
 
-                for extension in cert_deployment.received_certificate_chain[
-                    0
-                ].extensions:
+                for extension in cert_deployment.received_certificate_chain[0].extensions:
                     if extension.oid.dotted_string == "2.5.29.17":  # subjectAltName
                         names.extend(extension.value.get_values_for_type(x509.DNSName))
 
                 if not self._matches_hostname(domain, names):
-                    messages.append(
-                        f"{domain}: certificate CN doesn't match hostname, CN: {names}"
-                    )
+                    messages.append(f"{domain}: certificate CN doesn't match hostname, CN: {names}")
                     result["cn_different_from_hostname"] = True
                     result["names"] = names
                     result["hostname"] = domain
 
-            days_left = (
-                cert_deployment.received_certificate_chain[0].not_valid_after
-                - datetime.datetime.now()
-            ).days
+            days_left = (cert_deployment.received_certificate_chain[0].not_valid_after - datetime.datetime.now()).days
             if days_left <= 0:
                 messages.append(
                     f"{domain} : Certificate expired. "
                     f"Validity date: {cert_deployment.received_certificate_chain[0].not_valid_after}"
                 )
                 result["expired"] = True
-                result["expiry_date"] = str(
-                    cert_deployment.received_certificate_chain[0].not_valid_after
-                )
+                result["expiry_date"] = str(cert_deployment.received_certificate_chain[0].not_valid_after)
 
             if days_left <= 5 and days_left > 0:
                 messages.append(
@@ -157,9 +144,7 @@ class SSLyze(ArtemisBase):  # type: ignore
                     f"Validity date: {cert_deployment.received_certificate_chain[0].not_valid_after}"
                 )
                 result["almost_expired"] = True
-                result["expiry_date"] = str(
-                    cert_deployment.received_certificate_chain[0].not_valid_after
-                )
+                result["expiry_date"] = str(cert_deployment.received_certificate_chain[0].not_valid_after)
 
             heartbleed_result = server_scan_result.scan_result.heartbleed.result
             if heartbleed_result.is_vulnerable_to_heartbleed:
@@ -173,9 +158,7 @@ class SSLyze(ArtemisBase):  # type: ignore
             status = TaskStatus.OK
             status_reason = None
 
-        self.db.save_task_result(
-            task=current_task, status=status, status_reason=status_reason, data=result
-        )
+        self.db.save_task_result(task=current_task, status=status, status_reason=status_reason, data=result)
 
 
 if __name__ == "__main__":

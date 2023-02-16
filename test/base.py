@@ -25,13 +25,9 @@ class ArtemisModuleTestCase(KartonTestCase):  # type: ignore
         for item in ["artemis.module_base.ip_lookup"]:
             # We cannot use Artemis default DoH resolvers as they wouldn't be able to resolve
             # internal test services' addresses.
-            self._ip_lookup_mock = patch(
-                item, MagicMock(side_effect=lambda host: {socket.gethostbyname(host)})
-            )
+            self._ip_lookup_mock = patch(item, MagicMock(side_effect=lambda host: {socket.gethostbyname(host)}))
             self._ip_lookup_mock.__enter__()
 
         self.mock_db = MagicMock()
         self.mock_db.contains_scheduled_task.return_value = False
-        self.karton = self.karton_class(
-            config=ConfigMock(), backend=KartonBackendMockWithRedis(), db=self.mock_db
-        )
+        self.karton = self.karton_class(config=ConfigMock(), backend=KartonBackendMockWithRedis(), db=self.mock_db)
