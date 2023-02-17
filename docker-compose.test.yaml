@@ -1,0 +1,36 @@
+version: "3.8"
+services:
+  test-sqlmap:
+    build:
+      context: .
+      dockerfile: karton_sqlmap/Dockerfile
+    command: python -m unittest discover
+    environment:
+      TEST_REDIS_HOST: test-redis
+      TEST_REDIS_PORT: 6379
+      REDIS_CONN_STR: redis://test-redis:6379/1
+      SECONDS_PER_REQUEST_FOR_ONE_IP: 0
+
+  test-redis:
+    image: redis:7.0.5
+
+  test-service-with-sql-injection-mysql:
+    build: test/images/php-mysql
+    volumes:
+      - ./test/data/sql_injection_mysql/:/var/www/html/
+
+  test-service-with-sql-injection-mysql-db:
+    image: mysql:5.6
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+
+  test-service-with-sql-injection-postgres:
+    build: test/images/php-postgres
+    volumes:
+      - ./test/data/sql_injection_postgres/:/var/www/html/
+
+  test-service-with-sql-injection-postgres-db:
+    image: postgres:14.1-alpine
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
