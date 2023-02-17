@@ -74,6 +74,9 @@ class SQLmap(ArtemisBase):  # type: ignore
 
                 if os.path.exists(log_path):
                     with open(target_path) as f:
+                        # The format of the target is:
+                        # url (METHOD)  # sqlmap_command
+                        # e.g. http://127.0.0.1:8000/vuln.php?id=4 (GET)  # sqlmap.py --technique B -v 4 -u http://127.0.0.1:8000/ --crawl=1
                         target, _ = f.read().split("#", 1)
                         target = target.strip()
 
