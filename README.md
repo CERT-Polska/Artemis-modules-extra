@@ -1,3 +1,5 @@
+<img src="static/images/logo.png" alt="logo" style="width: 400px" />
+
 # Artemis-modules-extra
 
 Additional modules for Artemis (https://github.com/CERT-Polska/Artemis) that weren't included in
