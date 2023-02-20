@@ -1,4 +1,4 @@
-# Artemis-modules-extra
+<h1><img src=".github/images/logo.png" alt="logo" style="width: 400px" /></h1>
 
 Additional modules for Artemis (https://github.com/CERT-Polska/Artemis) that weren't included in
 in the core repository for licensing reasons.
