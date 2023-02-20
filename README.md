@@ -1,4 +1,4 @@
-<img src="static/images/logo.png" alt="logo" style="width: 400px" />
+<img src=".github/images/logo.png" alt="logo" style="width: 400px" />
 
 # Artemis-modules-extra
 
