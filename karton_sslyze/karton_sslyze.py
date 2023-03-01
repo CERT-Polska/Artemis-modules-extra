@@ -106,7 +106,7 @@ class SSLyze(ArtemisBase):  # type: ignore
                 server_location=server_location,
                 scan_commands={ScanCommand.CERTIFICATE_INFO, ScanCommand.HEARTBLEED},
             )
-            scanner = Scanner()
+            scanner = Scanner(concurrent_server_scans_limit=1)
             scanner.queue_scans([server_scan_req])
 
             return list(scanner.get_results())
