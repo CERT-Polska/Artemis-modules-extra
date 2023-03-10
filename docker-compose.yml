@@ -8,6 +8,7 @@ services:
     volumes: ["./docker/karton.ini:/etc/karton/karton.ini"]
     depends_on: [karton-logger, redis]
     env_file: .env
+    restart: always
     command: "python3 -m artemis.modules.karton_dns_reaper"
 
   karton-sqlmap:
@@ -17,6 +18,7 @@ services:
     volumes: ["./docker/karton.ini:/etc/karton/karton.ini"]
     depends_on: [karton-logger, redis]
     env_file: .env
+    restart: always
     command: "python3 -m artemis.modules.karton_sqlmap"
 
   karton-sslyze:
@@ -26,4 +28,5 @@ services:
     volumes: ["./docker/karton.ini:/etc/karton/karton.ini"]
     depends_on: [karton-logger, redis]
     env_file: .env
+    restart: always
     command: "python3 -m artemis.modules.karton_sslyze"
