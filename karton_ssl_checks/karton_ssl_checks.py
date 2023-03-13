@@ -19,12 +19,12 @@ from sslyze.plugins.scan_commands import ScanCommand
 from sslyze.scanner.scanner import Scanner, ServerScanRequest, ServerScanResult
 
 
-class SSLyze(ArtemisBase):  # type: ignore
+class SSL_checks(ArtemisBase):  # type: ignore
     """
-    Runs SSLyze
+    Runs SSL checks
     """
 
-    identity = "sslyze"
+    identity = "ssl_checks"
     filters = [
         {"type": TaskType.DOMAIN.value},
     ]
@@ -162,4 +162,4 @@ class SSLyze(ArtemisBase):  # type: ignore
 
 
 if __name__ == "__main__":
-    SSLyze().loop()
+    SSL_checks().loop()
