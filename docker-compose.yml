@@ -19,11 +19,11 @@ services:
     env_file: .env
     command: "python3 -m artemis.modules.karton_sqlmap"
 
-  karton-sslyze:
+  karton-ssl_checks:
     build:
       context: Artemis-modules-extra
-      dockerfile: karton_sslyze/Dockerfile
+      dockerfile: karton_ssl_checks/Dockerfile
     volumes: ["./docker/karton.ini:/etc/karton/karton.ini"]
     depends_on: [karton-logger, redis]
     env_file: .env
-    command: "python3 -m artemis.modules.karton_sslyze"
+    command: "python3 -m artemis.modules.karton_ssl_checks"
