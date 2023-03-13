@@ -15,7 +15,7 @@ docker compose -f docker-compose.yaml -f Artemis-modules-extra/docker-compose.ym
 Uses https://github.com/punk-security/dnsReaper under the hood. Finds subdomain takeover vulnerabilities
 and is licensed under AGPL-3.0.
 
-### `sslyze`
+### `ssl_checks`
 Uses https://github.com/nabla-c0d3/sslyze under the hood. Finds SSL misconfigurations and is licensed under
 AGPL-3.0.
 
