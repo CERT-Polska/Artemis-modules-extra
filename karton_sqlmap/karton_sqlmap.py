@@ -4,7 +4,7 @@ import random
 import re
 import shutil
 import subprocess
-from typing import Optional
+from typing import List, Optional
 
 import timeout_decorator
 from artemis.binds import TaskStatus, TaskType, WebApplication
@@ -27,38 +27,42 @@ class SQLmap(ArtemisBase):  # type: ignore
         {"type": TaskType.WEBAPP.value, "webapp": WebApplication.UNKNOWN.value},
     ]
 
-    def _query(self, url: str, query: str, timeout_seconds: Optional[int] = None) -> Optional[str]:
+    def _call_sqlmap(
+        self, url: str, arguments: List[str], find_in_output: str, timeout_seconds: Optional[int] = None
+    ) -> Optional[str]:
         def _run() -> Optional[str]:
             if Config.CUSTOM_USER_AGENT:
                 additional_configuration = ["-A", Config.CUSTOM_USER_AGENT]
             else:
                 additional_configuration = []
 
-            cmd = [
-                "python3",
-                "/sqlmap/sqlmap.py",
-                "--delay",
-                str(Config.SECONDS_PER_REQUEST_FOR_ONE_IP),
-                "-u",
-                url,
-                "--crawl",
-                "1",
-                "--batch",
-                "--technique",
-                "B",
-                "--skip-waf",
-                "--skip-heuristics",
-                "-v",
-                "0",
-                "--sql-query",
-                query,
-            ] + additional_configuration
+            cmd = (
+                [
+                    "python3",
+                    "/sqlmap/sqlmap.py",
+                    "--delay",
+                    str(Config.SECONDS_PER_REQUEST_FOR_ONE_IP),
+                    "-u",
+                    url,
+                    "--crawl",
+                    "1",
+                    "--batch",
+                    "--technique",
+                    "B",
+                    "--skip-waf",
+                    "--skip-heuristics",
+                    "-v",
+                    "0",
+                ]
+                + arguments
+                + additional_configuration
+            )
             data = subprocess.check_output(cmd)
 
             data_str = data.decode("ascii", errors="ignore")
 
             for line in data_str.split("\n"):
-                match_result = re.compile(f"^{re.escape(query)}: '(.*)'$").fullmatch(line)
+                match_result = re.compile(f"^{re.escape(find_in_output)}[^:]*: '(.*)'$").fullmatch(line)
                 if match_result:
                     return match_result.group(1)
             return None
@@ -90,7 +94,7 @@ class SQLmap(ArtemisBase):  # type: ignore
 
         message = None
         result = {}
-        if self._query(url, query) == f"{number1 * number2 * number3}":
+        if self._call_sqlmap(url, ["--sql-query", query], query) == f"{number1 * number2 * number3}":
             for item in os.listdir(os.path.join(OUTPUT_PATH)):
                 log_path = os.path.join(OUTPUT_PATH, item, "log")
                 target_path = os.path.join(OUTPUT_PATH, item, "target.txt")
@@ -110,13 +114,14 @@ class SQLmap(ArtemisBase):  # type: ignore
                     result["target"] = target
                     result["log"] = log
 
-                    for information_name, query in [
-                        ("version", "SELECT SUBSTR(VERSION(), 1, 15)"),
-                        ("user", "SELECT SUBSTR(CURRENT_USER, 1, 15)"),
+                    version_query = "SELECT SUBSTR(VERSION(), 1, 15)"
+                    for information_name, sqlmap_options, find_in_output in [
+                        ("version", ["--sql-query", version_query], version_query),
+                        ("user", ["--current-user"], "current user"),
                     ]:
                         try:
-                            result[information_name] = self._query(
-                                url, query, timeout_seconds=SQLI_ADDITIONAL_DATA_TIMEOUT
+                            result[information_name] = self._call_sqlmap(
+                                url, sqlmap_options, find_in_output, timeout_seconds=SQLI_ADDITIONAL_DATA_TIMEOUT
                             )  # type: ignore
                         except Exception:  # Whatever happens, we prefer to report SQLi without additional data than no SQLi
                             self.log.exception(f"Unable to obtain {information_name} via blind SQL injection")
