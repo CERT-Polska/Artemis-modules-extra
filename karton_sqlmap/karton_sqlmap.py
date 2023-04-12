@@ -110,7 +110,6 @@ class SQLmap(ArtemisBase):  # type: ignore
                     result["target"] = target
                     result["log"] = log
 
-                    # Whatever happens, we prefer to report SQLi without additional data than no SQLi
                     for information_name, query in [
                         ("version", "SELECT SUBSTR(VERSION(), 1, 15)"),
                         ("user", "SELECT SUBSTR(CURRENT_USER, 1, 15)"),
@@ -118,8 +117,8 @@ class SQLmap(ArtemisBase):  # type: ignore
                         try:
                             result[information_name] = self._query(
                                 url, query, timeout_seconds=SQLI_ADDITIONAL_DATA_TIMEOUT
-                            )
-                        except Exception:
+                            )  # type: ignore
+                        except Exception:  # Whatever happens, we prefer to report SQLi without additional data than no SQLi
                             self.log.exception(f"Unable to obtain {information_name} via blind SQL injection")
 
         if message:
