@@ -7,7 +7,6 @@ from karton.core import Task
 
 class SQLmapTestCase(ArtemisModuleTestCase):
     karton_class = SQLmap
-    maxDiff = None
 
     def test_mysql(self) -> None:
         task = Task(
