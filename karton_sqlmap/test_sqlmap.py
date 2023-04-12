@@ -7,6 +7,7 @@ from karton.core import Task
 
 class SQLmapTestCase(ArtemisModuleTestCase):
     karton_class = SQLmap
+    maxDiff = None
 
     def test_mysql(self) -> None:
         task = Task(
@@ -16,6 +17,8 @@ class SQLmapTestCase(ArtemisModuleTestCase):
         self.run_task(task)
         (call,) = self.mock_db.save_task_result.call_args_list
         self.assertEqual(call.kwargs["status"], TaskStatus.INTERESTING)
+        self.assertEqual(call.kwargs["data"]["version"], "5.6.51")
+        self.assertEqual(call.kwargs["data"]["user"], "root@%")
         self.assertEqual(
             call.kwargs["status_reason"],
             "Found SQL Injection in http://test-service-with-sql-injection-mysql:80/vuln.php?id=4 (GET)",
@@ -29,6 +32,8 @@ class SQLmapTestCase(ArtemisModuleTestCase):
         self.run_task(task)
         (call,) = self.mock_db.save_task_result.call_args_list
         self.assertEqual(call.kwargs["status"], TaskStatus.INTERESTING)
+        self.assertEqual(call.kwargs["data"]["version"], "PostgreSQL 14.1")
+        self.assertEqual(call.kwargs["data"]["user"], "root")
         self.assertEqual(
             call.kwargs["status_reason"],
             "Found SQL Injection in http://test-service-with-sql-injection-postgres:80/vuln.php?id=4 (GET)",

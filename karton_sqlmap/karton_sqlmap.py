@@ -1,15 +1,19 @@
 #!/usr/bin/env python3
 import os
 import random
+import re
 import shutil
 import subprocess
+from typing import Optional
 
+import timeout_decorator
 from artemis.binds import TaskStatus, TaskType, WebApplication
 from artemis.config import Config
 from artemis.module_base import ArtemisBase
 from karton.core import Task
 
 OUTPUT_PATH = "/root/.local/share/sqlmap/output"
+SQLI_ADDITIONAL_DATA_TIMEOUT = 600
 
 
 class SQLmap(ArtemisBase):  # type: ignore
@@ -23,17 +27,56 @@ class SQLmap(ArtemisBase):  # type: ignore
         {"type": TaskType.WEBAPP.value, "webapp": WebApplication.UNKNOWN.value},
     ]
 
+    def _query(self, url: str, query: str, timeout_seconds: Optional[int] = None) -> Optional[str]:
+        def _run() -> Optional[str]:
+            if Config.CUSTOM_USER_AGENT:
+                additional_configuration = ["-A", Config.CUSTOM_USER_AGENT]
+            else:
+                additional_configuration = []
+
+            cmd = [
+                "python3",
+                "/sqlmap/sqlmap.py",
+                "--delay",
+                str(Config.SECONDS_PER_REQUEST_FOR_ONE_IP),
+                "-u",
+                url,
+                "--crawl",
+                "1",
+                "--batch",
+                "--technique",
+                "B",
+                "--skip-waf",
+                "--skip-heuristics",
+                "-v",
+                "0",
+                "--sql-query",
+                query,
+            ] + additional_configuration
+            data = subprocess.check_output(cmd)
+
+            data_str = data.decode("ascii", errors="ignore")
+
+            for line in data_str.split("\n"):
+                match_result = re.compile(f"^{re.escape(query)}: '(.*)'$").fullmatch(line)
+                if match_result:
+                    return match_result.group(1)
+            return None
+
+        if timeout_seconds:
+            try:
+                return timeout_decorator.timeout(timeout_seconds)(_run)()  # type: ignore
+            except TimeoutError:
+                return None
+        else:
+            return _run()
+
     def run(self, current_task: Task) -> None:
         url = current_task.get_payload("url")
 
         number1 = random.randint(10, 99)
         number2 = random.randint(10, 99)
         number3 = random.randint(10, 99)
-
-        if Config.CUSTOM_USER_AGENT:
-            additional_configuration = ["-A", Config.CUSTOM_USER_AGENT]
-        else:
-            additional_configuration = []
 
         try:
             shutil.rmtree(OUTPUT_PATH)
@@ -44,30 +87,10 @@ class SQLmap(ArtemisBase):  # type: ignore
         # making sure we have an actual SQL database behind, not a false positive. We make sure the value blinded
         # by SQLmap is equal to the actual product of these numbers.
         query = f"SELECT {number1}*{number2}*{number3}"
-        cmd = [
-            "python3",
-            "/sqlmap/sqlmap.py",
-            "--delay",
-            str(Config.SECONDS_PER_REQUEST_FOR_ONE_IP),
-            "-u",
-            url,
-            "--crawl",
-            "1",
-            "--batch",
-            "--technique",
-            "B",
-            "--skip-waf",
-            "--skip-heuristics",
-            "--sql-query",
-            query,
-        ] + additional_configuration
-        data = subprocess.check_output(cmd)
-
-        data_str = data.decode("ascii", errors="ignore")
 
         message = None
         result = {}
-        if f"{query}: '{number1 * number2 * number3}'" in data_str:
+        if self._query(url, query) == f"{number1 * number2 * number3}":
             for item in os.listdir(os.path.join(OUTPUT_PATH)):
                 log_path = os.path.join(OUTPUT_PATH, item, "log")
                 target_path = os.path.join(OUTPUT_PATH, item, "target.txt")
@@ -86,6 +109,18 @@ class SQLmap(ArtemisBase):  # type: ignore
                     message = f"Found SQL Injection in {target}"
                     result["target"] = target
                     result["log"] = log
+
+                    # Whatever happens, we prefer to report SQLi without additional data than no SQLi
+                    for information_name, query in [
+                        ("version", "SELECT SUBSTR(VERSION(), 1, 15)"),
+                        ("user", "SELECT SUBSTR(CURRENT_USER, 1, 15)"),
+                    ]:
+                        try:
+                            result[information_name] = self._query(
+                                url, query, timeout_seconds=SQLI_ADDITIONAL_DATA_TIMEOUT
+                            )
+                        except Exception:
+                            self.log.exception(f"Unable to obtain {information_name} via blind SQL injection")
 
         if message:
             status = TaskStatus.INTERESTING
