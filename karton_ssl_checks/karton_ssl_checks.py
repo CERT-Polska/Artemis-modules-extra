@@ -19,7 +19,7 @@ from sslyze.plugins.scan_commands import ScanCommand
 from sslyze.scanner.scanner import Scanner, ServerScanRequest, ServerScanResult
 
 
-class SSL_checks(ArtemisBase):  # type: ignore
+class SSLChecks(ArtemisBase):  # type: ignore
     """
     Runs SSL checks
     """
@@ -49,22 +49,36 @@ class SSL_checks(ArtemisBase):  # type: ignore
         # certificates with incomplete chains are marked as broken although they work in major browsers (e.g.
         # Chrome or Firefox). This is a misconfiguration, albeit not a serious one. Let's use then the perspective
         # of users and report only certificates that would be marked by Chrome as having bad certificate authority.
+        stderr = None
         try:
-            output = subprocess.check_output(
+            process_result = subprocess.run(
                 [
                     "chromium-browser",
+                    "--disable-software-rasterizer",
+                    "--disable-dev-shm-usage",
                     "--headless",
+                    # This one makes Chromium be up the full REQUEST_TIMEOUT_SECONDS and fully load the page,
+                    # without that the error will not get captured.
+                    "--remote-debugging-port=9222",
                     "--no-sandbox",
-                    "--enable-logging=v=1",
+                    "--enable-logging",
+                    "--v=1",
                     f"https://{domain}",
                 ],
-                stderr=subprocess.STDOUT,
-            ).decode("ascii", errors="ignore")
-            if "SSL error code 1, net_error -202" in output:  # -202 is ERR_CERT_AUTHORITY_INVALID
-                messages.append(f"{domain}: certificate authority invalid")
-                result["certificate_authority_invalid"] = True
+                capture_output=True,
+                timeout=Config.REQUEST_TIMEOUT_SECONDS,
+            )
+            stderr = process_result.stderr.decode("ascii", errors="ignore")
+        except subprocess.TimeoutExpired as e:
+            if e.stderr:
+                stderr = e.stderr.decode("ascii", errors="ignore")
         except Exception as e:
             result["certificate_authority_check_error"] = repr(e)
+
+        if stderr:
+            if "SSL error code 1, net_error -202" in stderr:  # -202 is ERR_CERT_AUTHORITY_INVALID
+                messages.append(f"{domain}: certificate authority invalid")
+                result["certificate_authority_invalid"] = True
 
         try:
             original_url = f"http://{domain}"
@@ -162,4 +176,4 @@ class SSL_checks(ArtemisBase):  # type: ignore
 
 
 if __name__ == "__main__":
-    SSL_checks().loop()
+    SSLChecks().loop()
