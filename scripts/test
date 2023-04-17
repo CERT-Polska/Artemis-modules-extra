@@ -13,3 +13,11 @@ docker compose -f docker-compose.test.yaml run test-sqlmap /wait-for-it.sh test-
 
 # Now we are ready to start the tests
 docker compose -f docker-compose.test.yaml run test-sqlmap
+
+if [ $? -ne 0 ]; then
+    exit 1
+fi
+
+docker compose -f docker-compose.test.yaml run test-ssl_checks
+
+exit $?

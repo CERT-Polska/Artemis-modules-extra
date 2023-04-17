@@ -6,6 +6,6 @@ RUN bash -c "cd /; git clone https://github.com/sqlmapproject/sqlmap.git; cd sql
 
 WORKDIR /opt/
 
-COPY karton_sqlmap/test_sqlmap.py /opt/
 COPY karton_sqlmap/karton_sqlmap.py /opt/artemis/modules/
+COPY karton_sqlmap/test_sqlmap.py /opt/
 COPY test /opt/test
