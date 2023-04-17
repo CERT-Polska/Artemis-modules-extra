@@ -51,3 +51,16 @@ To setup `pre-commit` so that it runs before each commit, use:
 ```
 pre-commit install
 ```
+
+### Contributing
+Contributions are welcome! We will appreciate both ideas for new Artemis modules (added as
+[GitHub issues](https://github.com/CERT-Polska/Artemis/issues)) as well as pull requests with
+new modules or code improvements.
+
+We kindly remind you that:
+
+* by contributing to the `dns_reaper` module you agree that the AGPL-3.0 License shall apply to your input automatically,
+* by contributing to the `ssl_checks` module you agree that the AGPL-3.0 License shall apply to your input automatically,
+* by contributing to the `sqlmap` module you agree that the GPL-2.0 License shall apply to your input automatically,
+
+without the need for any additional declarations to be made.
