@@ -1,0 +1,41 @@
+{% if "sql_injection" in data.contains_type %}
+    <li>{% trans %}The following addresses contain an SQL injection vulnerability:{% endtrans %}
+        <ul>
+            {% for report in data.reports %}
+                {% if report.report_type == "sql_injection" %}
+                    <li>
+                        {{ report.target }}
+                        {% if report.report_data.parameter %}
+                            - {% trans %}the vulnerable parameter is{% endtrans %} {{ report.report_data.parameter }}
+                        {% endif %}
+                        {% if report.report_data.version or report.report_data.user %}
+                            ({% trans %}using this vulnerability, we obtained{% endtrans %}
+                                {% if report.report_data.version %}
+                                    {% trans %}the database version{% endtrans %}: {{ report.report_data.version }}
+                                    {% if report.report_data.user %}{% trans %}and{% endtrans %}{% endif -%}
+                                {% endif -%}
+                                {% if report.report_data.user %}
+                                    {% trans %}database user name{% endtrans %}: {{ report.report_data.user }}
+                                {%- endif -%}
+                            )
+                        {% endif %}
+                        {{ report_meta(report) }}
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+        <p>
+            {% trans trimmed %}
+                Such vulnerability may allow an attacker to download full database contents, including
+                passwords or personal identifiable information. We recommend fixing the vulnerability
+                immediately and making sure it doesn't occur in other places in the system.
+            {% endtrans %}
+        </p>
+        <p>
+            {% trans trimmed %}
+                Please contact us if more information is needed (e.g. a proof of
+                concept that demonstrates the vulnerability).
+            {% endtrans %}
+        </p>
+    </li>
+{% endif %}

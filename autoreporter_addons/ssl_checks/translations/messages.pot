@@ -1,0 +1,60 @@
+#: autoreporter_addons/ssl_checks/template_almost_expired_ssl_certificate.jinja2:2
+msgid "The SSL/TLS certificates for the following websites have almost expired:"
+msgstr ""
+
+#: autoreporter_addons/ssl_checks/template_almost_expired_ssl_certificate.jinja2:7
+msgid "expires on"
+msgstr ""
+
+#: autoreporter_addons/ssl_checks/template_almost_expired_ssl_certificate.jinja2:13
+msgid "We recommend creating a new certificate."
+msgstr ""
+
+#: autoreporter_addons/ssl_checks/template_bad_certificate_names.jinja2:2
+msgid "The following addresses return SSL/TLS certificates for different domains:"
+msgstr ""
+
+#: autoreporter_addons/ssl_checks/template_bad_certificate_names.jinja2:8
+msgid "returns certificate for"
+msgstr ""
+
+#: autoreporter_addons/ssl_checks/template_bad_certificate_names.jinja2:21
+#: autoreporter_addons/ssl_checks/template_certificate_authority_invalid.jinja2:14
+msgid ""
+"Such configuration will cause the user to see an invalid certificate "
+"message. We recommend correct SSL/TLS configuration, together with a "
+"redirect from http:// to https://, so that the communication between the "
+"user and the server (which may contain e.g. personal identifiable "
+"information) will be encrypted."
+msgstr ""
+
+#: autoreporter_addons/ssl_checks/template_certificate_authority_invalid.jinja2:2
+msgid ""
+"SSL/TLS certificates on following addresses aren't signed by a trusted "
+"authority:"
+msgstr ""
+
+#: autoreporter_addons/ssl_checks/template_expired_ssl_certificate.jinja2:2
+msgid "The SSL/TLS certificates for the following websites have expired:"
+msgstr ""
+
+#: autoreporter_addons/ssl_checks/template_expired_ssl_certificate.jinja2:7
+msgid "expired on"
+msgstr ""
+
+#: autoreporter_addons/ssl_checks/template_expired_ssl_certificate.jinja2:14
+msgid ""
+"If the site is not used, we recommend shutting it down. If it's still "
+"used, we recommend creating a new certificate."
+msgstr ""
+
+#: autoreporter_addons/ssl_checks/template_no_https_redirect.jinja2:2
+msgid "The following addresses don't redirect from http:// to https://:"
+msgstr ""
+
+#: autoreporter_addons/ssl_checks/template_no_https_redirect.jinja2:14
+msgid ""
+"We recommend redirecting the user to an address starting with https:// so"
+" that the communication between the user and the server (which may "
+"contain e.g. personal identifiable information) will be encrypted."
+msgstr ""

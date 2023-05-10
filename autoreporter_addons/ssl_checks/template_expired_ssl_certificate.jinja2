@@ -1,0 +1,19 @@
+{% if "expired_ssl_certificate" in data.contains_type %}
+    <li>{% trans %}The SSL/TLS certificates for the following websites have expired:{% endtrans %}
+        <ul>
+            {% for report in data.reports %}
+                {% if report.report_type == "expired_ssl_certificate" %}
+                    <li>
+                        {{ report.target }} - {% trans %}expired on{% endtrans %} {{ report.report_data.expiry_date }}
+                        {{ report_meta(report) }}
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+        <p>
+            {% trans trimmed %}
+                If the site is not used, we recommend shutting it down. If it's still used, we recommend creating
+                a new certificate.
+            {% endtrans %}
+     </li>
+{% endif %}

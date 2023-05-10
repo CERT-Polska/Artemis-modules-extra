@@ -1,0 +1,21 @@
+{% if "no_https_redirect" in data.contains_type %}
+    <li>{% trans %}The following addresses don't redirect from http:// to https://:{% endtrans %}
+        <ul>
+            {% for report in data.reports %}
+                {% if report.report_type == "no_https_redirect" %}
+                    <li>
+                        {{ report.target }}
+                        {{ report_meta(report) }}
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+        <p>
+            {% trans trimmed %}
+                We recommend redirecting the user to an address starting with https:// so that the
+                communication between the user and the server (which may contain e.g. personal identifiable
+                information) will be encrypted.
+            {% endtrans %}
+        </p>
+    </li>
+{% endif %}

@@ -30,3 +30,9 @@ services:
     env_file: .env
     restart: always
     command: "python3 -m artemis.modules.karton_ssl_checks"
+
+  autoreporter:
+    volumes:
+      - ./Artemis-modules-extra/autoreporter_addons/ssl_checks/:/opt/artemis/reporting/modules/ssl_checks/
+      - ./Artemis-modules-extra/autoreporter_addons/sqlmap/:/opt/artemis/reporting/modules/sqlmap/
+      - ./Artemis-modules-extra/autoreporter_addons/dns_reaper/:/opt/artemis/reporting/modules/dns_reaper/

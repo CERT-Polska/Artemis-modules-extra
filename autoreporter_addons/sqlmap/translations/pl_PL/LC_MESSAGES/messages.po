@@ -1,0 +1,44 @@
+#: autoreporter_addons/sqlmap/template_sql_injection.jinja2:2
+msgid "The following addresses contain an SQL injection vulnerability:"
+msgstr "Pod następującymi adresami występuje podatność SQL Injection:"
+
+#: autoreporter_addons/sqlmap/template_sql_injection.jinja2:7
+msgid "the vulnerable parameter is"
+msgstr "podatny parametr to"
+
+#: autoreporter_addons/sqlmap/template_sql_injection.jinja2:9
+msgid "using this vulnerability, we obtained"
+msgstr "za pomocą tej podatności pobrano z bazy danych"
+
+#: autoreporter_addons/sqlmap/template_sql_injection.jinja2:11
+msgid "the database version"
+msgstr "wersję bazy danych"
+
+#: autoreporter_addons/sqlmap/template_sql_injection.jinja2:12
+msgid "and"
+msgstr "oraz"
+
+#: autoreporter_addons/sqlmap/template_sql_injection.jinja2:15
+msgid "database user name"
+msgstr "nazwę użytkownika zalogowanego do bazy"
+
+#: autoreporter_addons/sqlmap/template_sql_injection.jinja2:25
+msgid ""
+"Such vulnerability may allow an attacker to download full database "
+"contents, including passwords or personal identifiable information. We "
+"recommend fixing the vulnerability immediately and making sure it doesn't"
+" occur in other places in the system."
+msgstr ""
+"Taka podatność może umożliwiać atakującemu pobranie całej zawartości bazy"
+" danych, w tym danych osobowych czy haseł dostępowych. Rekomendujemy "
+"niezwłoczne usunięcie tej podatności, jak również sprawdzenie systemu, "
+"czy podobne podatności nie występują w innych miejscach."
+
+#: autoreporter_addons/sqlmap/template_sql_injection.jinja2:32
+msgid ""
+"Please contact us if more information is needed (e.g. a proof of concept "
+"that demonstrates the vulnerability)."
+msgstr ""
+"Prosimy o kontakt, jeśli potrzebują Państwo więcej informacji (np. "
+"konkretny adres na Państwa stronie, za pomocą którego można potwierdzić, "
+"że podatność istnieje)."
