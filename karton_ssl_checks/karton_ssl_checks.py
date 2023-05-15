@@ -129,7 +129,7 @@ class SSLChecks(ArtemisBase):  # type: ignore
 
         for server_scan_result in results:
             if not server_scan_result.scan_result:
-                raise Exception("Unable to complete scan for {domain}. Full result: {server_scan_result}")
+                raise Exception(f"Unable to complete scan for {domain}. Full result: {server_scan_result}")
 
             certinfo_result = server_scan_result.scan_result.certificate_info.result
 
