@@ -114,7 +114,7 @@ class SSLChecksReporter(Reporter):  # type: ignore
                 logger.exception("Unable to parse HTML from %s", task_result["payload"]["domain"])
                 soup = None
 
-            if soup and not soup.find_all("meta", attrs={"http-equiv": "refresh"}):
+            if not soup or not soup.find_all("meta", attrs={"http-equiv": "refresh"}):
                 result.append(
                     Report(
                         top_level_target=get_top_level_target(task_result),
