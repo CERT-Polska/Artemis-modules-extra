@@ -52,7 +52,7 @@ class SSLChecksReporter(Reporter):  # type: ignore
         domain = task_result["payload"]["domain"]
         domain_parts = [part for part in domain.split(".") if part]
         # We do the filtering both in the scanning module and in the reporter so that after changing this setting
-        # the user wouldn't wait for the next scan for the configuration to take effect to take effect.
+        # the user wouldn't need to wait for the next scan for the configuration to take effect.
         if domain_parts[0] in ExtraModulesConfig.SUBDOMAINS_TO_SKIP_SSL_CHECKS:
             return []
 
