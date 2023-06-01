@@ -11,7 +11,6 @@ from artemis.reporting.base.report import Report
 from artemis.reporting.base.report_type import ReportType
 from artemis.reporting.base.reporter import Reporter
 from artemis.reporting.base.templating import ReportEmailTemplateFragment
-from artemis.reporting.translations import translate_using_dictionary
 from artemis.reporting.utils import get_top_level_target
 
 from .translations import pl_PL as translations_pl_PL
@@ -42,10 +41,6 @@ class DNSReaperReporter(Reporter):  # type: ignore
                         report_type=DNSReaperReporter.SUBDOMAIN_TAKEOVER_POSSIBLE,
                         report_data={
                             "message_en": item["info"],
-                            "message_translated": DNSReaperReporter._translate_info(
-                                item["info"],
-                                language,
-                            ),
                         },
                         timestamp=task_result["created_at"],
                     )
@@ -77,12 +72,3 @@ class DNSReaperReporter(Reporter):  # type: ignore
                 }
             )
         }
-
-    @staticmethod
-    def _translate_info(info: str, language: Language) -> str:
-        if language == Language.en_US:
-            return info
-        elif language == Language.pl_PL:
-            return translate_using_dictionary(info, translations_pl_PL.TRANSLATIONS)  # type: ignore
-        else:
-            raise NotImplementedError()
