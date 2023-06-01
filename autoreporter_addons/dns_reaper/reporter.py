@@ -13,8 +13,6 @@ from artemis.reporting.base.reporter import Reporter
 from artemis.reporting.base.templating import ReportEmailTemplateFragment
 from artemis.reporting.utils import get_top_level_target
 
-from .translations import pl_PL as translations_pl_PL
-
 
 class DNSReaperReporter(Reporter):  # type: ignore
     SUBDOMAIN_TAKEOVER_POSSIBLE = ReportType("subdomain_takeover_possible")

@@ -16,6 +16,7 @@ from artemis.reporting.base.reporter import Reporter
 from artemis.reporting.base.templating import ReportEmailTemplateFragment
 from artemis.reporting.utils import get_top_level_target
 from bs4 import BeautifulSoup
+from extra_modules_config import ExtraModulesConfig
 
 from .http_requests import cached_get
 
@@ -50,9 +51,9 @@ class SSLChecksReporter(Reporter):  # type: ignore
 
         domain = task_result["payload"]["domain"]
         domain_parts = [part for part in domain.split(".") if part]
-        if domain_parts[0] in ["autodiscover", "smtp", "ftp", "pop", "pop3", "imap", "mx"]:
-            # Don't verify these, they are misconfigured a lot of times because the users don't use
-            # them via HTTP.
+        # We do the filtering both in the scanning module and in the reporter so that after changing this setting
+        # the user wouldn't wait for the next scan for the configuration to take effect to take effect.
+        if domain_parts[0] in ExtraModulesConfig.SUBDOMAINS_TO_SKIP_SSL_CHECKS:
             return []
 
         if not isinstance(task_result["result"], dict):

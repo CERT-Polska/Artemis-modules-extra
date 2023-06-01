@@ -11,6 +11,7 @@ from artemis.config import Config
 from artemis.domains import is_subdomain
 from artemis.module_base import ArtemisBase
 from artemis.utils import throttle_request
+from extra_modules_config import ExtraModulesConfig
 from cryptography import x509
 from karton.core import Task
 from sslyze import ServerNetworkLocation
@@ -41,6 +42,11 @@ class SSLChecks(ArtemisBase):  # type: ignore
 
     def run(self, current_task: Task) -> None:
         domain = current_task.payload["domain"]
+
+        domain_parts = [part for part in domain.split(".") if part]
+        if domain_parts[0] in ExtraModulesConfig.SUBDOMAINS_TO_SKIP_SSL_CHECKS:
+            self.db.save_task_result(task=current_task, status=TaskStatus.OK)
+            return
 
         messages = []
         result: Dict[str, Any] = {}

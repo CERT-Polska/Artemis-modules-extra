@@ -33,6 +33,7 @@ services:
 
   autoreporter:
     volumes:
+      - ./Artemis-modules-extra/extra_modules_config.py /opt/extra_modules_config.py
       - ./Artemis-modules-extra/autoreporter_addons/ssl_checks/:/opt/artemis/reporting/modules/ssl_checks/
       - ./Artemis-modules-extra/autoreporter_addons/sqlmap/:/opt/artemis/reporting/modules/sqlmap/
       - ./Artemis-modules-extra/autoreporter_addons/dns_reaper/:/opt/artemis/reporting/modules/dns_reaper/
