@@ -2,27 +2,23 @@
 msgid "The following addresses contain an SQL injection vulnerability:"
 msgstr "Pod następującymi adresami występuje podatność SQL Injection:"
 
-#: autoreporter_addons/sqlmap/template_sql_injection.jinja2:7
+#: autoreporter_addons/sqlmap/template_sql_injection.jinja2:9
 msgid "the vulnerable parameter is"
 msgstr "podatny parametr to"
 
-#: autoreporter_addons/sqlmap/template_sql_injection.jinja2:9
-msgid "using this vulnerability, we obtained"
-msgstr "za pomocą tej podatności pobrano z bazy danych"
+#: autoreporter_addons/sqlmap/template_sql_injection.jinja2:12
+msgid "Using this vulnerability, we obtained"
+msgstr "Za pomocą tej podatności pobrano z bazy danych"
 
-#: autoreporter_addons/sqlmap/template_sql_injection.jinja2:11
+#: autoreporter_addons/sqlmap/template_sql_injection.jinja2:15
 msgid "the database version"
 msgstr "wersję bazy danych"
 
-#: autoreporter_addons/sqlmap/template_sql_injection.jinja2:12
-msgid "and"
-msgstr "oraz"
-
-#: autoreporter_addons/sqlmap/template_sql_injection.jinja2:15
+#: autoreporter_addons/sqlmap/template_sql_injection.jinja2:18
 msgid "database user name"
 msgstr "nazwę użytkownika zalogowanego do bazy"
 
-#: autoreporter_addons/sqlmap/template_sql_injection.jinja2:25
+#: autoreporter_addons/sqlmap/template_sql_injection.jinja2:28
 msgid ""
 "Such vulnerability may allow an attacker to download full database "
 "contents, including passwords or personal identifiable information. We "
@@ -34,7 +30,7 @@ msgstr ""
 "niezwłoczne usunięcie tej podatności, jak również sprawdzenie systemu, "
 "czy podobne podatności nie występują w innych miejscach."
 
-#: autoreporter_addons/sqlmap/template_sql_injection.jinja2:32
+#: autoreporter_addons/sqlmap/template_sql_injection.jinja2:35
 msgid ""
 "Please contact us if more information is needed (e.g. a proof of concept "
 "that demonstrates the vulnerability)."

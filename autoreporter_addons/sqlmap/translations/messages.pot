@@ -2,27 +2,23 @@
 msgid "The following addresses contain an SQL injection vulnerability:"
 msgstr ""
 
-#: autoreporter_addons/sqlmap/template_sql_injection.jinja2:7
+#: autoreporter_addons/sqlmap/template_sql_injection.jinja2:9
 msgid "the vulnerable parameter is"
 msgstr ""
 
-#: autoreporter_addons/sqlmap/template_sql_injection.jinja2:9
-msgid "using this vulnerability, we obtained"
-msgstr ""
-
-#: autoreporter_addons/sqlmap/template_sql_injection.jinja2:11
-msgid "the database version"
-msgstr ""
-
 #: autoreporter_addons/sqlmap/template_sql_injection.jinja2:12
-msgid "and"
+msgid "Using this vulnerability, we obtained"
 msgstr ""
 
 #: autoreporter_addons/sqlmap/template_sql_injection.jinja2:15
+msgid "the database version"
+msgstr ""
+
+#: autoreporter_addons/sqlmap/template_sql_injection.jinja2:18
 msgid "database user name"
 msgstr ""
 
-#: autoreporter_addons/sqlmap/template_sql_injection.jinja2:25
+#: autoreporter_addons/sqlmap/template_sql_injection.jinja2:28
 msgid ""
 "Such vulnerability may allow an attacker to download full database "
 "contents, including passwords or personal identifiable information. We "
@@ -30,7 +26,7 @@ msgid ""
 " occur in other places in the system."
 msgstr ""
 
-#: autoreporter_addons/sqlmap/template_sql_injection.jinja2:32
+#: autoreporter_addons/sqlmap/template_sql_injection.jinja2:35
 msgid ""
 "Please contact us if more information is needed (e.g. a proof of concept "
 "that demonstrates the vulnerability)."

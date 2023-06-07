@@ -6,18 +6,18 @@
                     <li>
                         {{ report.target }}
                         {% if report.report_data.parameter %}
-                            - {% trans %}the vulnerable parameter is{% endtrans %} {{ report.report_data.parameter }}
+                            - {% trans %}the vulnerable parameter is{% endtrans %} {{ report.report_data.parameter }}.
                         {% endif %}
                         {% if report.report_data.version or report.report_data.user %}
-                            ({% trans %}using this vulnerability, we obtained{% endtrans %}
+                            {% trans %}Using this vulnerability, we obtained{% endtrans %}:
+                            <ul>
                                 {% if report.report_data.version %}
-                                    {% trans %}the database version{% endtrans %}: {{ report.report_data.version }}
-                                    {% if report.report_data.user %}{% trans %}and{% endtrans %}{% endif -%}
-                                {% endif -%}
+                                    <li>{% trans %}the database version{% endtrans %}: {{ report.report_data.version }}</li>
+                                {% endif %}
                                 {% if report.report_data.user %}
-                                    {% trans %}database user name{% endtrans %}: {{ report.report_data.user }}
-                                {%- endif -%}
-                            )
+                                    <li>{% trans %}database user name{% endtrans %}: {{ report.report_data.user }}</li>
+                                {% endif %}
+                            </ul>
                         {% endif %}
                         {{ report_meta(report) }}
                     </li>
