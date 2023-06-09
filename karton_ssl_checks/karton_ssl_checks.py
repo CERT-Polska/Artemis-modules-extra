@@ -11,13 +11,14 @@ from artemis.config import Config
 from artemis.domains import is_subdomain
 from artemis.module_base import ArtemisBase
 from artemis.utils import throttle_request
-from extra_modules_config import ExtraModulesConfig
 from cryptography import x509
 from karton.core import Task
 from sslyze import ServerNetworkLocation
 from sslyze.plugins.certificate_info._certificate_utils import get_common_names
 from sslyze.plugins.scan_commands import ScanCommand
 from sslyze.scanner.scanner import Scanner, ServerScanRequest, ServerScanResult
+
+from extra_modules_config import ExtraModulesConfig
 
 
 class SSLChecks(ArtemisBase):  # type: ignore
