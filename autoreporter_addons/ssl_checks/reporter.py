@@ -16,6 +16,7 @@ from artemis.reporting.base.reporter import Reporter
 from artemis.reporting.base.templating import ReportEmailTemplateFragment
 from artemis.reporting.utils import get_top_level_target
 from bs4 import BeautifulSoup
+
 from extra_modules_config import ExtraModulesConfig
 
 from .http_requests import cached_get
@@ -24,7 +25,14 @@ logger = utils.build_logger(__name__)
 
 
 with open(os.path.join(os.path.dirname(__file__), "filtered_website_fragments.txt"), "r") as f:
-    FILTERED_WEBSITE_FRAGMENTS = [line.strip() for line in f.readlines()]
+    FILTERED_WEBSITE_FRAGMENTS = [line.strip() for line in f.readlines() if line]
+
+with open(os.path.join(os.path.dirname(__file__), "filtered_website_fragments_for_bad_redirect.txt"), "r") as f:
+    # These fragments, if occur, mean that we shouldn't treat this website as containing a bad redirect.
+    # For instance, if Cloudflare returned HTTP 200 with a message "Please wait while your request is being verified...",
+    # that doesn't meant that the original website doesn't redirect to https:// - that means only, that our request
+    # got intercepted via Cloudflare.
+    FILTERED_WEBSITE_FRAGMENTS_FOR_BAD_REDIRECT = [line.strip() for line in f.readlines() if line]
 
 
 class SSLChecksReporter(Reporter):  # type: ignore
@@ -105,25 +113,27 @@ class SSLChecksReporter(Reporter):  # type: ignore
             )
         if task_result["result"].get("bad_redirect", False):
             response_content_prefix = task_result["result"].get("response_content_prefix", "")
-            # If there is some kind of HTML redirect, let's better not report that, as it might be
-            # a proper SSL redirect - here, we want to decrease the number of false positives at the
-            # cost of true positives.
-            try:
-                soup = BeautifulSoup(response_content_prefix.lower(), "html.parser")
-            except Exception:  # parsing errors
-                logger.exception("Unable to parse HTML from %s", task_result["payload"]["domain"])
-                soup = None
+            if not any([fragment in response_content_prefix for fragment in FILTERED_WEBSITE_FRAGMENTS_FOR_BAD_REDIRECT]):
+                # If there is some kind of HTML redirect, let's better not report that, as it might be
+                # a proper SSL redirect - here, we want to decrease the number of false positives at the
+                # cost of true positives.
+                try:
+                    soup = BeautifulSoup(response_content_prefix.lower(), "html.parser")
+                except Exception:  # parsing errors
+                    logger.exception("Unable to parse HTML from %s", task_result["payload"]["domain"])
+                    soup = None
 
-            if not soup or not soup.find_all("meta", attrs={"http-equiv": "refresh"}):
-                result.append(
-                    Report(
-                        top_level_target=get_top_level_target(task_result),
-                        target=f'http://{task_result["payload"]["domain"]}:80/',
-                        report_type=SSLChecksReporter.NO_HTTPS_REDIRECT,
-                        report_data={},
-                        timestamp=task_result["created_at"],
+                if not soup or not soup.find_all("meta", attrs={"http-equiv": "refresh"}):
+                    result.append(
+                        Report(
+                            top_level_target=get_top_level_target(task_result),
+                            target=f'http://{task_result["payload"]["domain"]}:80/',
+                            report_type=SSLChecksReporter.NO_HTTPS_REDIRECT,
+                            report_data={},
+                            timestamp=task_result["created_at"],
+                        )
                     )
-                )
+
         if task_result["result"].get("cn_different_from_hostname", False):
             # If the domain starts with www. but the version without www. is in the names list,
             # let's assume just the version without www. is advertised and used by the users.
