@@ -16,13 +16,9 @@ Artemis directory:
 docker compose -f docker-compose.yaml -f Artemis-modules-extra/docker-compose.yml up --build
 ```
 
-To include vulnerabilities found by Artemis additional modules in the e-mail reports, use:
-
-```
-ADDITIONAL_DOCKER_COMPOSE_OPTIONS="-f docker-compose.yaml -f Artemis-modules-extra/docker-compose.yml" ./scripts/export_emails (...)
-```
-
-For more information, refer to TODO
+If you cloned the repository **inside the Artemis directory**, the e-mail report generation (described
+in https://artemis-scanner.readthedocs.io/en/latest/quick-start.html#generating-e-mails) for the new modules
+will be enabled **automatically**.
 
 ## Modules
 ### `dns_reaper`
