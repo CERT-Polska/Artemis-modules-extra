@@ -5,6 +5,7 @@ Account Suspended
 <FRAME NORESIZE SRC="http://www.kei.pl/landing/domyslna">
 Hello! Welcome to Synology Web Station!
 <html>Apache is functioning normally</html>
+<html><body></body></html>
 <html><head></head><body></body></html>
 <html>Hosting Zapewnia
 <html> is functioning normally
@@ -28,12 +29,14 @@ Strona w budowie
 Strona w przygotowaniu
 Tanie domeny dostarcza
 Testing 123
+The site has been moved to a different IP address. Your Internet provider has a wrong DNS configuration.
 This account has been suspended
 This is a default webpage generated for
 This is a placeholder for the subdomain
 This is the default index page of your website.
+<title> 404 Not Found
 <title>Apache2 Debian Default Page: It works</title>
-<title>Apache HTTP Server Test Pagee
+<title>Apache HTTP Server Test Page
 <title>BIP - Błąd</title>
 <title>Captcha</title>
 <title>Domain Default page</title>
@@ -42,6 +45,7 @@ This is the default index page of your website.
 <title>home.pl: Nr 1 w Polsce. Domeny, Hosting, Serwery WWW, Strony, eSklep, Office 365</title>
 <title>IIS Windows Server</title>
 <title>LOGONET Sp. z o.o. [C]</title>
+<title>Serwer WWW</title>
 <title>Shared IP
 <title>Site Under Service</title>
 <title>Strona utrzymywana w Chmurka.pl</title>
