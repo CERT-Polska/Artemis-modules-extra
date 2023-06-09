@@ -76,7 +76,7 @@ class SSLChecksReporter(Reporter):  # type: ignore
                 # which is actually used, and therefore don't report subdomains.
                 return []
         except Exception:
-            logger.warning("Unable to check whether domain has identical content to parent domain")
+            logger.warning(f"Unable to check whether domain {domain} has identical content to parent domain")
 
         if "response_status_code" in task_result["result"] and "response_content_prefix" in task_result["result"]:
             response_status_code = task_result["result"]["response_status_code"]
