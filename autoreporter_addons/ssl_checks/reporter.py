@@ -113,7 +113,9 @@ class SSLChecksReporter(Reporter):  # type: ignore
             )
         if task_result["result"].get("bad_redirect", False):
             response_content_prefix = task_result["result"].get("response_content_prefix", "")
-            if not any([fragment in response_content_prefix for fragment in FILTERED_WEBSITE_FRAGMENTS_FOR_BAD_REDIRECT]):
+            if not any(
+                [fragment in response_content_prefix for fragment in FILTERED_WEBSITE_FRAGMENTS_FOR_BAD_REDIRECT]
+            ):
                 # If there is some kind of HTML redirect, let's better not report that, as it might be
                 # a proper SSL redirect - here, we want to decrease the number of false positives at the
                 # cost of true positives.
