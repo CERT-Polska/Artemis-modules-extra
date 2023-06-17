@@ -45,6 +45,7 @@ This is the default index page of your website.
 <title>home.pl: Nr 1 w Polsce. Domeny, Hosting, Serwery WWW, Strony, eSklep, Office 365</title>
 <title>IIS Windows Server</title>
 <title>LOGONET Sp. z o.o. [C]</title>
+<title>Page not found!</title>
 <title>Serwer WWW</title>
 <title>Shared IP
 <title>Site Under Service</title>
