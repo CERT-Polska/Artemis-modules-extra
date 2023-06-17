@@ -62,11 +62,6 @@ class SQLmapReporter(Reporter):  # type: ignore
         ]
 
     @staticmethod
-    def get_scoring_rules() -> Dict[ReportType, Callable[[Report], List[int]]]:
-        """See the docstring in the parent class."""
-        return {report_type: Reporter.default_scoring_rule for report_type in SQLmapReporter.get_report_types()}
-
-    @staticmethod
     def get_normal_form_rules() -> Dict[ReportType, Callable[[Report], NormalForm]]:
         """See the docstring in the Reporter class."""
         return {
