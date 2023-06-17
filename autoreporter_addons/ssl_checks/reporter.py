@@ -168,9 +168,6 @@ class SSLChecksReporter(Reporter):  # type: ignore
     def get_email_template_fragments() -> List[ReportEmailTemplateFragment]:
         return [
             ReportEmailTemplateFragment.from_file(
-                os.path.join(os.path.dirname(__file__), "template_almost_expired_ssl_certificate.jinja2"), priority=2
-            ),
-            ReportEmailTemplateFragment.from_file(
                 os.path.join(os.path.dirname(__file__), "template_expired_ssl_certificate.jinja2"), priority=2
             ),
             ReportEmailTemplateFragment.from_file(
@@ -181,6 +178,9 @@ class SSLChecksReporter(Reporter):  # type: ignore
             ),
             ReportEmailTemplateFragment.from_file(
                 os.path.join(os.path.dirname(__file__), "template_no_https_redirect.jinja2"), priority=1
+            ),
+            ReportEmailTemplateFragment.from_file(
+                os.path.join(os.path.dirname(__file__), "template_almost_expired_ssl_certificate.jinja2"), priority=1
             ),
         ]
 
