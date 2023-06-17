@@ -3,9 +3,9 @@
         <ul>
             {% for report in data.reports %}
                 {% if report.report_type == "bad_certificate_names" %}
-                    {% if report.report_data.names_string %}
+                    {% if report.additional_data.names_string %}
                         <li>
-                            {{ report.target }} {% trans %}returns certificate for{% endtrans %} {{ report.report_data.names_string }}
+                            {{ report.target }} {% trans %}returns certificate for{% endtrans %} {{ report.additional_data.names_string }}
                             {{ report_meta(report) }}
                         </li>
                     {% else %}

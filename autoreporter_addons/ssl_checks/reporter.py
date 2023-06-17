@@ -43,16 +43,6 @@ class SSLChecksReporter(Reporter):  # type: ignore
     EXPIRED_SSL_CERTIFICATE = ReportType("expired_ssl_certificate")
 
     @staticmethod
-    def get_report_types() -> List[ReportType]:
-        return [
-            SSLChecksReporter.CERTIFICATE_AUTHORITY_INVALID,
-            SSLChecksReporter.NO_HTTPS_REDIRECT,
-            SSLChecksReporter.BAD_CERTIFICATE_NAMES,
-            SSLChecksReporter.ALMOST_EXPIRED_SSL_CERTIFICATE,
-            SSLChecksReporter.EXPIRED_SSL_CERTIFICATE,
-        ]
-
-    @staticmethod
     def create_reports(task_result: Dict[str, Any], language: Language) -> List[Report]:
         if task_result["headers"]["receiver"] != "ssl_checks":
             return []
@@ -107,7 +97,7 @@ class SSLChecksReporter(Reporter):  # type: ignore
                     top_level_target=get_top_level_target(task_result),
                     target=f'https://{task_result["payload"]["domain"]}:443/',
                     report_type=SSLChecksReporter.CERTIFICATE_AUTHORITY_INVALID,
-                    report_data={},
+                    additional_data={},
                     timestamp=task_result["created_at"],
                 )
             )
@@ -131,7 +121,7 @@ class SSLChecksReporter(Reporter):  # type: ignore
                             top_level_target=get_top_level_target(task_result),
                             target=f'http://{task_result["payload"]["domain"]}:80/',
                             report_type=SSLChecksReporter.NO_HTTPS_REDIRECT,
-                            report_data={},
+                            additional_data={},
                             timestamp=task_result["created_at"],
                         )
                     )
@@ -148,7 +138,7 @@ class SSLChecksReporter(Reporter):  # type: ignore
                         top_level_target=get_top_level_target(task_result),
                         target=f'https://{task_result["payload"]["domain"]}:443/',
                         report_type=SSLChecksReporter.BAD_CERTIFICATE_NAMES,
-                        report_data={"names_string": ", ".join(sorted(set(task_result["result"]["names"])))},
+                        additional_data={"names_string": ", ".join(sorted(set(task_result["result"]["names"])))},
                         timestamp=task_result["created_at"],
                     )
                 )
@@ -158,7 +148,7 @@ class SSLChecksReporter(Reporter):  # type: ignore
                     top_level_target=get_top_level_target(task_result),
                     target=f'https://{task_result["payload"]["domain"]}:443/',
                     report_type=SSLChecksReporter.ALMOST_EXPIRED_SSL_CERTIFICATE,
-                    report_data={"expiry_date": task_result["result"]["expiry_date"]},
+                    additional_data={"expiry_date": task_result["result"]["expiry_date"]},
                     timestamp=task_result["created_at"],
                 )
             )
@@ -168,7 +158,7 @@ class SSLChecksReporter(Reporter):  # type: ignore
                     top_level_target=get_top_level_target(task_result),
                     target=f'https://{task_result["payload"]["domain"]}:443/',
                     report_type=SSLChecksReporter.EXPIRED_SSL_CERTIFICATE,
-                    report_data={"expiry_date": task_result["result"]["expiry_date"]},
+                    additional_data={"expiry_date": task_result["result"]["expiry_date"]},
                     timestamp=task_result["created_at"],
                 )
             )
@@ -178,19 +168,19 @@ class SSLChecksReporter(Reporter):  # type: ignore
     def get_email_template_fragments() -> List[ReportEmailTemplateFragment]:
         return [
             ReportEmailTemplateFragment.from_file(
-                os.path.join(os.path.dirname(__file__), "template_almost_expired_ssl_certificate.jinja2"), 2
+                os.path.join(os.path.dirname(__file__), "template_almost_expired_ssl_certificate.jinja2"), priority=2
             ),
             ReportEmailTemplateFragment.from_file(
-                os.path.join(os.path.dirname(__file__), "template_expired_ssl_certificate.jinja2"), 2
+                os.path.join(os.path.dirname(__file__), "template_expired_ssl_certificate.jinja2"), priority=2
             ),
             ReportEmailTemplateFragment.from_file(
-                os.path.join(os.path.dirname(__file__), "template_certificate_authority_invalid.jinja2"), 2
+                os.path.join(os.path.dirname(__file__), "template_certificate_authority_invalid.jinja2"), priority=2
             ),
             ReportEmailTemplateFragment.from_file(
-                os.path.join(os.path.dirname(__file__), "template_bad_certificate_names.jinja2"), 2
+                os.path.join(os.path.dirname(__file__), "template_bad_certificate_names.jinja2"), priority=2
             ),
             ReportEmailTemplateFragment.from_file(
-                os.path.join(os.path.dirname(__file__), "template_no_https_redirect.jinja2"), 1
+                os.path.join(os.path.dirname(__file__), "template_no_https_redirect.jinja2"), priority=1
             ),
         ]
 

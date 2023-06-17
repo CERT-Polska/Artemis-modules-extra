@@ -5,17 +5,17 @@
                 {% if report.report_type == "sql_injection" %}
                     <li>
                         {{ report.target }}
-                        {% if report.report_data.parameter %}
-                            - {% trans %}the vulnerable parameter is{% endtrans %} {{ report.report_data.parameter }}.
+                        {% if report.additional_data.parameter %}
+                            - {% trans %}the vulnerable parameter is{% endtrans %} {{ report.additional_data.parameter }}.
                         {% endif %}
-                        {% if report.report_data.version or report.report_data.user %}
+                        {% if report.additional_data.version or report.additional_data.user %}
                             {% trans %}Using this vulnerability, we obtained{% endtrans %}:
                             <ul>
-                                {% if report.report_data.version %}
-                                    <li>{% trans %}the database version{% endtrans %}: {{ report.report_data.version }}</li>
+                                {% if report.additional_data.version %}
+                                    <li>{% trans %}the database version{% endtrans %}: {{ report.additional_data.version }}</li>
                                 {% endif %}
-                                {% if report.report_data.user %}
-                                    <li>{% trans %}database user name{% endtrans %}: {{ report.report_data.user }}</li>
+                                {% if report.additional_data.user %}
+                                    <li>{% trans %}database user name{% endtrans %}: {{ report.additional_data.user }}</li>
                                 {% endif %}
                             </ul>
                         {% endif %}

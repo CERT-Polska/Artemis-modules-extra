@@ -18,10 +18,6 @@ class DNSReaperReporter(Reporter):  # type: ignore
     SUBDOMAIN_TAKEOVER_POSSIBLE = ReportType("subdomain_takeover_possible")
 
     @staticmethod
-    def get_report_types() -> List[ReportType]:
-        return [DNSReaperReporter.SUBDOMAIN_TAKEOVER_POSSIBLE]
-
-    @staticmethod
     def create_reports(task_result: Dict[str, Any], language: Language) -> List[Report]:
         if task_result["headers"]["receiver"] != "dns_reaper":
             return []
@@ -37,7 +33,7 @@ class DNSReaperReporter(Reporter):  # type: ignore
                         top_level_target=get_top_level_target(task_result),
                         target=item["domain"],
                         report_type=DNSReaperReporter.SUBDOMAIN_TAKEOVER_POSSIBLE,
-                        report_data={
+                        additional_data={
                             "message_en": item["info"],
                         },
                         timestamp=task_result["created_at"],
@@ -49,7 +45,7 @@ class DNSReaperReporter(Reporter):  # type: ignore
     def get_email_template_fragments() -> List[ReportEmailTemplateFragment]:
         return [
             ReportEmailTemplateFragment.from_file(
-                os.path.join(os.path.dirname(__file__), "template_subdomain_takeover_possible.jinja2"), 10
+                os.path.join(os.path.dirname(__file__), "template_subdomain_takeover_possible.jinja2"), priority=10
             ),
         ]
 
@@ -66,7 +62,7 @@ class DNSReaperReporter(Reporter):  # type: ignore
                 {
                     "type": report.report_type,
                     "target": get_domain_normal_form(report.target),
-                    "message": report.report_data["message_en"],
+                    "message": report.additional_data["message_en"],
                 }
             )
         }

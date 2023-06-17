@@ -14,12 +14,6 @@ class SQLmapReporter(Reporter):  # type: ignore
     SQL_INJECTION = ReportType("sql_injection")
 
     @staticmethod
-    def get_report_types() -> List[ReportType]:
-        return [
-            SQLmapReporter.SQL_INJECTION,
-        ]
-
-    @staticmethod
     def create_reports(task_result: Dict[str, Any], language: Language) -> List[Report]:
         if task_result["headers"]["receiver"] != "sqlmap":
             return []
@@ -50,7 +44,7 @@ class SQLmapReporter(Reporter):  # type: ignore
                 top_level_target=get_top_level_target(task_result),
                 target=target,
                 report_type=SQLmapReporter.SQL_INJECTION,
-                report_data={
+                additional_data={
                     "parameter": parameter,
                     "version": task_result["result"].get("version", None),
                     "user": user,
@@ -63,7 +57,7 @@ class SQLmapReporter(Reporter):  # type: ignore
     def get_email_template_fragments() -> List[ReportEmailTemplateFragment]:
         return [
             ReportEmailTemplateFragment.from_file(
-                os.path.join(os.path.dirname(__file__), "template_sql_injection.jinja2"), 10
+                os.path.join(os.path.dirname(__file__), "template_sql_injection.jinja2"), priority=10
             ),
         ]
 
@@ -80,7 +74,7 @@ class SQLmapReporter(Reporter):  # type: ignore
                 {
                     "type": report.report_type,
                     "target": get_url_normal_form(report.target),
-                    "description": report.report_data["parameter"],
+                    "description": report.additional_data["parameter"],
                 }
             )
         }

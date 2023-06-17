@@ -4,7 +4,7 @@
             {% for report in data.reports %}
                 {% if report.report_type == "expired_ssl_certificate" %}
                     <li>
-                        {{ report.target }} - {% trans %}expired on{% endtrans %} {{ report.report_data.expiry_date }}
+                        {{ report.target }} - {% trans %}expired on{% endtrans %} {{ report.additional_data.expiry_date }}
                         {{ report_meta(report) }}
                     </li>
                 {% endif %}
