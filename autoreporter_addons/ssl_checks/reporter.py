@@ -96,9 +96,9 @@ class SSLChecksReporter(Reporter):  # type: ignore
                 if redirect_url_parsed.hostname != payload["domain"]:
                     return []
 
-        result = []
+        reports = []
         if result.get("certificate_authority_invalid", False):
-            result.append(
+            reports.append(
                 Report(
                     top_level_target=get_top_level_target(task_result),
                     target=f'https://{payload["domain"]}:443/',
@@ -122,7 +122,7 @@ class SSLChecksReporter(Reporter):  # type: ignore
                     soup = None
 
                 if not soup or not soup.find_all("meta", attrs={"http-equiv": "refresh"}):
-                    result.append(
+                    reports.append(
                         Report(
                             top_level_target=get_top_level_target(task_result),
                             target=f'http://{payload["domain"]}:80/',
@@ -135,13 +135,10 @@ class SSLChecksReporter(Reporter):  # type: ignore
         if result.get("cn_different_from_hostname", False):
             # If the domain starts with www. but the version without www. is in the names list,
             # let's assume just the version without www. is advertised and used by the users.
-            if not (
-                payload["domain"].startswith("www.")
-                and payload["domain"][4:] in result["names"]
-            ):
+            if not (payload["domain"].startswith("www.") and payload["domain"][4:] in result["names"]):
                 names_string = ", ".join(sorted(set(result["names"])))
 
-                result.append(
+                reports.append(
                     Report(
                         top_level_target=get_top_level_target(task_result),
                         target=f'https://{payload["domain"]}:443/',
@@ -151,7 +148,7 @@ class SSLChecksReporter(Reporter):  # type: ignore
                     )
                 )
         if result.get("almost_expired", False):
-            result.append(
+            reports.append(
                 Report(
                     top_level_target=get_top_level_target(task_result),
                     target=f'https://{payload["domain"]}:443/',
@@ -161,7 +158,7 @@ class SSLChecksReporter(Reporter):  # type: ignore
                 )
             )
         if result.get("expired", False):
-            result.append(
+            reports.append(
                 Report(
                     top_level_target=get_top_level_target(task_result),
                     target=f'https://{payload["domain"]}:443/',
@@ -170,7 +167,7 @@ class SSLChecksReporter(Reporter):  # type: ignore
                     timestamp=task_result["created_at"],
                 )
             )
-        return result
+        return reports
 
     @staticmethod
     def get_email_template_fragments() -> List[ReportEmailTemplateFragment]:
