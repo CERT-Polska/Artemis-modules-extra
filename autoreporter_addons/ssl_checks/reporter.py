@@ -73,8 +73,11 @@ class SSLChecksReporter(Reporter):  # type: ignore
             response_content_prefix = task_result["result"]["response_content_prefix"]
 
             if (
+                # We don't filter out all 4xx codes - for example, we want to show a message for
+                # e.g. 401 (unauthorized, where a login panel appears) or 405 (method not allowed).
                 response_status_code == 404
                 or response_status_code == 403
+                or response_status_code == 400
                 # This one is important - sometimes we reported false positives after getting a 5xx error (and thus no redirect)
                 or (response_status_code >= 500 and response_status_code <= 599)
                 or "<html" not in response_content_prefix.lower()
