@@ -1,7 +1,7 @@
 import os
-import urllib.parse
 from difflib import SequenceMatcher
 from typing import Any, Callable, Dict, List
+from urllib.parse import urlparse
 
 from artemis import utils
 from artemis.reporting.base.language import Language
@@ -92,7 +92,7 @@ class SSLChecksReporter(Reporter):  # type: ignore
             # We have systems in our constituency where a redirect is performed from http://domain to a different domain and https://domain is not used
             # and is misconfigured/the certificate expires. For now let's treat this as a false positive.
             if not result.get("bad_redirect", False) and "redirect_url" in result:
-                redirect_url_parsed = urllib.parse.urlparse(result["redirect_url"])
+                redirect_url_parsed = urlparse(result["redirect_url"])
                 if redirect_url_parsed.hostname != payload["domain"]:
                     return []
 
