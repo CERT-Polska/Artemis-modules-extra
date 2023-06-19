@@ -1,5 +1,5 @@
-import os
 from difflib import SequenceMatcher
+from pathlib import Path
 from typing import Any, Callable, Dict, List
 from urllib.parse import urlparse
 
@@ -24,10 +24,10 @@ from .http_requests import cached_get
 logger = utils.build_logger(__name__)
 
 
-with open(os.path.join(os.path.dirname(__file__), "filtered_website_fragments.txt"), "r") as f:
+with open(str(Path(__file__).parents[0] / "filtered_website_fragments.txt"), "r") as f:
     FILTERED_WEBSITE_FRAGMENTS = [line.strip() for line in f.readlines() if line]
 
-with open(os.path.join(os.path.dirname(__file__), "filtered_website_fragments_for_bad_redirect.txt"), "r") as f:
+with open(str(Path(__file__).parents[0] / "filtered_website_fragments_for_bad_redirect.txt"), "r") as f:
     # These fragments, if occur, mean that we shouldn't treat this website as containing a bad redirect.
     # For instance, if Cloudflare returned HTTP 200 with a message "Please wait while your request is being verified...",
     # that doesn't meant that the original website doesn't redirect to https:// - that means only, that our request
@@ -175,19 +175,19 @@ class SSLChecksReporter(Reporter):  # type: ignore
     def get_email_template_fragments() -> List[ReportEmailTemplateFragment]:
         return [
             ReportEmailTemplateFragment.from_file(
-                os.path.join(os.path.dirname(__file__), "template_expired_ssl_certificate.jinja2"), priority=2
+                str(Path(__file__).parents[0] / "template_expired_ssl_certificate.jinja2"), priority=2
             ),
             ReportEmailTemplateFragment.from_file(
-                os.path.join(os.path.dirname(__file__), "template_certificate_authority_invalid.jinja2"), priority=2
+                str(Path(__file__).parents[0] / "template_certificate_authority_invalid.jinja2"), priority=2
             ),
             ReportEmailTemplateFragment.from_file(
-                os.path.join(os.path.dirname(__file__), "template_bad_certificate_names.jinja2"), priority=2
+                str(Path(__file__).parents[0] / "template_bad_certificate_names.jinja2"), priority=2
             ),
             ReportEmailTemplateFragment.from_file(
-                os.path.join(os.path.dirname(__file__), "template_no_https_redirect.jinja2"), priority=1
+                str(Path(__file__).parents[0] / "template_no_https_redirect.jinja2"), priority=1
             ),
             ReportEmailTemplateFragment.from_file(
-                os.path.join(os.path.dirname(__file__), "template_almost_expired_ssl_certificate.jinja2"), priority=1
+                str(Path(__file__).parents[0] / "template_almost_expired_ssl_certificate.jinja2"), priority=1
             ),
         ]
 

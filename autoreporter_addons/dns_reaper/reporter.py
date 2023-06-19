@@ -1,4 +1,4 @@
-import os
+from pathlib import Path
 from typing import Any, Callable, Dict, List
 
 from artemis.reporting.base.language import Language
@@ -45,7 +45,7 @@ class DNSReaperReporter(Reporter):  # type: ignore
     def get_email_template_fragments() -> List[ReportEmailTemplateFragment]:
         return [
             ReportEmailTemplateFragment.from_file(
-                os.path.join(os.path.dirname(__file__), "template_subdomain_takeover_possible.jinja2"), priority=10
+                str(Path(__file__).parents[0] / "template_subdomain_takeover_possible.jinja2"), priority=10
             ),
         ]
 
