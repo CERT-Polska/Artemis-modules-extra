@@ -14,12 +14,11 @@ from artemis.reporting.base.report import Report
 from artemis.reporting.base.report_type import ReportType
 from artemis.reporting.base.reporter import Reporter
 from artemis.reporting.base.templating import ReportEmailTemplateFragment
-from artemis.reporting.utils import get_top_level_target
+from artemis.reporting.utils import get_top_level_target, cached_get
 from bs4 import BeautifulSoup
 
 from extra_modules_config import ExtraModulesConfig
 
-from .http_requests import cached_get
 
 logger = utils.build_logger(__name__)
 
