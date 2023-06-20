@@ -17,7 +17,7 @@ docker compose -f docker-compose.yaml -f Artemis-modules-extra/docker-compose.ym
 ```
 
 If you cloned the repository **inside the Artemis directory**, the e-mail report generation feature (described
-in https://artemis-scanner.readthedocs.io/en/latest/quick-start.html#generating-e-mails) for the new modules
+in https://artemis-scanner.readthedocs.io/en/latest/generating-emails.html) for the new modules
 will be enabled **automatically**.
 
 ## Modules
