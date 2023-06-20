@@ -1,0 +1,29 @@
+{% if "bad_certificate_names" in data.contains_type %}
+    <li>{% trans %}The following addresses return SSL/TLS certificates for different domains:{% endtrans %}
+        <ul>
+            {% for report in data.reports %}
+                {% if report.report_type == "bad_certificate_names" %}
+                    {% if report.additional_data.names_string %}
+                        <li>
+                            {{ report.target }} {% trans %}returns certificate for{% endtrans %} {{ report.additional_data.names_string }}
+                            {{ report_meta(report) }}
+                        </li>
+                    {% else %}
+                        <li>
+                            {{ report.target }}
+                            {{ report_meta(report) }}
+                        </li>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        </ul>
+        <p>
+            {% trans trimmed %}
+                Such configuration will cause the user to see an invalid certificate message. We recommend
+                correct SSL/TLS configuration, together with a redirect from http:// to https://, so that the
+                communication between the user and the server (which may contain e.g. personal identifiable
+                information) will be encrypted.
+            {% endtrans %}
+        </p>
+    </li>
+{% endif %}

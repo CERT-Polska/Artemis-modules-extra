@@ -7,6 +7,7 @@ RUN pip install -r /requirements.txt -r /requirements_ssl_checks.txt
 
 WORKDIR /opt/
 
+COPY extra_modules_config.py /opt/
 COPY karton_ssl_checks/karton_ssl_checks.py /opt/artemis/modules/
 COPY karton_ssl_checks/test_ssl_checks.py /opt/
 COPY test /opt/test

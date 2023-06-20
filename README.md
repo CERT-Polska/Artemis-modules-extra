@@ -16,6 +16,10 @@ Artemis directory:
 docker compose -f docker-compose.yaml -f Artemis-modules-extra/docker-compose.yml up --build
 ```
 
+If you cloned the repository **inside the Artemis directory**, the e-mail report generation feature (described
+in https://artemis-scanner.readthedocs.io/en/latest/quick-start.html#generating-e-mails) for the new modules
+will be enabled **automatically**.
+
 ## Modules
 ### `dns_reaper`
 Uses https://github.com/punk-security/dnsReaper under the hood. Finds subdomain takeover vulnerabilities

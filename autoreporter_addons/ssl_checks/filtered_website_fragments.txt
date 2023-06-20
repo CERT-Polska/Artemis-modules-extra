@@ -1,0 +1,67 @@
+Account Suspended
+<center>Widzisz ten komunikat ponieważ twoja domena nie jest dodana do konta.
+<div class="info underconstruction">
+<FRAME NORESIZE SRC="http://default.kei.pl/startowa">
+<FRAME NORESIZE SRC="http://www.kei.pl/landing/domyslna">
+Hello! Welcome to Synology Web Station!
+<html>Apache is functioning normally</html>
+<html><body></body></html>
+<html><head></head><body></body></html>
+<html>Hosting Zapewnia
+<html> is functioning normally
+<html><title>Hosting dedykowany zapewnie Hitme.pl</title>
+HTTP Error 404. The requested resource is not found.
+jest utrzymywana na serwerach
+Nginx is functioning normally
+Oops, an error occurred
+Page not exist. Contact
+<p class="subtitle">Rejestrator domen i Dostawca profesjonalnych rozwiązań hostingowych</p>
+Pliki strony www proszę umieścić w katalogu
+Pod tym adresem nie ma żadnej strony.
+Po zalogowaniu będziesz mógł zarządzać swoim serwerem poprzez intuicyjny, prosty w obsłudze i przyjazny interfejs
+Przerwa techniczna
+<p>Ta domena utrzymywana jest na serwerach</p>
+Serwis o podane nazwie nie istnieje
+Serwis w trakcie prac rozwojowych
+Something amazing will be constructed here...
+Strona dodana prawidłowo
+Strona w budowie
+Strona w przygotowaniu
+Tanie domeny dostarcza
+Testing 123
+The site has been moved to a different IP address. Your Internet provider has a wrong DNS configuration.
+This account has been suspended
+This is a default webpage generated for
+This is a placeholder for the subdomain
+This is the default index page of your website.
+<title> 404 Not Found
+<title>Apache2 Debian Default Page: It works</title>
+<title>Apache HTTP Server Test Page
+<title>BIP - Błąd</title>
+<title>Captcha</title>
+<title>Domain Default page</title>
+<title>|DOMAIN|</title>
+<title>Dummy site</title>
+<title>home.pl: Nr 1 w Polsce. Domeny, Hosting, Serwery WWW, Strony, eSklep, Office 365</title>
+<title>IIS Windows Server</title>
+<title>LOGONET Sp. z o.o. [C]</title>
+<title>Page not found!</title>
+<title>Serwer WWW</title>
+<title>Shared IP
+<title>Site Under Service</title>
+<title>Strona utrzymywana w Chmurka.pl</title>
+<TITLE>strona w konstrukcji</TITLE>
+<title>Strona w przygotowaniu...</title>
+<title>Strona www nie została zamieszczona na serwerze</title>
+<title>Test Page for the Nginx HTTP Server
+<title>Web Server's Default Page</title>
+<title>Welcome to nginx!</title>
+<title>Wirtualne Data Center - AnyTime Cloud</title>
+<title>Witaj na serwerze
+<tr><td>Welcome to the home of
+.vobacom.info</title>
+v.tld.pl</HTML>
+Welcome to your website!
+Witryna, którą chcesz wyświetlić, nie ma obecnie strony domyślnej. Może być uaktualniana i konfigurowana.
+Wystąpił błąd
+You are accessing the server from an untrusted domain.

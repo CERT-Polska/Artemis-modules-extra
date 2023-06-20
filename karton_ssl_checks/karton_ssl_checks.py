@@ -18,6 +18,8 @@ from sslyze.plugins.certificate_info._certificate_utils import get_common_names
 from sslyze.plugins.scan_commands import ScanCommand
 from sslyze.scanner.scanner import Scanner, ServerScanRequest, ServerScanResult
 
+from extra_modules_config import ExtraModulesConfig
+
 
 class SSLChecks(ArtemisBase):  # type: ignore
     """
@@ -41,6 +43,11 @@ class SSLChecks(ArtemisBase):  # type: ignore
 
     def run(self, current_task: Task) -> None:
         domain = current_task.payload["domain"]
+
+        domain_parts = [part for part in domain.split(".") if part]
+        if domain_parts[0] in ExtraModulesConfig.SUBDOMAINS_TO_SKIP_SSL_CHECKS:
+            self.db.save_task_result(task=current_task, status=TaskStatus.OK)
+            return
 
         messages = []
         result: Dict[str, Any] = {}
