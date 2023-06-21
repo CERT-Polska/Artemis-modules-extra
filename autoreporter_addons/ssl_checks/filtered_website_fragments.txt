@@ -6,12 +6,14 @@ Account Suspended
 Hello! Welcome to Synology Web Station!
 <html>Apache is functioning normally</html>
 <html><body></body></html>
+<html><body>Ready.</body></html>
 <html><head></head><body></body></html>
 <html>Hosting Zapewnia
 <html> is functioning normally
 <html><title>Hosting dedykowany zapewnie Hitme.pl</title>
 HTTP Error 404. The requested resource is not found.
 jest utrzymywana na serwerach
+Jeżeli chcesz zmienić tę stronę, wgraj własny plik index.html do katalogu private_html
 Nginx is functioning normally
 Oops, an error occurred
 Page not exist. Contact
@@ -35,13 +37,16 @@ This is a default webpage generated for
 This is a placeholder for the subdomain
 This is the default index page of your website.
 <title> 404 Not Found
+<title>apache</title
 <title>Apache2 Debian Default Page: It works</title>
 <title>Apache HTTP Server Test Page
+<title>Apache HTTP Server Test Page powered by Linux</title>
 <title>BIP - Błąd</title>
 <title>Captcha</title>
 <title>Domain Default page</title>
 <title>|DOMAIN|</title>
 <title>Dummy site</title>
+<title>Error</title>
 <title>home.pl: Nr 1 w Polsce. Domeny, Hosting, Serwery WWW, Strony, eSklep, Office 365</title>
 <title>IIS Windows Server</title>
 <title>LOGONET Sp. z o.o. [C]</title>
