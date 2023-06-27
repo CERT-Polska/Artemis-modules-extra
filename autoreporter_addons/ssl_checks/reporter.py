@@ -37,7 +37,6 @@ class SSLChecksReporter(Reporter):  # type: ignore
     CERTIFICATE_AUTHORITY_INVALID = ReportType("certificate_authority_invalid")
     NO_HTTPS_REDIRECT = ReportType("no_https_redirect")
     BAD_CERTIFICATE_NAMES = ReportType("bad_certificate_names")
-    ALMOST_EXPIRED_SSL_CERTIFICATE = ReportType("almost_expired_ssl_certificate")
     EXPIRED_SSL_CERTIFICATE = ReportType("expired_ssl_certificate")
 
     @staticmethod
@@ -147,16 +146,6 @@ class SSLChecksReporter(Reporter):  # type: ignore
                         timestamp=task_result["created_at"],
                     )
                 )
-        if result.get("almost_expired", False):
-            reports.append(
-                Report(
-                    top_level_target=get_top_level_target(task_result),
-                    target=f'https://{payload["domain"]}:443/',
-                    report_type=SSLChecksReporter.ALMOST_EXPIRED_SSL_CERTIFICATE,
-                    additional_data={"expiry_date": result["expiry_date"]},
-                    timestamp=task_result["created_at"],
-                )
-            )
         if result.get("expired", False):
             reports.append(
                 Report(
