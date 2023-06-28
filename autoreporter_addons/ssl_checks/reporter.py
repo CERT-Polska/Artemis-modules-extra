@@ -173,9 +173,6 @@ class SSLChecksReporter(Reporter):  # type: ignore
             ReportEmailTemplateFragment.from_file(
                 str(Path(__file__).parents[0] / "template_no_https_redirect.jinja2"), priority=1
             ),
-            ReportEmailTemplateFragment.from_file(
-                str(Path(__file__).parents[0] / "template_almost_expired_ssl_certificate.jinja2"), priority=1
-            ),
         ]
 
     @staticmethod
