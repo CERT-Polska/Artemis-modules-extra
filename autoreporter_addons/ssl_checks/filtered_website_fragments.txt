@@ -45,10 +45,12 @@ This is the default index page of your website.
 <title>apache</title
 <title>BIP - Błąd</title>
 <title>Błąd: Serwis tymczasowo niedostępny.</title>
+<title>brak strony do wyswietlenia</title>
 <title>Captcha</title>
 <title>Domain Default page</title>
 <title>|DOMAIN|</title>
 <title>Dummy site</title>
+<title>Error 404</title>
 <title>Error</title>
 <title>home.pl: Nr 1 w Polsce. Domeny, Hosting, Serwery WWW, Strony, eSklep, Office 365</title>
 <title>IIS Windows Server</title>
@@ -58,6 +60,7 @@ This is the default index page of your website.
 <title>Shared IP
 <title>Site Under Service</title>
 <title>Strona nie istnieje</title>
+<title>Strona nie istnieje / Page not found</title>
 <title>Strona utrzymywana w Chmurka.pl</title>
 <TITLE>strona w konstrukcji</TITLE>
 <title>Strona w przygotowaniu...</title>
