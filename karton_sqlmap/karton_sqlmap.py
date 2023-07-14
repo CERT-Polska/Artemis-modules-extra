@@ -41,7 +41,7 @@ class SQLmap(ArtemisBase):  # type: ignore
                     "python3",
                     "/sqlmap/sqlmap.py",
                     "--delay",
-                    str(Config.SECONDS_PER_REQUEST_FOR_ONE_IP),
+                    str(Config.Limits.SECONDS_PER_REQUEST),
                     "-u",
                     url,
                     "--crawl",
