@@ -12,9 +12,11 @@ Hello! Welcome to Synology Web Station!
 <html> is functioning normally
 <html><title>Hosting dedykowany zapewnie Hitme.pl</title>
 HTTP Error 404. The requested resource is not found.
+id="contact-frame" src="https://parking.premium.pl
 jest utrzymywana na serwerach
 Jeżeli chcesz zmienić tę stronę, wgraj własny plik index.html do katalogu private_html
 <META name="abstract" content="Cyber_Folks Lepsza szybkość stron i wsparcie bez porównania">
+//newkf.nazwa.pl/index
 Nginx is functioning normally
 Oops, an error occurred
 Page not exist. Contact
@@ -38,6 +40,7 @@ This account has been suspended
 This is a default webpage generated for
 This is a placeholder for the subdomain
 This is the default index page of your website.
+This page is under construction. Please try again in some time.
 <title> 404 Not Found
 <title>Apache2 Debian Default Page: It works</title>
 <title>Apache HTTP Server Test Page
@@ -55,6 +58,7 @@ This is the default index page of your website.
 <title>home.pl: Nr 1 w Polsce. Domeny, Hosting, Serwery WWW, Strony, eSklep, Office 365</title>
 <title>IIS Windows Server</title>
 <title>LOGONET Sp. z o.o. [C]</title>
+<title>Page not found!</title>
 <title>Page not found!</title>
 <title>Serwer WWW</title>
 <title>Shared IP
