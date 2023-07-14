@@ -16,7 +16,6 @@ id="contact-frame" src="https://parking.premium.pl
 jest utrzymywana na serwerach
 Jeżeli chcesz zmienić tę stronę, wgraj własny plik index.html do katalogu private_html
 <META name="abstract" content="Cyber_Folks Lepsza szybkość stron i wsparcie bez porównania">
-//newkf.nazwa.pl/index
 Nginx is functioning normally
 Oops, an error occurred
 Page not exist. Contact
