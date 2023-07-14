@@ -31,8 +31,8 @@ class SQLmap(ArtemisBase):  # type: ignore
         self, url: str, arguments: List[str], find_in_output: str, timeout_seconds: Optional[int] = None
     ) -> Optional[str]:
         def _run() -> Optional[str]:
-            if Config.CUSTOM_USER_AGENT:
-                additional_configuration = ["-A", Config.CUSTOM_USER_AGENT]
+            if Config.Miscellaneous.CUSTOM_USER_AGENT:
+                additional_configuration = ["-A", Config.Miscellaneous.CUSTOM_USER_AGENT]
             else:
                 additional_configuration = []
 
