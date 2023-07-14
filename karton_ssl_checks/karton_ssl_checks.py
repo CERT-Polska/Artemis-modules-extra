@@ -73,7 +73,7 @@ class SSLChecks(ArtemisBase):  # type: ignore
                     f"https://{domain}",
                 ],
                 capture_output=True,
-                timeout=Config.REQUEST_TIMEOUT_SECONDS,
+                timeout=Config.Limits.REQUEST_TIMEOUT_SECONDS,
             )
             stderr = process_result.stderr.decode("ascii", errors="ignore")
         except subprocess.TimeoutExpired as e:
@@ -94,13 +94,13 @@ class SSLChecks(ArtemisBase):  # type: ignore
                     original_url,
                     verify=False,
                     stream=True,
-                    timeout=Config.REQUEST_TIMEOUT_SECONDS,
+                    timeout=Config.Limits.REQUEST_TIMEOUT_SECONDS,
                     headers=http_requests.HEADERS,
                 )
             )
             result["response_status_code"] = response.status_code
             result["response_content_prefix"] = response.content.decode("utf-8", errors="ignore")[
-                : Config.CONTENT_PREFIX_SIZE
+                : Config.Miscellaneous.CONTENT_PREFIX_SIZE
             ]
 
             redirect_url = response.url
