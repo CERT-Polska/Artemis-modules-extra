@@ -59,8 +59,9 @@ This is the default index page of your website.
 <title>Serwer WWW</title>
 <title>Shared IP
 <title>Site Under Service</title>
-<title>Strona nie istnieje</title>
+<title>Strona jest w trakcie przygotowywania...</title>
 <title>Strona nie istnieje / Page not found</title>
+<title>Strona nie istnieje</title>
 <title>Strona utrzymywana w Chmurka.pl</title>
 <TITLE>strona w konstrukcji</TITLE>
 <title>Strona w przygotowaniu...</title>
@@ -68,6 +69,7 @@ This is the default index page of your website.
 <title>Test Page for the Nginx HTTP Server
 <title>Web Server's Default Page</title>
 <title>Welcome to nginx!</title>
+<title>We're sorry: The requested URL could not be retrieved</title>
 <title>Wirtualne Data Center - AnyTime Cloud</title>
 <title>Witaj na serwerze
 <tr><td>Welcome to the home of
