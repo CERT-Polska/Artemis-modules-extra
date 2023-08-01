@@ -38,8 +38,7 @@ class SQLmap(ArtemisBase):  # type: ignore
 
             cmd = (
                 [
-                    "python3",
-                    "/sqlmap/sqlmap.py",
+                    "sqlmap",
                     "--delay",
                     str(Config.Limits.SECONDS_PER_REQUEST),
                     "-u",
