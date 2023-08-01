@@ -2,7 +2,8 @@ FROM certpl/artemis:latest
 
 RUN apk add git
 
-RUN bash -c "cd /; git clone https://github.com/sqlmapproject/sqlmap.git; cd sqlmap; git checkout 4357b0087d4152caba0bb04b702d9b119dfbc537"
+COPY karton_sqlmap/requirements.txt /requirements_sqlmap.txt
+RUN pip install -r /requirements.txt -r /requirements_sqlmap.txt
 
 WORKDIR /opt/
 

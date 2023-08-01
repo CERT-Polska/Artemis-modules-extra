@@ -4,3 +4,13 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+
+  - package-ecosystem: "pip"
+    directory: "karton_ssl_checks"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "pip"
+    directory: "karton_sqlmap"
+    schedule:
+      interval: "weekly"
