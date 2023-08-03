@@ -26,13 +26,14 @@ with open(str(Path(__file__).parents[0] / "filtered_website_fragments.txt"), "r"
     FILTERED_WEBSITE_FRAGMENTS = [line.strip() for line in f.readlines() if line]
 
 with open(str(Path(__file__).parents[0] / "filtered_website_fragments_waf_or_ratelimits.txt"), "r") as f:
-    # These fragments, if occur, mean that we shouldn't treat this website as having SSL problems.
+    # These fragments, if occur, mean that we shouldn't report SSL problems for this site.
     # For instance, if Cloudflare returned HTTP 200 with a message "Please wait while your request is being verified...",
-    # that tells us that we don't know what was the original site content - maybe something unimportant?
+    # that tells us that we don't know what was the original site content - maybe something unimportant
+    # that would get filtered by FILTERED_WEBSITE_FRAGMENTS?
     #
     # Therefore, to keep the number of false positives low, we don't report such sites.
     # **In case the decision changes, let's keep the list of WAF- or ratelimit-related matchers in a separate
-    # file.
+    # file.**
     FILTERED_WEBSITE_FRAGMENTS_WAF_OR_RATELIMITS = [line.strip() for line in f.readlines() if line]
 
 
