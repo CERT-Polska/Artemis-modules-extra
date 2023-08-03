@@ -25,12 +25,16 @@ logger = utils.build_logger(__name__)
 with open(str(Path(__file__).parents[0] / "filtered_website_fragments.txt"), "r") as f:
     FILTERED_WEBSITE_FRAGMENTS = [line.strip() for line in f.readlines() if line]
 
-with open(str(Path(__file__).parents[0] / "filtered_website_fragments_for_bad_redirect.txt"), "r") as f:
-    # These fragments, if occur, mean that we shouldn't treat this website as containing a bad redirect.
+with open(str(Path(__file__).parents[0] / "filtered_website_fragments_waf_or_ratelimits.txt"), "r") as f:
+    # These fragments, if occur, mean that we shouldn't report SSL problems for this site.
     # For instance, if Cloudflare returned HTTP 200 with a message "Please wait while your request is being verified...",
-    # that doesn't meant that the original website doesn't redirect to https:// - that means only, that our request
-    # got intercepted via Cloudflare.
-    FILTERED_WEBSITE_FRAGMENTS_FOR_BAD_REDIRECT = [line.strip() for line in f.readlines() if line]
+    # that tells us that we don't know what was the original site content - maybe something unimportant
+    # that would get filtered by FILTERED_WEBSITE_FRAGMENTS?
+    #
+    # Therefore, to keep the number of false positives low, we don't report such sites.
+    # **In case the decision changes, let's keep the list of WAF- or ratelimit-related matchers in a separate
+    # file.**
+    FILTERED_WEBSITE_FRAGMENTS_WAF_OR_RATELIMITS = [line.strip() for line in f.readlines() if line]
 
 
 class SSLChecksReporter(Reporter):  # type: ignore
@@ -81,8 +85,15 @@ class SSLChecksReporter(Reporter):  # type: ignore
                 # This one is important - sometimes we reported false positives after getting a 5xx error (and thus no redirect)
                 or (response_status_code >= 500 and response_status_code <= 599)
             )
-            filter_by_content = "<html" not in response_content_prefix.lower() or any(
-                [fragment in response_content_prefix for fragment in FILTERED_WEBSITE_FRAGMENTS]
+            filter_by_content = (
+                "<html" not in response_content_prefix.lower()
+                or any(
+                    [
+                        fragment in response_content_prefix
+                        for fragment in FILTERED_WEBSITE_FRAGMENTS + FILTERED_WEBSITE_FRAGMENTS_WAF_OR_RATELIMITS
+                    ]
+                )
+                or response_content_prefix.strip() == ""
             )
             if filter_by_status_code or filter_by_content:
                 # Not something actually usable, won't be reported
@@ -108,28 +119,25 @@ class SSLChecksReporter(Reporter):  # type: ignore
             )
         if result.get("bad_redirect", False):
             response_content_prefix = result.get("response_content_prefix", "")
-            if not any(
-                [fragment in response_content_prefix for fragment in FILTERED_WEBSITE_FRAGMENTS_FOR_BAD_REDIRECT]
-            ):
-                # If there is some kind of HTML redirect, let's better not report that, as it might be
-                # a proper SSL redirect - here, we want to decrease the number of false positives at the
-                # cost of true positives.
-                try:
-                    soup = BeautifulSoup(response_content_prefix.lower(), "html.parser")
-                except Exception:  # parsing errors
-                    logger.exception("Unable to parse HTML from %s", payload["domain"])
-                    soup = None
+            # If there is some kind of HTML redirect, let's better not report that, as it might be
+            # a proper SSL redirect - here, we want to decrease the number of false positives at the
+            # cost of true positives.
+            try:
+                soup = BeautifulSoup(response_content_prefix.lower(), "html.parser")
+            except Exception:  # parsing errors
+                logger.exception("Unable to parse HTML from %s", payload["domain"])
+                soup = None
 
-                if not soup or not soup.find_all("meta", attrs={"http-equiv": "refresh"}):
-                    reports.append(
-                        Report(
-                            top_level_target=get_top_level_target(task_result),
-                            target=f'http://{payload["domain"]}:80/',
-                            report_type=SSLChecksReporter.NO_HTTPS_REDIRECT,
-                            additional_data={},
-                            timestamp=task_result["created_at"],
-                        )
+            if not soup or not soup.find_all("meta", attrs={"http-equiv": "refresh"}):
+                reports.append(
+                    Report(
+                        top_level_target=get_top_level_target(task_result),
+                        target=f'http://{payload["domain"]}:80/',
+                        report_type=SSLChecksReporter.NO_HTTPS_REDIRECT,
+                        additional_data={},
+                        timestamp=task_result["created_at"],
                     )
+                )
 
         if result.get("cn_different_from_hostname", False):
             # If the domain starts with www. but the version without www. is in the names list,
