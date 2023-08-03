@@ -85,9 +85,16 @@ class SSLChecksReporter(Reporter):  # type: ignore
                 # This one is important - sometimes we reported false positives after getting a 5xx error (and thus no redirect)
                 or (response_status_code >= 500 and response_status_code <= 599)
             )
-            filter_by_content = "<html" not in response_content_prefix.lower() or any(
-                [fragment in response_content_prefix for fragment in FILTERED_WEBSITE_FRAGMENTS + FILTERED_WEBSITE_FRAGMENTS_WAF_OR_RATELIMITS]
-            ) or response_content_prefix.strip() == ""
+            filter_by_content = (
+                "<html" not in response_content_prefix.lower()
+                or any(
+                    [
+                        fragment in response_content_prefix
+                        for fragment in FILTERED_WEBSITE_FRAGMENTS + FILTERED_WEBSITE_FRAGMENTS_WAF_OR_RATELIMITS
+                    ]
+                )
+                or response_content_prefix.strip() == ""
+            )
             if filter_by_status_code or filter_by_content:
                 # Not something actually usable, won't be reported
                 return []
