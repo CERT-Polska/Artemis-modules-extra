@@ -31,3 +31,4 @@ msgid ""
 "Please contact us if more information is needed (e.g. a proof of concept "
 "that demonstrates the vulnerability)."
 msgstr ""
+

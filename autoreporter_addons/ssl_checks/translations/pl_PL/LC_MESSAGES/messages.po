@@ -60,3 +60,4 @@ msgstr ""
 "Rekomendujemy przekierowanie użytkownika do adresu zaczynającego się od "
 "https://, tak, żeby komunikacja użytkowników z serwisem (która może "
 "zawierać np. dane osobowe) była szyfrowana."
+

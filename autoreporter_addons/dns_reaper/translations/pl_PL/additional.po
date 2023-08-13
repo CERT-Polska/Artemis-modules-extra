@@ -18,6 +18,13 @@ msgstr ""
 "jest wolna. Atakujący może zarejestrować taką domenę w serwisie GetResponse aby umieścić tam swoje treści."
 
 msgid ""
+" The defined domain has CNAME records configured for getresponse but a web request shows the domain is "
+"unclaimed. An attacker can register this domain on getresponse and serve their own web content."
+msgstr ""
+"Domena ma skonfigurowany rekord CNAME skierowany do narzędzia GetResponse, ale domena docelowa "
+"jest wolna. Atakujący może zarejestrować taką domenę w serwisie GetResponse aby umieścić tam swoje treści."
+
+msgid ""
 " The defined domain has CNAME records configured for Netlify and but a web request shows the domain "
 "is unclaimed. An attacker can register this domain on Netlify and serve their own web content."
 msgstr ""
