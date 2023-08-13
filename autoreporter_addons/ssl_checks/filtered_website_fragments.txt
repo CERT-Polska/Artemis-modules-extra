@@ -3,6 +3,7 @@ Account Suspended
 <div class="info underconstruction">
 <FRAME NORESIZE SRC="http://default.kei.pl/startowa">
 <FRAME NORESIZE SRC="http://www.kei.pl/landing/domyslna">
+<h1>Tu 2click20.trol.pl</h1>
 Hello! Welcome to Synology Web Station!
 <html>Apache is functioning normally</html>
 <html><body></body></html>
@@ -55,6 +56,7 @@ This page is under construction. Please try again in some time.
 <title>Error 404</title>
 <title>Error</title>
 <title>home.pl: Nr 1 w Polsce. Domeny, Hosting, Serwery WWW, Strony, eSklep, Office 365</title>
+<title>HTTP ERROR 404</title>
 <title>IIS Windows Server</title>
 <title>LOGONET Sp. z o.o. [C]</title>
 <title>Page not found!</title>
