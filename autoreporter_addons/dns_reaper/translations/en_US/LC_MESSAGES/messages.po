@@ -8,4 +8,3 @@ msgid ""
 "change it. Subdomain takeover allows an attacker to put any content on "
 "the website, including malware."
 msgstr ""
-
