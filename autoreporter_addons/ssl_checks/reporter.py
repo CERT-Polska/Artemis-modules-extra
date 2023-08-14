@@ -70,7 +70,12 @@ class SSLChecksReporter(Reporter):  # type: ignore
                 # which is actually used, and therefore don't report subdomains.
                 return []
         except Exception:
-            logger.warning(f"Unable to check whether domain {domain} has identical content to parent domain")
+            logger.warning(
+                f"Unable to check whether domain {domain} has similar content to parent domain. Artemis SSL check "
+                "module tries to reduce the number of false positives by skipping reports where domain has similar "
+                "content to parent domain, as there are cases where e.g. mail.example.com serves the same content "
+                "as example.com. If this fails, two similar reports may get sent."
+            )
 
         if "response_status_code" in result and "response_content_prefix" in result:
             response_status_code = result["response_status_code"]
