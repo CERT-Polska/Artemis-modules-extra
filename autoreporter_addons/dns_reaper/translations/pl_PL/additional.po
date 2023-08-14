@@ -62,7 +62,7 @@ msgstr ""
 "treści."
 
 msgid ""
-"The defined domain has CNAME records configured for Microsoft Azure but these records do not resolve. "
+" The defined domain has CNAME records configured for Microsoft Azure but these records do not resolve. "
 "An attacker can register this domain on Microsoft Azure and serve their own web content."
 msgstr ""
 "Domena ma skonfigurowane rekordy CNAME kierujące do serwisu Microsoft Azure, ale domena docelowa nie "
