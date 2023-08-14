@@ -22,3 +22,11 @@ class ExtraModulesConfig:
         ),
         cast=decouple.Csv(str),
     )
+
+    # The minimum response length to report SSL problems. This is to skip reporting e.g. "<html>\n</html>" or other
+    # non-interesting sites.
+    SSL_CHECKS_MIN_RESPONSE_LENGTH = decouple.config(
+        "SSL_CHECKS_MIN_RESPONSE_LENGTH",
+        cast=int,
+        default=50,
+    )

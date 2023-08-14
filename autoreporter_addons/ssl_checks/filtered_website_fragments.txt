@@ -26,6 +26,7 @@ Pod tym adresem nie ma żadnej strony.
 Po zalogowaniu będziesz mógł zarządzać swoim serwerem poprzez intuicyjny, prosty w obsłudze i przyjazny interfejs
 Przerwa techniczna
 <p>Ta domena utrzymywana jest na serwerach</p>
+<script src="https://static.nazwa.pl/rotator/blackdown/banner_script.js"></script>
 Serwis o podane nazwie nie istnieje
 Serwis w trakcie prac rozwojowych
 Something amazing will be constructed here...
@@ -70,6 +71,7 @@ This page is under construction. Please try again in some time.
 <TITLE>strona w konstrukcji</TITLE>
 <title>Strona w przygotowaniu...</title>
 <title>Strona www nie została zamieszczona na serwerze</title>
+<title>Tanie domeny, Tani hosting, Helpdesk, Pomoc zdalna - NetStrefa.pl</title>
 <title>Test Page for the Nginx HTTP Server
 <title>Web Server's Default Page</title>
 <title>Welcome to nginx!</title>
