@@ -93,7 +93,7 @@ class SSLChecksReporter(Reporter):  # type: ignore
                         for fragment in FILTERED_WEBSITE_FRAGMENTS + FILTERED_WEBSITE_FRAGMENTS_WAF_OR_RATELIMITS
                     ]
                 )
-                or response_content_prefix.strip() == ""
+                or len(response_content_prefix.strip()) <= ExtraModulesConfig.SSL_CHECKS_MIN_RESPONSE_LENGTH
             )
             if filter_by_status_code or filter_by_content:
                 # Not something actually usable, won't be reported
