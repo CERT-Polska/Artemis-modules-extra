@@ -24,6 +24,7 @@ Page not exist. Contact
 Pliki strony www proszę umieścić w katalogu
 Pod tym adresem nie ma żadnej strony.
 Po zalogowaniu będziesz mógł zarządzać swoim serwerem poprzez intuicyjny, prosty w obsłudze i przyjazny interfejs
+Przepraszamy - strona w produkcji !
 Przerwa techniczna
 <p>Ta domena utrzymywana jest na serwerach</p>
 <script src="https://static.nazwa.pl/rotator/blackdown/banner_script.js"></script>
@@ -51,6 +52,7 @@ This page is under construction. Please try again in some time.
 <title>Błąd: Serwis tymczasowo niedostępny.</title>
 <title>brak strony do wyswietlenia</title>
 <title>Captcha</title>
+<title>Coming soon</title>
 <title>Domain Default page</title>
 <title>|DOMAIN|</title>
 <title>Dummy site</title>
