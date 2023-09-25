@@ -87,3 +87,4 @@ Welcome to your website!
 Witryna, którą chcesz wyświetlić, nie ma obecnie strony domyślnej. Może być uaktualniana i konfigurowana.
 Wystąpił błąd
 You are accessing the server from an untrusted domain.
+You've successfully started the Nginx Proxy Manager.
