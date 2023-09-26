@@ -53,6 +53,7 @@ This page is under construction. Please try again in some time.
 <title>brak strony do wyswietlenia</title>
 <title>Captcha</title>
 <title>Coming soon</title>
+<title>dhosting.pl - pod tym adresem nie znajduje się żaden serwis WWW</title>
 <title>Domain Default page</title>
 <title>|DOMAIN|</title>
 <title>Dummy site</title>
@@ -80,6 +81,7 @@ This page is under construction. Please try again in some time.
 <title>We're sorry: The requested URL could not be retrieved</title>
 <title>Wirtualne Data Center - AnyTime Cloud</title>
 <title>Witaj na serwerze
+<tr><td>To jest lokalizacja subdomeny <b>
 <tr><td>Welcome to the home of
 .vobacom.info</title>
 v.tld.pl</HTML>
@@ -87,3 +89,4 @@ Welcome to your website!
 Witryna, którą chcesz wyświetlić, nie ma obecnie strony domyślnej. Może być uaktualniana i konfigurowana.
 Wystąpił błąd
 You are accessing the server from an untrusted domain.
+You've successfully started the Nginx Proxy Manager.
