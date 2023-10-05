@@ -22,15 +22,18 @@ Oops, an error occurred
 Page not exist. Contact
 <p class="subtitle">Rejestrator domen i Dostawca profesjonalnych rozwiązań hostingowych</p>
 Pliki strony www proszę umieścić w katalogu
+<p>No Web page here</p>
 Pod tym adresem nie ma żadnej strony.
 Po zalogowaniu będziesz mógł zarządzać swoim serwerem poprzez intuicyjny, prosty w obsłudze i przyjazny interfejs
 Przepraszamy - strona w produkcji !
 Przerwa techniczna
+<p><span class="Style1">mobylee web site not found!<br>
 <p>Ta domena utrzymywana jest na serwerach</p>
 <script src="https://static.nazwa.pl/rotator/blackdown/banner_script.js"></script>
 Serwis o podane nazwie nie istnieje
 Serwis w trakcie prac rozwojowych
 Something amazing will be constructed here...
+<span class="errorHeader">Wewnętrzny błąd serwera</span>
 Strona dodana prawidłowo
 Strona w budowie
 Strona w przygotowaniu
@@ -45,6 +48,7 @@ This is the default index page of your website.
 This page is under construction. Please try again in some time.
 <title> 404 Not Found
 <title>Apache2 Debian Default Page: It works</title>
+<title>Apache2 Ubuntu Default Page: It works</title>
 <title>Apache HTTP Server Test Page
 <title>Apache HTTP Server Test Page powered by Linux</title>
 <title>apache</title
@@ -63,6 +67,8 @@ This page is under construction. Please try again in some time.
 <title>HTTP ERROR 404</title>
 <title>IIS Windows Server</title>
 <title>LOGONET Sp. z o.o. [C]</title>
+<title>Microsoft Internet Information Services 8</title>
+<TITLE>Not Found</TITLE>
 <title>Page not found!</title>
 <title>Serwer WWW</title>
 <title>Shared IP
@@ -75,6 +81,7 @@ This page is under construction. Please try again in some time.
 <title>Strona w przygotowaniu...</title>
 <title>Strona www nie została zamieszczona na serwerze</title>
 <title>Tanie domeny, Tani hosting, Helpdesk, Pomoc zdalna - NetStrefa.pl</title>
+<title>Test Page for the Apache Web Server on Red Hat Linux, customised</title>
 <title>Test Page for the Nginx HTTP Server
 <title>Web Server's Default Page</title>
 <title>Welcome to nginx!</title>
