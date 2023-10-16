@@ -24,7 +24,7 @@ msgstr ""
 "wolna. Atakujący może zarejestrować taką domenę w serwisie Netlify aby umieścić tam swoje treści."
 
 msgid ""
-" The defined domain has A/AAAA records configured for Github Pages and but a web request shows the "
+" The defined domain has CNAME or A/AAAA records configured for Github Pages but a web request shows the "
 "domain is unclaimed. An attacker can register this domain on Github Pages and serve their own web content."
 msgstr ""
 "Domena ma skonfigurowane rekordy A/AAAA kierujące do serwisu GitHub Pages, ale domena docelowa jest "
