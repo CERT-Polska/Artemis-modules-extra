@@ -4,6 +4,7 @@ Account Suspended
 <FRAME NORESIZE SRC="http://default.kei.pl/startowa">
 <FRAME NORESIZE SRC="http://www.kei.pl/landing/domyslna">
 <h1>Tu 2click20.trol.pl</h1>
+<head><title>Error Page - Ta strona nie istnieje!</title></head>
 Hello! Welcome to Synology Web Station!
 <html>Apache is functioning normally</html>
 <html><body></body></html>
