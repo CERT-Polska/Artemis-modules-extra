@@ -183,7 +183,7 @@ class SQLmap(ArtemisBase):  # type: ignore
             extension = ""
             path_segments = url_parsed.path[1:].split(separator)
 
-        # Heuristic: if the path ends with .php, it's most probably not a clean URL.
+        # Heuristic: if the path ends with .php, it's most probably not a clean URL but a file name.
         if extension == ".php":
             return []
 
