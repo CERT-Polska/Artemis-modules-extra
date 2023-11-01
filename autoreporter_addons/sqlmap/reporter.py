@@ -18,6 +18,10 @@ class SQLmapReporter(Reporter):  # type: ignore
         if task_result["headers"]["receiver"] != "sqlmap":
             return []
 
+        # Migrate from old format
+        if isinstance(task_result["result"], dict):
+            task_result["result"] = [task_result["result"]]
+
         if not isinstance(task_result["result"], list):
             return []
 
