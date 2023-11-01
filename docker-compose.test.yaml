@@ -29,8 +29,6 @@ services:
 
   test-service-with-sql-injection-mysql-clean-urls:
     build: test/images/php-mysql
-    ports:
-      - 8000:80
     volumes:
       - ./test/data/sql_injection_mysql_clean_urls/:/var/www/html/
 

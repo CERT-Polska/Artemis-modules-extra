@@ -148,11 +148,9 @@ class SQLmap(ArtemisBase):  # type: ignore
             new_query = copy.copy(query)
             # this doesn't support multiple parameters with the same name, but nobody uses that
             new_query[key] = [new_query[key][0] + "*"]
-            url_parsed._replace(query=urllib.parse.urlencode(new_query))
-            results.append(urllib.parse.urlunparse(url_parsed))
+            results.append(urllib.parse.urlunparse(url_parsed._replace(query=urllib.parse.urlencode(new_query))))
             new_query[key] = ["*"]
-            url_parsed._replace(query=urllib.parse.urlencode(new_query))
-            results.append(urllib.parse.urlunparse(url_parsed))
+            results.append(urllib.parse.urlunparse(url_parsed._replace(query=urllib.parse.urlencode(new_query))))
         return results
 
     @staticmethod
@@ -177,17 +175,15 @@ class SQLmap(ArtemisBase):  # type: ignore
         for i, path_segment in enumerate(path_segments):
             new_path_segments = copy.copy(path_segments)
             new_path_segments[i] += "*"
-            url_parsed._replace(path=separator.join(new_path_segments) + extension)
-            results.append(urllib.parse.urlunparse(url_parsed))
+            results.append(urllib.parse.urlunparse(url_parsed._replace(path=separator.join(new_path_segments) + extension)))
             new_path_segments[i] = "*"
-            url_parsed._replace(path=separator.join(new_path_segments) + extension)
-            results.append(urllib.parse.urlunparse(url_parsed))
+            results.append(urllib.parse.urlunparse(url_parsed._replace(path=separator.join(new_path_segments) + extension)))
 
         return results
 
     @staticmethod
     def _expand_urls_for_scanning(url: str) -> List[str]:
-        return SQLmap._expand_query_parameters_for_scanning(url) + SQLmap._expand_path_segments_for_scanning(url)
+        return sorted(set(SQLmap._expand_query_parameters_for_scanning(url) + SQLmap._expand_path_segments_for_scanning(url)))
 
     def run(self, current_task: Task) -> None:
         url = current_task.get_payload("url")
