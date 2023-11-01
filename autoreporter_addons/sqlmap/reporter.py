@@ -18,40 +18,37 @@ class SQLmapReporter(Reporter):  # type: ignore
         if task_result["headers"]["receiver"] != "sqlmap":
             return []
 
-        if not isinstance(task_result["result"], dict):
+        if not isinstance(task_result["result"], list):
             return []
 
-        if "log" not in task_result["result"]:
-            return []
+        result = []
+        for found_injection in task_result["result"]:
+            if not isinstance(found_injection, dict):
+                continue
 
-        parameter = None
+            if "log" not in found_injection:
+                continue
 
-        for item in task_result["result"]["log"].split("\n"):
-            if ":" in item:
-                name, value = item.split(":", 1)
-                if name == "Parameter":
-                    parameter = value.strip()
+            target = found_injection["target"].split(" ")[0]
+            target = add_port_to_url(target)
 
-        target = task_result["result"]["target"].split(" ")[0]
-        target = add_port_to_url(target)
+            user = found_injection.get("extracted_user", None)
+            if user and "@" in user:  # sometimes the returned user has the form user@host, let's strip host
+                user = user.split("@")[0]
 
-        user = task_result["result"].get("user", None)
-        if user and "@" in user:  # sometimes the returned user has the form user@host, let's strip host
-            user = user.split("@")[0]
-
-        return [
-            Report(
-                top_level_target=get_top_level_target(task_result),
-                target=target,
-                report_type=SQLmapReporter.SQL_INJECTION,
-                additional_data={
-                    "parameter": parameter,
-                    "version": task_result["result"].get("version", None),
-                    "user": user,
-                },
-                timestamp=task_result["created_at"],
+            result.append(
+                Report(
+                    top_level_target=get_top_level_target(task_result),
+                    target=target,
+                    report_type=SQLmapReporter.SQL_INJECTION,
+                    additional_data={
+                        "version": found_injection.get("extracted_version", None),
+                        "user": user,
+                    },
+                    timestamp=task_result["created_at"],
+                )
             )
-        ]
+        return result
 
     @staticmethod
     def get_email_template_fragments() -> List[ReportEmailTemplateFragment]:
@@ -69,7 +66,6 @@ class SQLmapReporter(Reporter):  # type: ignore
                 {
                     "type": report.report_type,
                     "target": get_url_normal_form(report.target),
-                    "description": report.additional_data["parameter"],
                 }
             )
         }

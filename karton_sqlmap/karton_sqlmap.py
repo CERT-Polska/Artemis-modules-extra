@@ -145,8 +145,7 @@ class SQLmap(ArtemisBase):  # type: ignore
     def _expand_query_parameters_for_scanning(url: str) -> List[str]:
         url_parsed = urllib.parse.urlparse(url)
         query = {
-            key: value[0]
-            for key, value in urllib.parse.parse_qs(url_parsed.query, keep_blank_values=True).items()
+            key: value[0] for key, value in urllib.parse.parse_qs(url_parsed.query, keep_blank_values=True).items()
         }
 
         results = []
@@ -255,7 +254,9 @@ class SQLmap(ArtemisBase):  # type: ignore
             status = TaskStatus.OK
             status_reason = None
 
-        self.db.save_task_result(task=current_task, status=status, status_reason=status_reason, data=results_filtered_as_dict)
+        self.db.save_task_result(
+            task=current_task, status=status, status_reason=status_reason, data=results_filtered_as_dict
+        )
 
 
 if __name__ == "__main__":
