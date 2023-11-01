@@ -144,6 +144,7 @@ class SQLmap(ArtemisBase):  # type: ignore
     @staticmethod
     def _expand_query_parameters_for_scanning(url: str) -> List[str]:
         url_parsed = urllib.parse.urlparse(url)
+        # let's keep only the first value of a parameter
         query = {
             key: value[0] for key, value in urllib.parse.parse_qs(url_parsed.query, keep_blank_values=True).items()
         }
@@ -151,7 +152,6 @@ class SQLmap(ArtemisBase):  # type: ignore
         results = []
         for key in query:
             new_query = copy.copy(query)
-            # this doesn't support multiple parameters with the same name, but nobody uses that
             token = "__sqlmap_injection_point__"
             for item in [new_query[key] + token, token]:
                 new_query[key] = item
