@@ -17,6 +17,8 @@ from artemis.module_base import ArtemisBase
 from bs4 import BeautifulSoup
 from karton.core import Task
 
+from extra_modules_config import ExtraModulesConfig
+
 OUTPUT_PATH = "/root/.local/share/sqlmap/output"
 SQLI_ADDITIONAL_DATA_TIMEOUT = 600
 
@@ -142,15 +144,25 @@ class SQLmap(ArtemisBase):  # type: ignore
     @staticmethod
     def _expand_query_parameters_for_scanning(url: str) -> List[str]:
         url_parsed = urllib.parse.urlparse(url)
-        query = urllib.parse.parse_qs(url_parsed.query, keep_blank_values=True)
+        query = {
+            key: value[0]
+            for key, value in urllib.parse.parse_qs(url_parsed.query, keep_blank_values=True).items()
+        }
+
         results = []
         for key in query:
             new_query = copy.copy(query)
             # this doesn't support multiple parameters with the same name, but nobody uses that
-            new_query[key] = [new_query[key][0] + "*"]
-            results.append(urllib.parse.urlunparse(url_parsed._replace(query=urllib.parse.urlencode(new_query))))
-            new_query[key] = ["*"]
-            results.append(urllib.parse.urlunparse(url_parsed._replace(query=urllib.parse.urlencode(new_query))))
+            token = "__sqlmap_injection_point__"
+            for item in [new_query[key] + token, token]:
+                new_query[key] = item
+
+                # We replace token with * after building the URL, so that the asterisk is passwd to sqlmap unescaped
+                results.append(
+                    urllib.parse.urlunparse(url_parsed._replace(query=urllib.parse.urlencode(new_query))).replace(
+                        token, "*"
+                    )
+                )
         return results
 
     @staticmethod
@@ -166,27 +178,39 @@ class SQLmap(ArtemisBase):  # type: ignore
 
         extension_re = r"\.[a-z]{3,4}$"
         if m := re.search(extension_re, url_parsed.path):
-            extension = str(m.groups(0))
+            extension = url_parsed.path[m.start() : m.end()]
+            path_segments = url_parsed.path[1 : -len(extension)].split(separator)
         else:
             extension = ""
+            path_segments = url_parsed.path[1:].split(separator)
+
+        # Heuristic: if the path ends with .php, it's most probably not a clean URL.
+        if extension == ".php":
+            return []
 
         results = []
-        path_segments = url_parsed.path[: -len(extension)].split(separator)
         for i, path_segment in enumerate(path_segments):
             new_path_segments = copy.copy(path_segments)
             new_path_segments[i] += "*"
-            results.append(urllib.parse.urlunparse(url_parsed._replace(path=separator.join(new_path_segments) + extension)))
+            results.append(
+                urllib.parse.urlunparse(url_parsed._replace(path="/" + separator.join(new_path_segments) + extension))
+            )
             new_path_segments[i] = "*"
-            results.append(urllib.parse.urlunparse(url_parsed._replace(path=separator.join(new_path_segments) + extension)))
+            results.append(
+                urllib.parse.urlunparse(url_parsed._replace(path="/" + separator.join(new_path_segments) + extension))
+            )
 
         return results
 
     @staticmethod
     def _expand_urls_for_scanning(url: str) -> List[str]:
-        return sorted(set(SQLmap._expand_query_parameters_for_scanning(url) + SQLmap._expand_path_segments_for_scanning(url)))
+        return sorted(
+            set(SQLmap._expand_query_parameters_for_scanning(url) + SQLmap._expand_path_segments_for_scanning(url))
+        )
 
     def run(self, current_task: Task) -> None:
         url = current_task.get_payload("url")
+        self.log.info("Requested to crawl and test SQL injection on %s", url)
         url_parsed = urllib.parse.urlparse(url)
 
         results = []
@@ -210,9 +234,19 @@ class SQLmap(ArtemisBase):  # type: ignore
                 new_url_parsed = urllib.parse.urlparse(new_url)
 
                 if url_parsed.netloc == new_url_parsed.netloc:
-                    links.append(SQLmap._expand_urls_for_scanning(new_url))
+                    expanded_urls = SQLmap._expand_urls_for_scanning(new_url)
+                    self.log.info("Found link %s, expanding to %s", new_url, expanded_urls)
+                    links.extend(expanded_urls)
+
+        random.shuffle(links)
+        links = links[: ExtraModulesConfig.SQLMAP_MAX_URLS_TO_CRAWL]
+
+        for link in links:
+            self.log.info("Checking %s", link)
+            results.append(self._run_on_single_url(link))
 
         results_filtered = [result for result in results if result]
+        results_filtered_as_dict = [dataclasses.asdict(result) for result in results_filtered]
 
         if results_filtered:
             status = TaskStatus.INTERESTING
@@ -221,7 +255,7 @@ class SQLmap(ArtemisBase):  # type: ignore
             status = TaskStatus.OK
             status_reason = None
 
-        self.db.save_task_result(task=current_task, status=status, status_reason=status_reason, data=results_filtered)
+        self.db.save_task_result(task=current_task, status=status, status_reason=status_reason, data=results_filtered_as_dict)
 
 
 if __name__ == "__main__":
