@@ -47,7 +47,7 @@ class SQLmap(ArtemisBase):  # type: ignore
                     "1",
                     "--batch",
                     "--technique",
-                    "B",
+                    "BU",
                     "--skip-waf",
                     "--skip-heuristics",
                     "-v",
