@@ -157,11 +157,11 @@ class SQLmap(ArtemisBase):  # type: ignore
                 new_query[key] = item
 
                 # We replace token with * after building the URL, so that the asterisk is passwd to sqlmap unescaped
-                results.append(
-                    urllib.parse.urlunparse(url_parsed._replace(query=urllib.parse.urlencode(new_query))).replace(
-                        token, "*"
-                    )
-                )
+                new_query_encoded = urllib.parse.urlencode(new_query)
+                new_url_parsed = url_parsed._replace(query=new_query_encoded)
+                new_url = urllib.parse.urlunparse(new_url_parsed)
+                new_url_with_injection_point = new_url.replace(token, "*")
+                results.append(new_url_with_injection_point)
         return results
 
     @staticmethod
