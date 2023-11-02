@@ -143,6 +143,17 @@ class SQLmap(ArtemisBase):  # type: ignore
 
     @staticmethod
     def _expand_query_parameters_for_scanning(url: str) -> List[str]:
+        """
+        This converts a URL to a list of URLs with query string injection points.
+        For example, 'https://example.com/?id=1&q=2' would be converted to a list of:
+
+        [
+            'https://example.com/?id=1&q=2*',
+            'https://example.com/?id=1&q=*',
+            'https://example.com/?id=1*&q=2',
+            'https://example.com/?id=*&q=2',
+        ]
+        """
         url_parsed = urllib.parse.urlparse(url)
         # let's keep only the first value of a parameter
         query = {
@@ -166,6 +177,17 @@ class SQLmap(ArtemisBase):  # type: ignore
 
     @staticmethod
     def _expand_path_segments_for_scanning(url: str) -> List[str]:
+        """
+        This converts a URL to a list of URLs with path injection points.
+        For example, 'https://example.com/path/file' would be converted to a list of:
+
+        [
+            'https://example.com/path/file*',
+            'https://example.com/path/*',
+            'https://example.com/path*/file',
+            'https://example.com/*/file',
+        ]
+        """
         url_parsed = urllib.parse.urlparse(url)
         num_commas = len([c for c in url_parsed.path[1:] if c == ","])
         num_slashes = len([c for c in url_parsed.path[1:] if c == "/"])
@@ -203,6 +225,21 @@ class SQLmap(ArtemisBase):  # type: ignore
 
     @staticmethod
     def _expand_urls_for_scanning(url: str) -> List[str]:
+        """
+        This converts a URL to a list of URLs with path and query string injection points.
+        For example, 'https://example.com/path/file.html?id=1&q=2' would be converted to a list of:
+
+        [
+                'https://example.com/path/file.html?id=1&q=2*',
+                'https://example.com/path/file.html?id=1&q=*',
+                'https://example.com/path/file.html?id=1*&q=2',
+                'https://example.com/path/file.html?id=*&q=2',
+                'https://example.com/path/file*.html?id=1&q=2',
+                'https://example.com/path/*.html?id=1&q=2',
+                'https://example.com/path*/file.html?id=1&q=2',
+                'https://example.com/*/file.html?id=1&q=2',
+        ]
+        """
         return sorted(
             set(SQLmap._expand_query_parameters_for_scanning(url) + SQLmap._expand_path_segments_for_scanning(url))
         )
