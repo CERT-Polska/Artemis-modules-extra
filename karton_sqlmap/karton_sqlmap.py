@@ -61,7 +61,7 @@ class SQLmap(ArtemisBase):  # type: ignore
                     url,
                     "--batch",
                     "--technique",
-                    "B",
+                    "BU",
                     "--skip-waf",
                     "--skip-heuristics",
                     "-v",
