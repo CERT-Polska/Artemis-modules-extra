@@ -199,7 +199,7 @@ class SQLmap(ArtemisBase):  # type: ignore
 
         extension_re = r"\.[a-z]{3,4}$"
         if m := re.search(extension_re, url_parsed.path):
-            extension = url_parsed.path[m.start() : m.end()]
+            extension = m.group(0)
             path_segments = url_parsed.path[1 : -len(extension)].split(separator)
         else:
             extension = ""
