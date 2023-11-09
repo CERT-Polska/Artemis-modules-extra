@@ -3,7 +3,7 @@ msgid "The following addresses contain an SQL injection vulnerability:"
 msgstr ""
 
 #: autoreporter_addons/sqlmap/template_sql_injection.jinja2:7
-msgid "The vulnerable parameter is marked with an asterisk."
+msgid "the vulnerable parameter is marked with an asterisk. "
 msgstr ""
 
 #: autoreporter_addons/sqlmap/template_sql_injection.jinja2:9
