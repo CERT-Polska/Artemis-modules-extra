@@ -309,9 +309,9 @@ class SQLmap(ArtemisBase):  # type: ignore
                 if result:
 
                     # We try to inject https://example.com/?id=4* (where '4' is taken from crawling)
-                    # but we report https://example.com/?id=* to avoid duplicates (e.g. when both
+                    # but we report https://example.com/?id=* to avoid duplicates (e.g. when
                     # https://example.com/?id=4*, https://example.com/?id=5*, and https://example.com/?id=*
-                    # is reported).
+                    # are reported).
                     result.target = url_with_injection_point
 
             if result:
