@@ -7,7 +7,7 @@ import re
 import shutil
 import subprocess
 import urllib
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 import timeout_decorator
 from artemis import http_requests
@@ -142,16 +142,17 @@ class SQLmap(ArtemisBase):  # type: ignore
         return None
 
     @staticmethod
-    def _expand_query_parameters_for_scanning(url: str) -> List[str]:
+    def _expand_query_parameters_for_scanning(url: str) -> List[Tuple[str, str]]:
         """
-        This converts a URL to a list of URLs with query string injection points.
+        This converts a URL to a list of pairs:
+            - URL with path injection point,
+            - original injection point value.
+
         For example, 'https://example.com/?id=1&q=2' would be converted to a list of:
 
         [
-            'https://example.com/?id=1&q=2*',
-            'https://example.com/?id=1&q=*',
-            'https://example.com/?id=1*&q=2',
-            'https://example.com/?id=*&q=2',
+            ('https://example.com/?id=1&q=*', '2'),
+            ('https://example.com/?id=*&q=2', '1'),
         ]
         """
         url_parsed = urllib.parse.urlparse(url)
@@ -164,28 +165,29 @@ class SQLmap(ArtemisBase):  # type: ignore
         for key in query:
             new_query = copy.copy(query)
             token = "__sqlmap_injection_point__"
-            for item in [new_query[key] + token, token]:
-                new_query[key] = item
+            original_value = new_query[key]
+            new_query[key] = token
 
-                # We replace token with * after building the URL, so that the asterisk is passwd to sqlmap unescaped
-                new_query_encoded = urllib.parse.urlencode(new_query)
-                new_url_parsed = url_parsed._replace(query=new_query_encoded)
-                new_url = urllib.parse.urlunparse(new_url_parsed)
-                new_url_with_injection_point = new_url.replace(token, "*")
-                results.append(new_url_with_injection_point)
+            # We replace token with * after building the URL, so that the asterisk is passwd to sqlmap unescaped
+            new_query_encoded = urllib.parse.urlencode(new_query)
+            new_url_parsed = url_parsed._replace(query=new_query_encoded)
+            new_url = urllib.parse.urlunparse(new_url_parsed)
+            new_url_with_injection_point = new_url.replace(token, "*")
+            results.append((new_url_with_injection_point, original_value))
         return results
 
     @staticmethod
-    def _expand_path_segments_for_scanning(url: str) -> List[str]:
+    def _expand_path_segments_for_scanning(url: str) -> List[Tuple[str, str]]:
         """
-        This converts a URL to a list of URLs with path injection points.
+        This converts a URL to a list of pairs:
+            - URL with path injection point,
+            - original injection point value.
+
         For example, 'https://example.com/path/file' would be converted to a list of:
 
         [
-            'https://example.com/path/file*',
-            'https://example.com/path/*',
-            'https://example.com/path*/file',
-            'https://example.com/*/file',
+            ('https://example.com/path/*', 'file'),
+            ('https://example.com/*/file', 'path'),
         ]
         """
         url_parsed = urllib.parse.urlparse(url)
@@ -212,32 +214,33 @@ class SQLmap(ArtemisBase):  # type: ignore
         results = []
         for i, path_segment in enumerate(path_segments):
             new_path_segments = copy.copy(path_segments)
-            new_path_segments[i] += "*"
-            results.append(
-                urllib.parse.urlunparse(url_parsed._replace(path="/" + separator.join(new_path_segments) + extension))
-            )
+            original_value = new_path_segments[i]
             new_path_segments[i] = "*"
             results.append(
-                urllib.parse.urlunparse(url_parsed._replace(path="/" + separator.join(new_path_segments) + extension))
+                (
+                    urllib.parse.urlunparse(
+                        url_parsed._replace(path="/" + separator.join(new_path_segments) + extension)
+                    ),
+                    original_value,
+                )
             )
 
         return results
 
     @staticmethod
-    def _expand_urls_for_scanning(url: str) -> List[str]:
+    def _expand_urls_for_scanning(url: str) -> List[Tuple[str, str]]:
         """
-        This converts a URL to a list of URLs with path and query string injection points.
+        This converts a URL to a list of pairs:
+            - URL with injection point,
+            - original injection point value.
+
         For example, 'https://example.com/path/file.html?id=1&q=2' would be converted to a list of:
 
         [
-                'https://example.com/path/file.html?id=1&q=2*',
-                'https://example.com/path/file.html?id=1&q=*',
-                'https://example.com/path/file.html?id=1*&q=2',
-                'https://example.com/path/file.html?id=*&q=2',
-                'https://example.com/path/file*.html?id=1&q=2',
-                'https://example.com/path/*.html?id=1&q=2',
-                'https://example.com/path*/file.html?id=1&q=2',
-                'https://example.com/*/file.html?id=1&q=2',
+            ('https://example.com/path/file.html?id=1&q=*', '2'),
+            ('https://example.com/path/file.html?id=*&q=2', '1'),
+            ('https://example.com/path/*.html?id=1&q=2', 'file'),
+            ('https://example.com/*/file.html?id=1&q=2', 'path'),
         ]
         """
         return sorted(
@@ -252,14 +255,17 @@ class SQLmap(ArtemisBase):  # type: ignore
         results = []
 
         # Let's just try injecting example.com/[injection point]
-        results.append(self._run_on_single_url(url + "*" if url.endswith("/") else url + "/*"))
+        root_injection_result = self._run_on_single_url(url + "*" if url.endswith("/") else url + "/*")
+        if root_injection_result:
+            results.append(root_injection_result)
 
         response = http_requests.get(url)
 
         # Unfortunately, crawling of clean URLs is not a feature that would get merged to sqlmap
         # (https://github.com/sqlmapproject/sqlmap/issues/5561) so it is done here.
         soup = BeautifulSoup(response.text)
-        links = []
+        urls_with_injection_points = set()
+        expanded_urls_with_example_values = []
         for tag in soup.find_all():
             new_url = None
             for attribute in ["src", "href"]:
@@ -270,30 +276,57 @@ class SQLmap(ArtemisBase):  # type: ignore
                 new_url_parsed = urllib.parse.urlparse(new_url)
 
                 if url_parsed.netloc == new_url_parsed.netloc:
-                    expanded_urls = SQLmap._expand_urls_for_scanning(new_url)
-                    self.log.info("Found link %s, expanding to %s", new_url, expanded_urls)
-                    links.extend(expanded_urls)
+                    expanded_url = SQLmap._expand_urls_for_scanning(new_url)
+                    self.log.info("Found link %s, expanding to %s", new_url, expanded_url)
 
-        random.shuffle(links)
-        links = links[: ExtraModulesConfig.SQLMAP_MAX_URLS_TO_CRAWL]
+                    for url_with_injection_point, example_value in expanded_url:
+                        if url_with_injection_point in urls_with_injection_points:
+                            continue
 
-        for link in links:
-            self.log.info("Checking %s", link)
-            results.append(self._run_on_single_url(link))
+                        urls_with_injection_points.add(url_with_injection_point)
+                        expanded_urls_with_example_values.append(
+                            (
+                                url_with_injection_point,
+                                example_value,
+                            )
+                        )
 
-        results_filtered = [result for result in results if result]
-        results_filtered_as_dict = [dataclasses.asdict(result) for result in results_filtered]
+        random.shuffle(expanded_urls_with_example_values)
+        expanded_urls_with_example_values = expanded_urls_with_example_values[
+            : ExtraModulesConfig.SQLMAP_MAX_URLS_TO_CRAWL
+        ]
 
-        if results_filtered:
+        for url_with_injection_point, example_value in expanded_urls_with_example_values:
+            self.log.info("Checking %s, example value=%s", url_with_injection_point, example_value)
+
+            result = self._run_on_single_url(url_with_injection_point)
+
+            if not result:
+                # If scanning failed when we tried to inject https://example.com/?id=*, we try
+                # to inject https://example.com/?id=4* (where '4' is taken from crawling)
+                result = self._run_on_single_url(url_with_injection_point.replace("*", example_value + "*"))
+
+                if result:
+
+                    # We try to inject https://example.com/?id=4* (where '4' is taken from crawling)
+                    # but we report https://example.com/?id=* to avoid duplicates (e.g. when both
+                    # https://example.com/?id=4*, https://example.com/?id=5*, and https://example.com/?id=*
+                    # is reported).
+                    result.target = url_with_injection_point
+
+            if result:
+                results.append(result)
+
+        results_as_dict = [dataclasses.asdict(result) for result in results]
+
+        if results:
             status = TaskStatus.INTERESTING
-            status_reason = ", ".join([result.message for result in results_filtered])
+            status_reason = ", ".join([result.message for result in results])
         else:
             status = TaskStatus.OK
             status_reason = None
 
-        self.db.save_task_result(
-            task=current_task, status=status, status_reason=status_reason, data=results_filtered_as_dict
-        )
+        self.db.save_task_result(task=current_task, status=status, status_reason=status_reason, data=results_as_dict)
 
 
 if __name__ == "__main__":
