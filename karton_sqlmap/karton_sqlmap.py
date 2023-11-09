@@ -168,7 +168,7 @@ class SQLmap(ArtemisBase):  # type: ignore
             original_value = new_query[key]
             new_query[key] = token
 
-            # We replace token with * after building the URL, so that the asterisk is passwd to sqlmap unescaped
+            # We replace token with * after building the URL, so that the asterisk is passed to sqlmap unescaped
             new_query_encoded = urllib.parse.urlencode(new_query)
             new_url_parsed = url_parsed._replace(query=new_query_encoded)
             new_url = urllib.parse.urlunparse(new_url_parsed)
