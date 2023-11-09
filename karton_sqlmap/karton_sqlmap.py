@@ -145,7 +145,7 @@ class SQLmap(ArtemisBase):  # type: ignore
     def _expand_query_parameters_for_scanning(url: str) -> List[Tuple[str, str]]:
         """
         This converts a URL to a list of pairs:
-            - URL with path injection point,
+            - URL with query string injection point,
             - original injection point value.
 
         For example, 'https://example.com/?id=1&q=2' would be converted to a list of:
