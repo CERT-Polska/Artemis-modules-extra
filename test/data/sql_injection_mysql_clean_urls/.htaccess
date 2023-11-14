@@ -1,0 +1,3 @@
+RewriteEngine on
+RewriteRule ^not_vuln/(.*)$ not_vuln.php?id=$1 [B,QSA]
+RewriteRule ^vuln/(.*) vuln.php?id=$1 [B,QSA]

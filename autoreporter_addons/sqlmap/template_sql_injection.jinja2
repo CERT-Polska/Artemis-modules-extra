@@ -4,10 +4,7 @@
             {% for report in data.reports %}
                 {% if report.report_type == "sql_injection" %}
                     <li>
-                        {{ report.target }}
-                        {% if report.additional_data.parameter %}
-                            - {% trans %}the vulnerable parameter is{% endtrans %} {{ report.additional_data.parameter }}.
-                        {% endif %}
+                        {{ report.target }} - {% trans %}the vulnerable parameter is marked with an asterisk. {% endtrans %}
                         {% if report.additional_data.version or report.additional_data.user %}
                             {% trans %}Using this vulnerability, we obtained{% endtrans %}:
                             <ul>

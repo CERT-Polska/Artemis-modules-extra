@@ -7,6 +7,7 @@ RUN pip install -r /requirements.txt -r /requirements_sqlmap.txt
 
 WORKDIR /opt/
 
+COPY extra_modules_config.py /opt/
 COPY karton_sqlmap/karton_sqlmap.py /opt/artemis/modules/
 COPY karton_sqlmap/test_sqlmap.py /opt/
 COPY test /opt/test

@@ -27,6 +27,16 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
 
+  test-service-with-sql-injection-mysql-clean-urls:
+    build: test/images/php-mysql
+    volumes:
+      - ./test/data/sql_injection_mysql_clean_urls/:/var/www/html/
+
+  test-service-with-sql-injection-mysql-clean-urls-db:
+    image: mysql:5.6
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+
   test-service-with-sql-injection-postgres:
     build: test/images/php-postgres
     volumes:
