@@ -68,6 +68,7 @@ This page is under construction. Please try again in some time.
 <title>HTTP ERROR 404</title>
 <title>IIS Windows Server</title>
 <title>LOGONET Sp. z o.o. [C]</title>
+<title>LOGONET Sp. z o.o. [V]</title>
 <title>Microsoft Internet Information Services 8</title>
 <TITLE>Not Found</TITLE>
 <title>Page not found!</title>
