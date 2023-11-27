@@ -56,7 +56,7 @@ class SQLmap(ArtemisBase):  # type: ignore
                 [
                     "sqlmap",
                     "--delay",
-                    str(Config.Limits.SECONDS_PER_REQUEST),
+                    str(1.0 / Config.Limits.REQUESTS_PER_SECOND),
                     "-u",
                     url,
                     "--batch",
