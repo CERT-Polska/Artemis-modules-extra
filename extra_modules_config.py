@@ -2,6 +2,10 @@ import decouple
 
 
 class ExtraModulesConfig:
+    # This is the maximum number of correct certificate domain names to show when we show the
+    # "The following addresses return SSL/TLS certificates for different domains" message.
+    MAX_CERTIFICATE_NAMES_TO_SHOW = decouple.config("MAX_CERTIFICATE_NAMES_TO_SHOW", default=10, cast=int)
+
     # Subdomains where the SSL configuration shouldn't be checked.
     SUBDOMAINS_TO_SKIP_SSL_CHECKS = decouple.config(
         "SUBDOMAINS_TO_SKIP_SSL_CHECKS",
