@@ -148,7 +148,11 @@ class SSLChecksReporter(Reporter):  # type: ignore
             # If the domain starts with www. but the version without www. is in the names list,
             # let's assume just the version without www. is advertised and used by the users.
             if not (payload["domain"].startswith("www.") and payload["domain"][4:] in result["names"]):
-                names_string = ", ".join(sorted(set(result["names"])))
+                names_list = sorted(set(result["names"]))
+                if len(names_list) > ExtraModulesConfig.MAX_CERTIFICATE_NAMES_TO_SHOW:
+                    names_string = ", ".join(names_list[: ExtraModulesConfig.MAX_CERTIFICATE_NAMES_TO_SHOW]) + "..."
+                else:
+                    names_string = ", ".join(names_list)
 
                 reports.append(
                     Report(
