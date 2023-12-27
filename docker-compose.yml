@@ -47,3 +47,4 @@ services:
       - ./Artemis-modules-extra/autoreporter_addons/ssl_checks/:/opt/artemis/reporting/modules/ssl_checks/
       - ./Artemis-modules-extra/autoreporter_addons/sqlmap/:/opt/artemis/reporting/modules/sqlmap/
       - ./Artemis-modules-extra/autoreporter_addons/dns_reaper/:/opt/artemis/reporting/modules/dns_reaper/
+      - ./Artemis-modules-extra/autoreporter_addons/humble/:/opt/artemis/reporting/modules/humble/
