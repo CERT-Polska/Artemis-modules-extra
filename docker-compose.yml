@@ -31,6 +31,22 @@ services:
     restart: always
     command: "python3 -m artemis.modules.karton_ssl_checks"
 
+  karton_detectem:
+    build:
+      context: Artemis-modules-extra
+      dockerfile: karton_detectem/Dockerfile
+    volumes: ["./docker/karton.ini:/etc/karton/karton.ini", "${DOCKER_COMPOSE_ADDITIONAL_SHARED_DIRECTORY:-./shared}:/shared/"]
+    depends_on: [karton-logger, redis, detectem_splash]
+    environment:
+      - SETUP_SPLASH=False
+      - SPLASH_URL=http://detectem_splash:8050
+    env_file: .env
+    restart: always
+    command: "python3 -m artemis.modules.karton_detectem"
+
+  detectem_splash:
+    image: scrapinghub/splash:3.0
+
   autoreporter:
     volumes:
       - ./Artemis-modules-extra/extra_modules_config.py:/opt/extra_modules_config.py
