@@ -69,7 +69,7 @@ class Humble(ArtemisBase):  # type: ignore
                 "python3",
                 "humble.py",
                 "-u",
-                domain,
+                "https://" + domain,
                 "-b",
                 "-o",
                 "json",
