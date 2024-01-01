@@ -2,6 +2,7 @@
 import datetime
 import subprocess
 import urllib.parse
+from difflib import SequenceMatcher
 from typing import Any, Dict, List
 
 import requests
@@ -48,6 +49,28 @@ class SSLChecks(ArtemisBase):  # type: ignore
         if domain_parts[0] in ExtraModulesConfig.SUBDOMAINS_TO_SKIP_SSL_CHECKS:
             self.db.save_task_result(task=current_task, status=TaskStatus.OK)
             return
+
+        try:
+            response = http_requests.get(f"https://{domain}")
+            parent_domain = ".".join(domain_parts[1:])
+            parent_response = http_requests.get(f"https://{parent_domain}")
+            if SequenceMatcher(None, response.content, parent_response.content).quick_ratio() >= 0.8:
+                # Do not report misconfigurations if a domain has identical content to a parent domain - e.g.
+                # if we have mail.domain.com with identical content to domain.com, we assume that it's domain.com
+                # which is actually used, and therefore don't report subdomains.
+                self.db.save_task_result(
+                    task=current_task,
+                    status=TaskStatus.OK,
+                    status_reason=f"Detected that {domain} has similar content to {parent_domain}, not scanning to avoid duplicate reports",
+                )
+                return
+        except Exception:
+            self.log.exception(
+                f"Unable to check whether domain {domain} has similar content to parent domain. Artemis SSL check "
+                "module tries to reduce the number of false positives by skipping reports where domain has similar "
+                "content to parent domain, as there are cases where e.g. mail.example.com serves the same content "
+                "as example.com. If this fails, two similar reports may get sent."
+            )
 
         messages = []
         result: Dict[str, Any] = {}
