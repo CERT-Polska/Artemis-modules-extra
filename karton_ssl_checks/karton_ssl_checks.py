@@ -67,9 +67,9 @@ class SSLChecks(ArtemisBase):  # type: ignore
         except Exception:
             self.log.exception(
                 f"Unable to check whether domain {domain} has similar content to parent domain. Artemis SSL check "
-                "module tries to reduce the number of false positives by skipping reports where domain has similar "
-                "content to parent domain, as there are cases where e.g. mail.example.com serves the same content "
-                "as example.com. If this fails, two similar reports may get sent."
+                "module tries to reduce the number of false positives by skipping scanning domains when domain has "
+                "similar content to parent domain, as there are cases where e.g. mail.example.com serves the same "
+                "content as example.com.",
             )
 
         messages = []
