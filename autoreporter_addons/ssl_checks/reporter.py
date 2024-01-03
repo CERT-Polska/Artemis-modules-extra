@@ -1,4 +1,3 @@
-from difflib import SequenceMatcher
 from pathlib import Path
 from typing import Any, Callable, Dict, List
 from urllib.parse import urlparse
@@ -14,7 +13,7 @@ from artemis.reporting.base.report import Report
 from artemis.reporting.base.report_type import ReportType
 from artemis.reporting.base.reporter import Reporter
 from artemis.reporting.base.templating import ReportEmailTemplateFragment
-from artemis.reporting.utils import cached_get, get_top_level_target
+from artemis.reporting.utils import get_top_level_target
 from bs4 import BeautifulSoup
 
 from extra_modules_config import ExtraModulesConfig
@@ -60,22 +59,6 @@ class SSLChecksReporter(Reporter):  # type: ignore
 
         if not isinstance(result, dict):
             return []
-
-        try:
-            response = cached_get(f"https://{domain}")
-            parent_response = cached_get(f"https://{'.'.join(domain_parts[1:])}")
-            if SequenceMatcher(None, response.content, parent_response.content).quick_ratio() >= 0.8:
-                # Do not report misconfigurations if a domain has identical content to a parent domain - e.g.
-                # if we have mail.domain.com with identical content to domain.com, we assume that it's domain.com
-                # which is actually used, and therefore don't report subdomains.
-                return []
-        except Exception:
-            logger.warning(
-                f"Unable to check whether domain {domain} has similar content to parent domain. Artemis SSL check "
-                "module tries to reduce the number of false positives by skipping reports where domain has similar "
-                "content to parent domain, as there are cases where e.g. mail.example.com serves the same content "
-                "as example.com. If this fails, two similar reports may get sent."
-            )
 
         if "response_status_code" in result and "response_content_prefix" in result:
             response_status_code = result["response_status_code"]
