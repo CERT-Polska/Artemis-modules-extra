@@ -11,9 +11,10 @@ from typing import List, Optional, Tuple
 
 import timeout_decorator
 from artemis import http_requests
-from artemis.binds import TaskStatus, TaskType, WebApplication
+from artemis.binds import Service, TaskStatus, TaskType
 from artemis.config import Config
 from artemis.module_base import ArtemisBase
+from artemis.task_utils import get_target_url
 from bs4 import BeautifulSoup
 from karton.core import Task
 
@@ -39,8 +40,9 @@ class SQLmap(ArtemisBase):  # type: ignore
 
     identity = "sqlmap"
     filters = [
-        # Run only on UNKNOWN webapps, e.g. homegrown CMS
-        {"type": TaskType.WEBAPP.value, "webapp": WebApplication.UNKNOWN.value},
+        # We run on all HTTP services, as even if it's a known CMS, it may contain custom plugins
+        # and therefore it's worth scanning.
+        {"type": TaskType.SERVICE.value, "service": Service.HTTP.value},
     ]
 
     def _call_sqlmap(
@@ -248,7 +250,7 @@ class SQLmap(ArtemisBase):  # type: ignore
         )
 
     def run(self, current_task: Task) -> None:
-        url = current_task.get_payload("url")
+        url = get_target_url(current_task)
         self.log.info("Requested to crawl and test SQL injection on %s", url)
         url_parsed = urllib.parse.urlparse(url)
 
