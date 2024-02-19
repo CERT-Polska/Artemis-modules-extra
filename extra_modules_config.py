@@ -41,3 +41,18 @@ class ExtraModulesConfig:
         cast=int,
         default=50,
     )
+
+    SQLMAP_TAMPER_SCRIPTS = decouple.config(
+        "SQLMAP_TAMPER_SCRIPTS",
+        cast=decouple.Csv(str),
+        default=",".join(
+            [
+                "base64encode",
+                "chardoubleencode",
+                "charencode",
+                "randomcase",
+                "space2randomblank",
+                "/opt/karton_sqlmap/tamper/tamper_double_quotes.py",
+            ]
+        ),
+    )

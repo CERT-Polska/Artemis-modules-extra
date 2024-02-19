@@ -54,32 +54,37 @@ class SQLmap(ArtemisBase):  # type: ignore
             else:
                 additional_configuration = []
 
-            cmd = (
-                [
-                    "sqlmap",
-                    "--delay",
-                    str(1.0 / Config.Limits.REQUESTS_PER_SECOND) if Config.Limits.REQUESTS_PER_SECOND else "0",
-                    "-u",
-                    url,
-                    "--batch",
-                    "--technique",
-                    "BU",
-                    "--skip-waf",
-                    "--skip-heuristics",
-                    "-v",
-                    "0",
-                ]
-                + arguments
-                + additional_configuration
-            )
-            data = subprocess.check_output(cmd)
+            for tamper_script in [None] + ExtraModulesConfig.SQLMAP_TAMPER_SCRIPTS:
+                cmd = (
+                    [
+                        "sqlmap",
+                        "--delay",
+                        str(1.0 / Config.Limits.REQUESTS_PER_SECOND) if Config.Limits.REQUESTS_PER_SECOND else "0",
+                        "-u",
+                        url,
+                        "--batch",
+                        "--technique",
+                        "BU",
+                        "--skip-waf",
+                        "--skip-heuristics",
+                        "-v",
+                        "0",
+                    ]
+                    + arguments
+                    + additional_configuration
+                )
 
-            data_str = data.decode("ascii", errors="ignore")
+                if tamper_script:
+                    cmd.append(f"--tamper={tamper_script}")
 
-            for line in data_str.split("\n"):
-                match_result = re.compile(f"^{re.escape(find_in_output)}[^:]*: '(.*)'$").fullmatch(line)
-                if match_result:
-                    return match_result.group(1)
+                data = subprocess.check_output(cmd)
+
+                data_str = data.decode("ascii", errors="ignore")
+
+                for line in data_str.split("\n"):
+                    match_result = re.compile(f"^{re.escape(find_in_output)}[^:]*: '(.*)'$").fullmatch(line)
+                    if match_result:
+                        return match_result.group(1)
             return None
 
         if timeout_seconds:

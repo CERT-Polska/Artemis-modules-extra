@@ -10,4 +10,8 @@ WORKDIR /opt/
 COPY extra_modules_config.py /opt/
 COPY karton_sqlmap/karton_sqlmap.py /opt/artemis/modules/
 COPY karton_sqlmap/test_sqlmap.py /opt/
+COPY karton_sqlmap/tamper/ /opt/karton_sqlmap/tamper/
+
+RUN touch /opt/karton_sqlmap/__init__.py
+
 COPY test /opt/test
