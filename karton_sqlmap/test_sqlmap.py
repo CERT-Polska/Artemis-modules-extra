@@ -45,7 +45,7 @@ class SQLmapTestCase(ArtemisModuleTestCase):
         self.assertEqual(call.kwargs["data"][0]["extracted_user"], "root@%")
         self.assertEqual(
             call.kwargs["status_reason"],
-            "Found SQL Injection in http://test-service-with-sql-injection-mysql-clean-urls:80/vuln/* (GET)",
+            "Found SQL Injection in http://test-service-with-sql-injection-mysql-clean-urls:80/vuln/4* (GET)",
         )
 
     def test_mysql(self) -> None:
@@ -60,7 +60,7 @@ class SQLmapTestCase(ArtemisModuleTestCase):
         self.assertEqual(call.kwargs["data"][0]["extracted_user"], "root@%")
         self.assertEqual(
             call.kwargs["status_reason"],
-            "Found SQL Injection in http://test-service-with-sql-injection-mysql:80/vuln.php?id=* (GET)",
+            "Found SQL Injection in http://test-service-with-sql-injection-mysql:80/vuln.php?id=4* (GET)",
         )
 
     def test_postgres(self) -> None:
@@ -75,5 +75,5 @@ class SQLmapTestCase(ArtemisModuleTestCase):
         self.assertEqual(call.kwargs["data"][0]["extracted_user"], "root")
         self.assertEqual(
             call.kwargs["status_reason"],
-            "Found SQL Injection in http://test-service-with-sql-injection-postgres:80/vuln.php?id=* (GET)",
+            "Found SQL Injection in http://test-service-with-sql-injection-postgres:80/vuln.php?id=4* (GET)",
         )
