@@ -87,7 +87,6 @@ class SQLmap(ArtemisBase):  # type: ignore
                     data_str = data.decode("ascii", errors="ignore")
                     self.log.info("url %s, cmd %s, output %s", url, cmd, data_str)
 
-
                 for line in data_str.split("\n"):
                     match_result = re.compile(f"^{re.escape(find_in_output)}[^:]*: '(.*)'$").fullmatch(line)
                     if match_result:
@@ -288,7 +287,7 @@ class SQLmap(ArtemisBase):  # type: ignore
 
                 new_url = urllib.parse.urljoin(url, tag[attribute])
 
-                new_url = new_url.split('#')[0]
+                new_url = new_url.split("#")[0]
 
                 if any(new_url.endswith(extension) for extension in [".png", ".jpg", ".svg", ".jpeg", ".css"]):
                     # Let's not inject image/style paths
