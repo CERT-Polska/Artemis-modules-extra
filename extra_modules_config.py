@@ -39,7 +39,7 @@ class ExtraModulesConfig:
     SQLMAP_MAX_URLS_TO_CRAWL = decouple.config(
         "SQLMAP_MAX_URLS_TO_CRAWL",
         cast=int,
-        default=50,
+        default=25,
     )
 
     SQLMAP_TAMPER_SCRIPTS = decouple.config(
@@ -50,6 +50,7 @@ class ExtraModulesConfig:
                 "base64encode",
                 "chardoubleencode",
                 "charencode",
+                "commalessmid",
                 "randomcase",
                 "space2randomblank",
                 "/opt/karton_sqlmap/tamper/tamper_double_quotes.py",

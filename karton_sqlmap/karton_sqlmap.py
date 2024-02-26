@@ -68,7 +68,7 @@ class SQLmap(ArtemisBase):  # type: ignore
                         "--skip-waf",
                         "--skip-heuristics",
                         "-v",
-                        "0",
+                        "1",
                     ]
                     + arguments
                     + additional_configuration
@@ -78,8 +78,14 @@ class SQLmap(ArtemisBase):  # type: ignore
                     cmd.append(f"--tamper={tamper_script}")
 
                 data = subprocess.check_output(cmd)
-
                 data_str = data.decode("ascii", errors="ignore")
+                self.log.info("url %s, cmd %s, output %s", url, cmd, data_str)
+
+                if "in case of continuous data retrieval problems you are advised to try a switch '--no-cast'":
+                    cmd += ["--no-cast"]
+                    data = subprocess.check_output(cmd)
+                    data_str = data.decode("ascii", errors="ignore")
+                    self.log.info("url %s, cmd %s, output %s", url, cmd, data_str)
 
                 for line in data_str.split("\n"):
                     match_result = re.compile(f"^{re.escape(find_in_output)}[^:]*: '(.*)'$").fullmatch(line)
@@ -280,6 +286,13 @@ class SQLmap(ArtemisBase):  # type: ignore
                     continue
 
                 new_url = urllib.parse.urljoin(url, tag[attribute])
+
+                new_url = new_url.split("#")[0]
+
+                if any(new_url.endswith(extension) for extension in [".png", ".jpg", ".svg", ".jpeg", ".css"]):
+                    # Let's not inject image/style paths
+                    continue
+
                 new_url_parsed = urllib.parse.urlparse(new_url)
 
                 if url_parsed.netloc == new_url_parsed.netloc:
@@ -306,22 +319,15 @@ class SQLmap(ArtemisBase):  # type: ignore
         for url_with_injection_point, example_value in expanded_urls_with_example_values:
             self.log.info("Checking %s, example value=%s", url_with_injection_point, example_value)
 
-            result = self._run_on_single_url(url_with_injection_point)
-
-            if not result:
-                # If scanning failed when we tried to inject https://example.com/?id=*, we try
-                # to inject https://example.com/?id=4* (where '4' is taken from crawling)
-                result = self._run_on_single_url(url_with_injection_point.replace("*", example_value + "*"))
-
-                if result:
-
-                    # We try to inject https://example.com/?id=4* (where '4' is taken from crawling)
-                    # but we report https://example.com/?id=* to avoid duplicates (e.g. when
-                    # https://example.com/?id=4*, https://example.com/?id=5*, and https://example.com/?id=*
-                    # are reported).
-                    result.target = url_with_injection_point
+            result = self._run_on_single_url(url_with_injection_point.replace("*", example_value + "*"))
 
             if result:
+                # We try to inject https://example.com/?id=4* (where '4' is taken from crawling)
+                # but we report https://example.com/?id=* to avoid duplicates (e.g. when
+                # https://example.com/?id=4*, https://example.com/?id=5*, and https://example.com/?id=*
+                # are reported).
+                result.target = url_with_injection_point
+
                 results.append(result)
 
         results_as_dict = [dataclasses.asdict(result) for result in results]
