@@ -1,0 +1,80 @@
+from pathlib import Path
+from typing import Any, Callable, Dict, List
+
+from artemis.reporting.base.language import Language
+from artemis.reporting.base.normal_form import (
+    NormalForm,
+    get_domain_normal_form,
+    get_domain_score,
+)
+from artemis.reporting.base.report import Report
+from artemis.reporting.base.report_type import ReportType
+from artemis.reporting.base.reporter import Reporter
+from artemis.reporting.base.templating import ReportEmailTemplateFragment
+from artemis.reporting.utils import get_top_level_target
+
+
+class WPScanReporter(Reporter):  # type: ignore
+    FOUND_VULNERABILITY = ReportType("wpscan.found_vulnerability")
+    FOUND_INTERESTING_URLS = ReportType("wpscan.found_interesting_urls")
+
+    @staticmethod
+    def create_reports(task_result: Dict[str, Any], language: Language) -> List[Report]:
+        if task_result["headers"]["receiver"] != "wpscan":
+            return []
+
+        if not isinstance(task_result["result"], list):
+            return []
+
+        result = []
+        for item in task_result["result"]:
+            if "type" in item and item["type"] == "vulnerabilities":
+                result.append(
+                    Report(
+                        top_level_target=get_top_level_target(task_result),
+                        target=item["domain"],
+                        report_type=WPScanReporter.FOUND_VULNERABILITY,
+                        additional_data={},
+                        timestamp=task_result["created_at"],
+                    )
+                )
+            elif "url" in item:
+                result.append(
+                    Report(
+                        top_level_target=get_top_level_target(task_result),
+                        target=item["domain"],
+                        report_type=WPScanReporter.FOUND_INTERESTING_URLS,
+                        additional_data={},
+                        timestamp=task_result["created_at"],
+                    )
+                )
+        return result
+
+    @staticmethod
+    def get_email_template_fragments() -> List[ReportEmailTemplateFragment]:
+        return [
+            ReportEmailTemplateFragment.from_file(
+                str(Path(__file__).parents[0] / "template_found_vulnerability.jinja2"), priority=7
+            ),
+             ReportEmailTemplateFragment.from_file(
+                str(Path(__file__).parents[0] / "template_found_interesting_url.jinja2"), priority=3
+            ),
+        ]
+
+    @staticmethod
+    def get_scoring_rules() -> Dict[ReportType, Callable[[Report], List[int]]]:
+        """See the docstring in the parent class."""
+        return {report_type: WPScanReporter.scoring_rule for report_type in WPScanReporter.get_report_types()}
+
+    @staticmethod
+    def get_normal_form_rules() -> Dict[ReportType, Callable[[Report], NormalForm]]:
+        """See the docstring in the Reporter class."""
+        return {report_type: WPScanReporter.normal_form_rule for report_type in WPScanReporter.get_report_types()}
+    
+    @staticmethod
+    def scoring_rule(report: Report) -> List[int]:
+        return [get_domain_score(report.target)]
+
+    @staticmethod
+    def normal_form_rule(report: Report) -> NormalForm:
+        return Reporter.dict_to_tuple({"type": report.report_type, "target": get_domain_normal_form(report.target)})
