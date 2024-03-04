@@ -1,5 +1,14 @@
 version: "3.8"
 services:
+  postgres-test:
+    image: postgres
+    restart: always
+    shm_size: 256mb
+    environment:
+      POSTGRES_DB: artemis
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+
   test-sqlmap:
     build:
       context: .
