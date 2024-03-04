@@ -4,8 +4,8 @@ RUN apk upgrade --no-cache --available && apk add --no-cache git chromium-swifts
 
 COPY karton_ssl_checks/requirements.txt /requirements_ssl_checks.txt
 # We don't run `pip install -r /requirements.txt -r /requirements_ssl_checks.txt` because sometimes
-# the sslyze requirements conflict with Artemis ones (e.g. it requires slightly older `cryptography`
-# version.
+# the sslyze requirements conflict with Artemis ones (e.g. sslyze requires slightly older `cryptography`
+# version).
 RUN pip install -r /requirements_ssl_checks.txt
 
 WORKDIR /opt/
