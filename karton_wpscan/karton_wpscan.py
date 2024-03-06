@@ -1,12 +1,17 @@
 #!/usr/bin/env python3
 import json
 import subprocess
+import time
+from typing import Any
+
 from artemis.binds import TaskStatus, TaskType
 from artemis.module_base import ArtemisBase
 from karton.core import Task
+
 from extra_modules_config import ExtraModulesConfig
 
-class WPScan(ArtemisBase):
+
+class WPScan(ArtemisBase):  # type: ignore
     """
     Runs WPScan -> WordPress Vulnerability Scanner
     """
@@ -16,6 +21,17 @@ class WPScan(ArtemisBase):
         {"type": TaskType.WEBAPP.value, "webapp": "wordpress"},
     ]
 
+    def __init__(self, *args: Any, **kwargs: Any):
+        super().__init__(*args, **kwargs)
+
+        # We install wpscan in __init__ (on karton start) so that it will get installed only if the user
+        # agrees to the license terms.
+        subprocess.call(["rm", "-rf", "/wpscan"])
+        subprocess.call(["git", "clone", "https://github.com/wpscanteam/wpscan.git", "/wpscan"])
+        subprocess.call(
+            ["bash", "-c", "cd /wpscan && gem install bundler && bundle install && rake install && wpscan --update"]
+        )
+
     def run(self, current_task: Task) -> None:
         target_url = current_task.payload["url"]
 
@@ -23,17 +39,36 @@ class WPScan(ArtemisBase):
         # Run WPScan and get the JSON output without api
         if not wpscanapi:
             data = subprocess.run(
-                ["wpscan", "--url", target_url, "--no-update", "--disable-tls-checks", "--format", "json", "--random-user-agent"],
+                [
+                    "wpscan",
+                    "--url",
+                    target_url,
+                    "--no-update",
+                    "--disable-tls-checks",
+                    "--format",
+                    "json",
+                    "--random-user-agent",
+                ],
                 capture_output=True,
             )
         elif wpscanapi:
             # Run WPScan and get the JSON output with api
-            
+
             data = subprocess.run(
-                ["wpscan", "--url", target_url, "--no-update", "--disable-tls-checks", "--format", "json", "--random-user-agent", "--api-token", wpscanapi],
+                [
+                    "wpscan",
+                    "--url",
+                    target_url,
+                    "--no-update",
+                    "--disable-tls-checks",
+                    "--format",
+                    "json",
+                    "--random-user-agent",
+                    "--api-token",
+                    wpscanapi,
+                ],
                 capture_output=True,
             )
-            
 
         # Parse the JSON data
         try:
@@ -77,4 +112,8 @@ class WPScan(ArtemisBase):
 
 
 if __name__ == "__main__":
-    WPScan().loop()
+    if ExtraModulesConfig.WPSCAN_ENABLE:
+        WPScan().loop()
+    else:
+        while True:
+            time.sleep(1)

@@ -56,7 +56,7 @@ class WPScanReporter(Reporter):  # type: ignore
             ReportEmailTemplateFragment.from_file(
                 str(Path(__file__).parents[0] / "template_found_vulnerability.jinja2"), priority=7
             ),
-             ReportEmailTemplateFragment.from_file(
+            ReportEmailTemplateFragment.from_file(
                 str(Path(__file__).parents[0] / "template_found_interesting_url.jinja2"), priority=3
             ),
         ]
@@ -70,7 +70,7 @@ class WPScanReporter(Reporter):  # type: ignore
     def get_normal_form_rules() -> Dict[ReportType, Callable[[Report], NormalForm]]:
         """See the docstring in the Reporter class."""
         return {report_type: WPScanReporter.normal_form_rule for report_type in WPScanReporter.get_report_types()}
-    
+
     @staticmethod
     def scoring_rule(report: Report) -> List[int]:
         return [get_domain_score(report.target)]

@@ -57,3 +57,13 @@ class ExtraModulesConfig:
             ]
         ),
     )
+
+    # WPScan API key
+    WPSCAN_API_KEY = decouple.config("WPSCAN_API_KEY", default=None)
+
+    # Whether the wpscan module is enabled. Read the license disclaimer in README.md before enabling.
+    WPSCAN_ENABLE = decouple.config(
+        "WPSCAN_ENABLE",
+        cast=bool,
+        default=False,
+    )
