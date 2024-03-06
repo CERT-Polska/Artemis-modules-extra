@@ -88,7 +88,7 @@ class WPScan(ArtemisBase):  # type: ignore
             for entry in result["interesting_findings"]:
                 if "type" in entry and entry["type"] == "vulnerabilities":
                     vulnerabilities.append(entry)
-                elif "url" in entry:
+                elif "url" in entry and entry["url"] != target_url:
                     interesting_urls.append(entry["url"])
 
         wp_version = result.get("version", {}).get("number", "")
