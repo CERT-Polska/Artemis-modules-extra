@@ -1,0 +1,19 @@
+version: "3"
+
+services:
+  # Before using this docker-compose.yml file, please read the license disclaimer in README.md.
+  karton-wpscan:
+    build:
+      context: Artemis-modules-extra
+      dockerfile: karton_wpscan/Dockerfile
+    volumes:
+      - "./docker/karton.ini:/etc/karton/karton.ini"
+      - "${DOCKER_COMPOSE_ADDITIONAL_SHARED_DIRECTORY:-./shared}:/shared/"
+    depends_on: [karton-system]
+    env_file: .env
+    restart: always
+    command: "python3 -m artemis.modules.karton_wpscan"
+
+  autoreporter:
+    volumes:
+      - ./Artemis-modules-extra/autoreporter_addons/wpscan/:/opt/artemis/reporting/modules/wpscan/
