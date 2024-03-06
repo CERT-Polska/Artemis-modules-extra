@@ -38,7 +38,7 @@ Uses https://github.com/wpscanteam/wpscan under the hood. Finds vulnerabilities 
 By using this module you confirm that you have read carefully the terms and conditions of the license in
 https://github.com/wpscanteam/wpscan/blob/master/LICENSE and agree to respect them, in particular in
 ensuring no conflict with the commercialization clause. For the avoidance of doubt, in any case, you
-remain solely liable for how you use this module and your compliance with the module’s license, and
+remain solely liable for how you use this module and your compliance with wpscan’s license, and
 NASK is relieved of such liability to the fullest extent possible.
 
 The module is disabled by default - to enable it, add `-f Artemis-modules-extra/docker-compose.wpscan.yml` to
