@@ -41,7 +41,7 @@ ensuring no conflict with the commercialization clause. For the avoidance of dou
 remain solely liable for how you use this module and your compliance with wpscan’s license, and
 NASK is relieved of such liability to the fullest extent possible.
 
-The module is disabled by default - to enable it, add `-f Artemis-modules-extra/docker-compose.wpscan.yml` to
+The module is disabled by default - to enable it, add `-f Artemis-modules-extra/docker-compose.additional.wpscan.yml` to
 the `docker compose up` command.
 
 ## Testing

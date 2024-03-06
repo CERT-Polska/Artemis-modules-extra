@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import json
 import subprocess
+import urllib.parse
 
 from artemis.binds import TaskStatus, TaskType
 from artemis.module_base import ArtemisBase
@@ -22,9 +23,9 @@ class WPScan(ArtemisBase):  # type: ignore
     def run(self, current_task: Task) -> None:
         target_url = current_task.payload["url"]
 
-        wpscanapi = ExtraModulesConfig.WPSCAN_API_KEY
-        # Run WPScan and get the JSON output without api
-        if not wpscanapi:
+        wpscan_api_key = ExtraModulesConfig.WPSCAN_API_KEY
+        if not wpscan_api_key:
+            # Run WPScan and get the JSON output without API key
             data = subprocess.run(
                 [
                     "wpscan",
@@ -38,8 +39,8 @@ class WPScan(ArtemisBase):  # type: ignore
                 ],
                 capture_output=True,
             )
-        elif wpscanapi:
-            # Run WPScan and get the JSON output with api
+        elif wpscan_api_key:
+            # Run WPScan and get the JSON output with API key
 
             data = subprocess.run(
                 [
@@ -52,7 +53,7 @@ class WPScan(ArtemisBase):  # type: ignore
                     "json",
                     "--random-user-agent",
                     "--api-token",
-                    wpscanapi,
+                    wpscan_api_key,
                 ],
                 capture_output=True,
             )
@@ -75,7 +76,7 @@ class WPScan(ArtemisBase):  # type: ignore
             for entry in result["interesting_findings"]:
                 if "type" in entry and entry["type"] == "vulnerabilities":
                     vulnerabilities.append(entry)
-                elif "url" in entry and entry["url"] != target_url:
+                elif "url" in entry and urllib.parse.urlparse(entry["url"]).path.strip("/") != "":
                     interesting_urls.append(entry["url"])
 
         wp_version = result.get("version", {}).get("number", "")
@@ -95,7 +96,12 @@ class WPScan(ArtemisBase):  # type: ignore
             status_reason = None
 
         # Save the task result to the database
-        self.db.save_task_result(task=current_task, status=status, status_reason=status_reason, data=result)
+        self.db.save_task_result(
+            task=current_task,
+            status=status,
+            status_reason=status_reason,
+            data={"vulnerabilities": vulnerabilities, "interesting_urls": interesting_urls, "result": result},
+        )
 
 
 if __name__ == "__main__":

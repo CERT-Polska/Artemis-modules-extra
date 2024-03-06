@@ -4,8 +4,8 @@ from typing import Any, Callable, Dict, List
 from artemis.reporting.base.language import Language
 from artemis.reporting.base.normal_form import (
     NormalForm,
-    get_domain_normal_form,
-    get_domain_score,
+    get_url_normal_form,
+    get_url_score,
 )
 from artemis.reporting.base.report import Report
 from artemis.reporting.base.report_type import ReportType
@@ -15,49 +15,48 @@ from artemis.reporting.utils import get_top_level_target
 
 
 class WPScanReporter(Reporter):  # type: ignore
-    FOUND_VULNERABILITY = ReportType("wpscan.found_vulnerability")
-    FOUND_INTERESTING_URLS = ReportType("wpscan.found_interesting_urls")
+    WPSCAN_VULNERABILITY = ReportType("wpscan_vulnerability")
+    WPSCAN_INTERESTING_URL = ReportType("wpscan_interesting_url")
 
     @staticmethod
     def create_reports(task_result: Dict[str, Any], language: Language) -> List[Report]:
         if task_result["headers"]["receiver"] != "wpscan":
             return []
 
-        if not isinstance(task_result["result"], list):
+        if not isinstance(task_result["result"], dict):
             return []
 
         result = []
-        for item in task_result["result"]:
-            if "type" in item and item["type"] == "vulnerabilities":
-                result.append(
-                    Report(
-                        top_level_target=get_top_level_target(task_result),
-                        target=item["domain"],
-                        report_type=WPScanReporter.FOUND_VULNERABILITY,
-                        additional_data={},
-                        timestamp=task_result["created_at"],
-                    )
+        for item in task_result["result"]["vulnerabilities"]:
+            result.append(
+                Report(
+                    top_level_target=get_top_level_target(task_result),
+                    target=task_result["target_string"],
+                    report_type=WPScanReporter.WPSCAN_VULNERABILITY,
+                    additional_data={},
+                    timestamp=task_result["created_at"],
                 )
-            elif "url" in item:
-                result.append(
-                    Report(
-                        top_level_target=get_top_level_target(task_result),
-                        target=item["domain"],
-                        report_type=WPScanReporter.FOUND_INTERESTING_URLS,
-                        additional_data={},
-                        timestamp=task_result["created_at"],
-                    )
+            )
+        for item in task_result["result"]["interesting_urls"]:
+            result.append(
+                Report(
+                    top_level_target=get_top_level_target(task_result),
+                    target=task_result["target_string"],
+                    report_type=WPScanReporter.WPSCAN_INTERESTING_URL,
+                    additional_data={"url": item},
+                    timestamp=task_result["created_at"],
                 )
+            )
         return result
 
     @staticmethod
     def get_email_template_fragments() -> List[ReportEmailTemplateFragment]:
         return [
             ReportEmailTemplateFragment.from_file(
-                str(Path(__file__).parents[0] / "template_found_vulnerability.jinja2"), priority=7
+                str(Path(__file__).parents[0] / "template_wpscan_vulnerability.jinja2"), priority=7
             ),
             ReportEmailTemplateFragment.from_file(
-                str(Path(__file__).parents[0] / "template_found_interesting_url.jinja2"), priority=3
+                str(Path(__file__).parents[0] / "template_wpscan_interesting_url.jinja2"), priority=3
             ),
         ]
 
@@ -73,8 +72,8 @@ class WPScanReporter(Reporter):  # type: ignore
 
     @staticmethod
     def scoring_rule(report: Report) -> List[int]:
-        return [get_domain_score(report.target)]
+        return [get_url_score(report.target)]
 
     @staticmethod
     def normal_form_rule(report: Report) -> NormalForm:
-        return Reporter.dict_to_tuple({"type": report.report_type, "target": get_domain_normal_form(report.target)})
+        return Reporter.dict_to_tuple({"type": report.report_type, "target": get_url_normal_form(report.target), "additional_data": report.additional_data})
