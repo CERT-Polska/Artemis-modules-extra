@@ -6,7 +6,7 @@ services:
       context: Artemis-modules-extra
       dockerfile: karton_dns_reaper/Dockerfile
     volumes: ["./docker/karton.ini:/etc/karton/karton.ini", "${DOCKER_COMPOSE_ADDITIONAL_SHARED_DIRECTORY:-./shared}:/shared/"]
-    depends_on: [karton-logger, redis]
+    depends_on: [karton-system]
     env_file: .env
     restart: always
     command: "python3 -m artemis.modules.karton_dns_reaper"
@@ -16,7 +16,7 @@ services:
       context: Artemis-modules-extra
       dockerfile: karton_sqlmap/Dockerfile
     volumes: ["./docker/karton.ini:/etc/karton/karton.ini", "${DOCKER_COMPOSE_ADDITIONAL_SHARED_DIRECTORY:-./shared}:/shared/"]
-    depends_on: [karton-logger, redis]
+    depends_on: [karton-system]
     env_file: .env
     restart: always
     command: "python3 -m artemis.modules.karton_sqlmap"
@@ -26,7 +26,7 @@ services:
       context: Artemis-modules-extra
       dockerfile: karton_ssl_checks/Dockerfile
     volumes: ["./docker/karton.ini:/etc/karton/karton.ini", "${DOCKER_COMPOSE_ADDITIONAL_SHARED_DIRECTORY:-./shared}:/shared/"]
-    depends_on: [karton-logger, redis]
+    depends_on: [karton-system]
     env_file: .env
     restart: always
     command: "python3 -m artemis.modules.karton_ssl_checks"

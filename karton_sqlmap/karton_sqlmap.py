@@ -11,9 +11,10 @@ from typing import List, Optional, Tuple
 
 import timeout_decorator
 from artemis import http_requests
-from artemis.binds import TaskStatus, TaskType, WebApplication
+from artemis.binds import Service, TaskStatus, TaskType
 from artemis.config import Config
 from artemis.module_base import ArtemisBase
+from artemis.task_utils import get_target_url
 from bs4 import BeautifulSoup
 from karton.core import Task
 
@@ -39,8 +40,9 @@ class SQLmap(ArtemisBase):  # type: ignore
 
     identity = "sqlmap"
     filters = [
-        # Run only on UNKNOWN webapps, e.g. homegrown CMS
-        {"type": TaskType.WEBAPP.value, "webapp": WebApplication.UNKNOWN.value},
+        # We run on all HTTP services, as even if it's a known CMS, it may contain custom plugins
+        # and therefore it's worth scanning.
+        {"type": TaskType.SERVICE.value, "service": Service.HTTP.value},
     ]
 
     def _call_sqlmap(
@@ -52,32 +54,43 @@ class SQLmap(ArtemisBase):  # type: ignore
             else:
                 additional_configuration = []
 
-            cmd = (
-                [
-                    "sqlmap",
-                    "--delay",
-                    str(1.0 / Config.Limits.REQUESTS_PER_SECOND) if Config.Limits.REQUESTS_PER_SECOND else "0",
-                    "-u",
-                    url,
-                    "--batch",
-                    "--technique",
-                    "BU",
-                    "--skip-waf",
-                    "--skip-heuristics",
-                    "-v",
-                    "0",
-                ]
-                + arguments
-                + additional_configuration
-            )
-            data = subprocess.check_output(cmd)
+            for tamper_script in [None] + ExtraModulesConfig.SQLMAP_TAMPER_SCRIPTS:
+                cmd = (
+                    [
+                        "sqlmap",
+                        "--delay",
+                        str(1.0 / Config.Limits.REQUESTS_PER_SECOND) if Config.Limits.REQUESTS_PER_SECOND else "0",
+                        "-u",
+                        url,
+                        "--batch",
+                        "--technique",
+                        "BU",
+                        "--skip-waf",
+                        "--skip-heuristics",
+                        "-v",
+                        "1",
+                    ]
+                    + arguments
+                    + additional_configuration
+                )
 
-            data_str = data.decode("ascii", errors="ignore")
+                if tamper_script:
+                    cmd.append(f"--tamper={tamper_script}")
 
-            for line in data_str.split("\n"):
-                match_result = re.compile(f"^{re.escape(find_in_output)}[^:]*: '(.*)'$").fullmatch(line)
-                if match_result:
-                    return match_result.group(1)
+                data = subprocess.check_output(cmd)
+                data_str = data.decode("ascii", errors="ignore")
+                self.log.info("url %s, cmd %s, output %s", url, cmd, data_str)
+
+                if "in case of continuous data retrieval problems you are advised to try a switch '--no-cast'":
+                    cmd += ["--no-cast"]
+                    data = subprocess.check_output(cmd)
+                    data_str = data.decode("ascii", errors="ignore")
+                    self.log.info("url %s, cmd %s, output %s", url, cmd, data_str)
+
+                for line in data_str.split("\n"):
+                    match_result = re.compile(f"^{re.escape(find_in_output)}[^:]*: '(.*)'$").fullmatch(line)
+                    if match_result:
+                        return match_result.group(1)
             return None
 
         if timeout_seconds:
@@ -248,7 +261,7 @@ class SQLmap(ArtemisBase):  # type: ignore
         )
 
     def run(self, current_task: Task) -> None:
-        url = current_task.get_payload("url")
+        url = get_target_url(current_task)
         self.log.info("Requested to crawl and test SQL injection on %s", url)
         url_parsed = urllib.parse.urlparse(url)
 
@@ -273,6 +286,13 @@ class SQLmap(ArtemisBase):  # type: ignore
                     continue
 
                 new_url = urllib.parse.urljoin(url, tag[attribute])
+
+                new_url = new_url.split("#")[0]
+
+                if any(new_url.endswith(extension) for extension in [".png", ".jpg", ".svg", ".jpeg", ".css"]):
+                    # Let's not inject image/style paths
+                    continue
+
                 new_url_parsed = urllib.parse.urlparse(new_url)
 
                 if url_parsed.netloc == new_url_parsed.netloc:
@@ -299,22 +319,15 @@ class SQLmap(ArtemisBase):  # type: ignore
         for url_with_injection_point, example_value in expanded_urls_with_example_values:
             self.log.info("Checking %s, example value=%s", url_with_injection_point, example_value)
 
-            result = self._run_on_single_url(url_with_injection_point)
-
-            if not result:
-                # If scanning failed when we tried to inject https://example.com/?id=*, we try
-                # to inject https://example.com/?id=4* (where '4' is taken from crawling)
-                result = self._run_on_single_url(url_with_injection_point.replace("*", example_value + "*"))
-
-                if result:
-
-                    # We try to inject https://example.com/?id=4* (where '4' is taken from crawling)
-                    # but we report https://example.com/?id=* to avoid duplicates (e.g. when
-                    # https://example.com/?id=4*, https://example.com/?id=5*, and https://example.com/?id=*
-                    # are reported).
-                    result.target = url_with_injection_point
+            result = self._run_on_single_url(url_with_injection_point.replace("*", example_value + "*"))
 
             if result:
+                # We try to inject https://example.com/?id=4* (where '4' is taken from crawling)
+                # but we report https://example.com/?id=* to avoid duplicates (e.g. when
+                # https://example.com/?id=4*, https://example.com/?id=5*, and https://example.com/?id=*
+                # are reported).
+                result.target = url_with_injection_point
+
                 results.append(result)
 
         results_as_dict = [dataclasses.asdict(result) for result in results]
