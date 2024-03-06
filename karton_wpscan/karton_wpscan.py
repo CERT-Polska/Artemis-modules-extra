@@ -68,16 +68,21 @@ class WPScan(ArtemisBase):  # type: ignore
         if not result:
             result = {"error": "No JSON output from WPScan."}
 
-        # Extract interesting information from the result if available
-        vulnerabilities = []
         interesting_urls = []
-
         if "interesting_findings" in result:
             for entry in result["interesting_findings"]:
-                if "type" in entry and entry["type"] == "vulnerabilities":
-                    vulnerabilities.append(entry)
-                elif "url" in entry and urllib.parse.urlparse(entry["url"]).path.strip("/") != "":
+                if "url" in entry and urllib.parse.urlparse(entry["url"]).path.strip("/") != "":
                     interesting_urls.append(entry["url"])
+
+        vulnerabilities = []
+        for entry in result["plugins"].values():
+            for vulnerability in entry["vulnerabilities"]:
+                vulnerabilities.append(vulnerability["title"])
+        for entry in result.get("themes", {}).values():
+            for vulnerability in entry["vulnerabilities"]:
+                vulnerabilities.append(vulnerability["title"])
+        for vulnerability in entry["main_theme"]["vulnerabilities"]:
+            vulnerabilities.append(vulnerability["title"])
 
         wp_version = result.get("version", {}).get("number", "")
 

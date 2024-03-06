@@ -33,7 +33,7 @@ class WPScanReporter(Reporter):  # type: ignore
                     top_level_target=get_top_level_target(task_result),
                     target=task_result["target_string"],
                     report_type=WPScanReporter.WPSCAN_VULNERABILITY,
-                    additional_data={},
+                    additional_data={"vulnerability": item},
                     timestamp=task_result["created_at"],
                 )
             )
