@@ -34,7 +34,7 @@ Uses https://github.com/sqlmapproject/sqlmap under the hood. Finds SQL injection
 licensed under GPL-2.0.
 
 ### `wpscan`
-Uses https://github.com/wpscanteam/wpscan under the hood. Finds vulnerabilities on sites using WordPress.
+Uses https://github.com/wpscanteam/wpscan under the hood. Finds vulnerabilities on sites that use WordPress.
 By using this module you confirm that you have read carefully the terms and conditions of the license in
 https://github.com/wpscanteam/wpscan/blob/master/LICENSE and agree to respect them, in particular in
 ensuring no conflict with the commercialization clause. For the avoidance of doubt, in any case, you
