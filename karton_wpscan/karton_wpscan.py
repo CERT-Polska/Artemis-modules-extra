@@ -75,13 +75,13 @@ class WPScan(ArtemisBase):  # type: ignore
                     interesting_urls.append(entry["url"])
 
         vulnerabilities = []
-        for entry in result["plugins"].values():
+        for entry in result.get("plugins", {}).values():
             for vulnerability in entry["vulnerabilities"]:
                 vulnerabilities.append(vulnerability["title"])
         for entry in result.get("themes", {}).values():
             for vulnerability in entry["vulnerabilities"]:
                 vulnerabilities.append(vulnerability["title"])
-        for vulnerability in result["main_theme"]["vulnerabilities"]:
+        for vulnerability in result.get("main_theme", {}).get("vulnerabilities", []):
             vulnerabilities.append(vulnerability["title"])
 
         wp_version = result.get("version", {}).get("number", "")
