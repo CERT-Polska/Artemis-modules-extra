@@ -33,7 +33,7 @@ AGPL-3.0.
 Uses https://github.com/sqlmapproject/sqlmap under the hood. Finds SQL injection vulnerabilities and is
 licensed under GPL-2.0.
 
-### `wpscan``
+### `wpscan`
 Uses https://github.com/wpscanteam/wpscan under the hood. Finds vulnerabilities on sites using WordPress.
 By using this module you confirm that you have read carefully the terms and conditions of the license in
 https://github.com/wpscanteam/wpscan/blob/master/LICENSE and agree to respect them, in particular in
