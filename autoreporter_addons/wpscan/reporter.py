@@ -76,4 +76,10 @@ class WPScanReporter(Reporter):  # type: ignore
 
     @staticmethod
     def normal_form_rule(report: Report) -> NormalForm:
-        return Reporter.dict_to_tuple({"type": report.report_type, "target": get_url_normal_form(report.target), "additional_data": report.additional_data})
+        return Reporter.dict_to_tuple(
+            {
+                "type": report.report_type,
+                "target": get_url_normal_form(report.target),
+                "additional_data": report.additional_data,
+            }
+        )
