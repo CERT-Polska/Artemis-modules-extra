@@ -10,6 +10,10 @@ from karton.core import Task
 from extra_modules_config import ExtraModulesConfig
 
 
+class ScanningException(Exception):
+    pass
+
+
 class WPScan(ArtemisBase):  # type: ignore
     """
     Runs WPScan -> WordPress Vulnerability Scanner
@@ -58,13 +62,14 @@ class WPScan(ArtemisBase):  # type: ignore
                 capture_output=True,
             )
 
-        # Parse the JSON data
         try:
             result = json.loads(data.stdout.decode("utf-8"))
         except json.JSONDecodeError:
             result = {"error": "Failed to decode JSON output from WPScan."}
 
-        # Check if the input string is empty
+        if result.get("scan_aborted", None):
+            raise ScanningException(result["scan_aborted"])
+
         if not result:
             result = {"error": "No JSON output from WPScan."}
 
