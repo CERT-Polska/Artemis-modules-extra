@@ -1,5 +1,5 @@
 {% if "wpscan.found_interesting_urls" in data.contains_type %}
-    <li>{% trans %}We identified a interesting locations that were accessible in your wordporess application:{% endtrans %}
+    <li>{% trans %}We identified interesting locations that were accessible in your WordPress application:{% endtrans %}
         <ul>
             {% for report in data.reports %}
                 {% if report.report_type == "wpscan.found_interesting_urls" %}
