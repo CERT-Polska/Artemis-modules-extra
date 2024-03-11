@@ -5,7 +5,9 @@ services:
     build:
       context: Artemis-modules-extra
       dockerfile: karton_dns_reaper/Dockerfile
-    volumes: ["./docker/karton.ini:/etc/karton/karton.ini", "${DOCKER_COMPOSE_ADDITIONAL_SHARED_DIRECTORY:-./shared}:/shared/"]
+    volumes:
+      - "./docker/karton.ini:/etc/karton/karton.ini"
+      - "${DOCKER_COMPOSE_ADDITIONAL_SHARED_DIRECTORY:-./shared}:/shared/"
     depends_on: [karton-system]
     env_file: .env
     restart: always
@@ -15,7 +17,9 @@ services:
     build:
       context: Artemis-modules-extra
       dockerfile: karton_sqlmap/Dockerfile
-    volumes: ["./docker/karton.ini:/etc/karton/karton.ini", "${DOCKER_COMPOSE_ADDITIONAL_SHARED_DIRECTORY:-./shared}:/shared/"]
+    volumes:
+      - "./docker/karton.ini:/etc/karton/karton.ini"
+      - "${DOCKER_COMPOSE_ADDITIONAL_SHARED_DIRECTORY:-./shared}:/shared/"
     depends_on: [karton-system]
     env_file: .env
     restart: always
@@ -25,7 +29,9 @@ services:
     build:
       context: Artemis-modules-extra
       dockerfile: karton_ssl_checks/Dockerfile
-    volumes: ["./docker/karton.ini:/etc/karton/karton.ini", "${DOCKER_COMPOSE_ADDITIONAL_SHARED_DIRECTORY:-./shared}:/shared/"]
+    volumes:
+      - "./docker/karton.ini:/etc/karton/karton.ini"
+      - "${DOCKER_COMPOSE_ADDITIONAL_SHARED_DIRECTORY:-./shared}:/shared/"
     depends_on: [karton-system]
     env_file: .env
     restart: always

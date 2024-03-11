@@ -57,3 +57,6 @@ class ExtraModulesConfig:
             ]
         ),
     )
+
+    # WPScan API key
+    WPSCAN_API_KEY = decouple.config("WPSCAN_API_KEY", default=None)
