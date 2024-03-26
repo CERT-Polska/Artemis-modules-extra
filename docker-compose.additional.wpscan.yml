@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   # Before using this docker-compose.yml file, please read the license disclaimer in README.md.
   karton-wpscan:

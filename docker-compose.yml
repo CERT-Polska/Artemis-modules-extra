@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   karton-dns_reaper:
     build:
