@@ -289,7 +289,10 @@ class SQLmap(ArtemisBase):  # type: ignore
 
                 new_url = new_url.split("#")[0]
 
-                if any(new_url.split("?")[0].endswith(extension) for extension in [".png", ".jpg", ".svg", ".jpeg", ".css", ".js"]):
+                if any(
+                    new_url.split("?")[0].endswith(extension)
+                    for extension in [".png", ".jpg", ".svg", ".jpeg", ".css", ".js"]
+                ):
                     # Let's not inject image/style paths
                     continue
 
