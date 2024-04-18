@@ -5,6 +5,7 @@ import urllib.parse
 from difflib import SequenceMatcher
 from typing import Any, Dict, List
 
+import hstspreload
 import requests
 from artemis import http_requests
 from artemis.binds import TaskStatus, TaskType
@@ -131,7 +132,9 @@ class SSLChecks(ArtemisBase):  # type: ignore
                 redirect_url_parsed = urllib.parse.urlparse(redirect_url)
                 result["redirect_url"] = redirect_url
 
-                if redirect_url_parsed.scheme != "https":
+                if redirect_url_parsed.scheme != "https" and not hstspreload.in_hsts_preload(
+                    redirect_url_parsed.hostname
+                ):
                     messages.append(
                         f"No https redirect from {original_url} to https detected, final url: {redirect_url}"
                     )
