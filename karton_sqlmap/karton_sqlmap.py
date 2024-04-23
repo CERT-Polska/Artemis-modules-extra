@@ -158,7 +158,7 @@ class SQLmap(ArtemisBase):  # type: ignore
                                 information_name,
                                 self._call_sqlmap(
                                     url, sqlmap_options, find_in_output, timeout_seconds=SQLI_ADDITIONAL_DATA_TIMEOUT
-                                ),
+                                ).output,
                             )
                         except Exception:  # Whatever happens, we prefer to report SQLi without additional data than no SQLi
                             self.log.exception(f"Unable to obtain {information_name} via blind SQL injection")
