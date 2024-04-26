@@ -25,12 +25,19 @@ SQLI_ADDITIONAL_DATA_TIMEOUT = 600
 
 
 @dataclasses.dataclass
+class SQLmapCallResult:
+    output: Optional[str]
+    used_tamper_script: Optional[str]
+
+
+@dataclasses.dataclass
 class FoundSQLInjection:
     message: str
     target: str
     log: str
     extracted_version: Optional[str] = None
     extracted_user: Optional[str] = None
+    used_tamper_script: Optional[str] = None
 
 
 class SQLmap(ArtemisBase):  # type: ignore
@@ -47,8 +54,8 @@ class SQLmap(ArtemisBase):  # type: ignore
 
     def _call_sqlmap(
         self, url: str, arguments: List[str], find_in_output: str, timeout_seconds: Optional[int] = None
-    ) -> Optional[str]:
-        def _run() -> Optional[str]:
+    ) -> SQLmapCallResult:
+        def _run() -> SQLmapCallResult:
             if Config.Miscellaneous.CUSTOM_USER_AGENT:
                 additional_configuration = ["-A", Config.Miscellaneous.CUSTOM_USER_AGENT]
             else:
@@ -90,14 +97,14 @@ class SQLmap(ArtemisBase):  # type: ignore
                 for line in data_str.split("\n"):
                     match_result = re.compile(f"^{re.escape(find_in_output)}[^:]*: '(.*)'$").fullmatch(line)
                     if match_result:
-                        return match_result.group(1)
-            return None
+                        return SQLmapCallResult(match_result.group(1), tamper_script)
+            return SQLmapCallResult(None, None)
 
         if timeout_seconds:
             try:
                 return timeout_decorator.timeout(timeout_seconds)(_run)()  # type: ignore
             except TimeoutError:
-                return None
+                return SQLmapCallResult(None, None)
         else:
             return _run()
 
@@ -116,7 +123,8 @@ class SQLmap(ArtemisBase):  # type: ignore
         # by SQLmap is equal to the actual product of these numbers.
         query = f"SELECT {number1}*{number2}*{number3}"
 
-        if self._call_sqlmap(url, ["--sql-query", query], query) == f"{number1 * number2 * number3}":
+        result = self._call_sqlmap(url, ["--sql-query", query], query)
+        if result.output == f"{number1 * number2 * number3}":
             for item in os.listdir(os.path.join(OUTPUT_PATH)):
                 log_path = os.path.join(OUTPUT_PATH, item, "log")
                 target_path = os.path.join(OUTPUT_PATH, item, "target.txt")
@@ -133,7 +141,10 @@ class SQLmap(ArtemisBase):  # type: ignore
                         log = f.read().strip()
 
                     found_sql_injection = FoundSQLInjection(
-                        message=f"Found SQL Injection in {target}", target=target, log=log
+                        message=f"Found SQL Injection in {target}",
+                        target=target,
+                        log=log,
+                        used_tamper_script=result.used_tamper_script,
                     )
 
                     version_query = "SELECT SUBSTR(VERSION(), 1, 15)"
@@ -147,7 +158,7 @@ class SQLmap(ArtemisBase):  # type: ignore
                                 information_name,
                                 self._call_sqlmap(
                                     url, sqlmap_options, find_in_output, timeout_seconds=SQLI_ADDITIONAL_DATA_TIMEOUT
-                                ),
+                                ).output,
                             )
                         except Exception:  # Whatever happens, we prefer to report SQLi without additional data than no SQLi
                             self.log.exception(f"Unable to obtain {information_name} via blind SQL injection")
