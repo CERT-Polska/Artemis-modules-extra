@@ -158,11 +158,16 @@ class SSLChecks(ArtemisBase):  # type: ignore
 
             return list(scanner.get_results())
 
-        results = throttle_request(scan)
+        try:
+            results = throttle_request(scan)
+        except Exception:
+            self.log.exception(f"Unable to complete scan for {domain}")
+            results = []
 
         for server_scan_result in results:
             if not server_scan_result.scan_result:
-                raise Exception(f"Unable to complete scan for {domain}. Full result: {server_scan_result}")
+                self.log.error(f"Unable to complete scan for {domain}. Full result: {server_scan_result}")
+                continue
 
             certinfo_result = server_scan_result.scan_result.certificate_info.result
 
