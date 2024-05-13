@@ -49,8 +49,6 @@ class ExtraModulesConfig:
             [
                 "chardoubleencode",
                 "charencode",
-                "commalessmid",
-                "space2randomblank",
                 "/opt/karton_sqlmap/tamper/tamper_double_quotes.py",
             ]
         ),
