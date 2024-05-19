@@ -289,7 +289,7 @@ class SQLmap(ArtemisBase):  # type: ignore
         # (https://github.com/sqlmapproject/sqlmap/issues/5561) so it is done here.
         soup = BeautifulSoup(response.text)
         urls_with_injection_points = set()
-        expanded_urls_with_example_values = []
+        expanded_urls_with_example_values_dict = {}
         for tag in soup.find_all():
             new_url = None
             for attribute in ["src", "href"]:
@@ -301,8 +301,8 @@ class SQLmap(ArtemisBase):  # type: ignore
                 new_url = new_url.split("#")[0]
 
                 if any(
-                    new_url.split("?")[0].endswith(extension)
-                    for extension in [".png", ".jpg", ".svg", ".jpeg", ".css", ".js"]
+                    new_url.split("?")[0].lower().endswith(extension)
+                    for extension in [".png", ".jpg", ".svg", ".jpeg", ".css", ".js", ".ico", ".woff2"]
                 ):
                     # Let's not inject image/style paths
                     continue
@@ -318,13 +318,9 @@ class SQLmap(ArtemisBase):  # type: ignore
                             continue
 
                         urls_with_injection_points.add(url_with_injection_point)
-                        expanded_urls_with_example_values.append(
-                            (
-                                url_with_injection_point,
-                                example_value,
-                            )
-                        )
+                        expanded_urls_with_example_values_dict[url_with_injection_point] = example_value
 
+        expanded_urls_with_example_values = list(expanded_urls_with_example_values_dict.items())
         random.shuffle(expanded_urls_with_example_values)
         expanded_urls_with_example_values = expanded_urls_with_example_values[
             : ExtraModulesConfig.SQLMAP_MAX_URLS_TO_CRAWL
