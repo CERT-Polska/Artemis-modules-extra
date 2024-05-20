@@ -9,15 +9,11 @@
 Additional modules for Artemis (https://github.com/CERT-Polska/Artemis) that weren't included in
 in the core repository for licensing reasons.
 
-To run, clone this repository **inside the Artemis directory** and run the following command in the
-Artemis directory:
+To run, clone this repository **inside the Artemis directory**. The ``./scripts/start`` script will automatically
+detect and run these modules.
 
-```
-docker compose -f docker-compose.yaml -f Artemis-modules-extra/docker-compose.yml up --build
-```
-
-If you cloned the repository **inside the Artemis directory**, the e-mail report generation feature (described
-in https://artemis-scanner.readthedocs.io/en/latest/generating-emails.html) for the new modules
+If you cloned the repository inside the Artemis directory, the report generation feature (described
+in https://artemis-scanner.readthedocs.io/en/latest/generating-reports.html) for the new modules
 will be enabled **automatically**.
 
 ## Modules
@@ -41,8 +37,8 @@ ensuring no conflict with the commercialization clause. For the avoidance of dou
 remain solely liable for how you use this module and your compliance with wpscan’s license, and
 NASK is relieved of such liability to the fullest extent possible.
 
-The module is disabled by default - to enable it, add `-f Artemis-modules-extra/docker-compose.additional.wpscan.yml` to
-the `docker compose up` command.
+The module is disabled by default - to enable it, rename `docker-compose.additional.wpscan.yml.disabled` to
+`docker-compose.additional.wpscan.yml` and re-run ``./scripts/start``.
 
 ## Testing
 To run the tests, run:
