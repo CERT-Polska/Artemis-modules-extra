@@ -12,8 +12,8 @@ in the core repository for licensing reasons.
 To run, clone this repository **inside the Artemis directory**. The ``./scripts/start`` script will automatically
 detect and run these modules.
 
-If you cloned the repository inside the Artemis directory, the e-mail report generation feature (described
-in https://artemis-scanner.readthedocs.io/en/latest/generating-emails.html) for the new modules
+If you cloned the repository inside the Artemis directory, the report generation feature (described
+in https://artemis-scanner.readthedocs.io/en/latest/generating-reports.html) for the new modules
 will be enabled **automatically**.
 
 ## Modules
