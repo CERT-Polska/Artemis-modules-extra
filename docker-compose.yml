@@ -34,6 +34,7 @@ services:
     env_file: .env
     restart: always
     command: "python3 -m artemis.modules.karton_ssl_checks"
+    profiles: [not-arm]
 
   autoreporter:
     volumes:
