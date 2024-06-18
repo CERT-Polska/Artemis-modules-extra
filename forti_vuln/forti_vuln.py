@@ -60,21 +60,21 @@ class FortiVuln(ArtemisBase):  # type: ignore[misc]
         context.check_hostname = False
         context.verify_mode = ssl.CERT_NONE
 
-        baseurl = f"https://{host}:{port}"
-        self.log.info(f"forti vuln scanning {baseurl}")
+        http_host = f"{host}:{port}"
+        self.log.info(f"forti vuln scanning {http_host}")
 
         user_agent = ""
         if Config.Miscellaneous.CUSTOM_USER_AGENT:
             user_agent = Config.Miscellaneous.CUSTOM_USER_AGENT
 
         r1 = throttle_request(
-            lambda: self._send_req(context, (host, port), CONTROL_REQUEST.format(baseurl, user_agent).encode())
+            lambda: self._send_req(context, (host, port), CONTROL_REQUEST.format(http_host, user_agent).encode())
         )
         if r1 in [-1, 0]:
             return -1
         else:
             r2 = throttle_request(
-                lambda: self._send_req(context, (host, port), VULN_CHECK_REQUEST.format(baseurl, user_agent).encode())
+                lambda: self._send_req(context, (host, port), VULN_CHECK_REQUEST.format(http_host, user_agent).encode())
             )
             if r2 == 0:
                 return 1
