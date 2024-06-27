@@ -9,7 +9,7 @@ from artemis.reporting.base.templating import ReportEmailTemplateFragment
 from artemis.reporting.utils import get_top_level_target
 
 
-class FortiVulnReporter(Reporter):  # type: ignore[misc]
+class FortiVulnReporter(Reporter):  # type: ignore
     VULNERABLE_FORTIOS = ReportType("forti_vuln")
 
     @staticmethod
