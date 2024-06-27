@@ -11,6 +11,18 @@ services:
     restart: always
     command: "python3 -m artemis.modules.karton_dns_reaper"
 
+  karton-forti_vuln:
+    build:
+      context: Artemis-modules-extra
+      dockerfile: forti_vuln/Dockerfile
+    volumes:
+      - "./docker/karton.ini:/etc/karton/karton.ini"
+      - "${DOCKER_COMPOSE_ADDITIONAL_SHARED_DIRECTORY:-./shared}:/shared/"
+    depends_on: [karton-system]
+    env_file: .env
+    restart: always
+    command: "python3 -m artemis.modules.forti_vuln"
+
   karton-sqlmap:
     build:
       context: Artemis-modules-extra
@@ -36,22 +48,10 @@ services:
     command: "python3 -m artemis.modules.karton_ssl_checks"
     profiles: [not-arm]
 
-  karton-forti_vuln:
-    build:
-      context: Artemis-modules-extra
-      dockerfile: forti_vuln/Dockerfile
-    volumes:
-      - "./docker/karton.ini:/etc/karton/karton.ini"
-      - "${DOCKER_COMPOSE_ADDITIONAL_SHARED_DIRECTORY:-./shared}:/shared/"
-    depends_on: [karton-system]
-    env_file: .env
-    restart: always
-    command: "python3 -m artemis.modules.forti_vuln"
-
   autoreporter:
     volumes:
       - ./Artemis-modules-extra/extra_modules_config.py:/opt/extra_modules_config.py
-      - ./Artemis-modules-extra/autoreporter_addons/ssl_checks/:/opt/artemis/reporting/modules/ssl_checks/
-      - ./Artemis-modules-extra/autoreporter_addons/sqlmap/:/opt/artemis/reporting/modules/sqlmap/
       - ./Artemis-modules-extra/autoreporter_addons/dns_reaper/:/opt/artemis/reporting/modules/dns_reaper/
       - ./Artemis-modules-extra/autoreporter_addons/forti_vuln/:/opt/artemis/reporting/modules/forti_vuln/
+      - ./Artemis-modules-extra/autoreporter_addons/sqlmap/:/opt/artemis/reporting/modules/sqlmap/
+      - ./Artemis-modules-extra/autoreporter_addons/ssl_checks/:/opt/artemis/reporting/modules/ssl_checks/
