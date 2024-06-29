@@ -30,7 +30,7 @@ Uses https://github.com/sqlmapproject/sqlmap under the hood. Finds SQL injection
 licensed under GPL-2.0.
 
 ### `forti_vuln`
-Uses slightly modified https://github.com/BishopFox/cve-2024-21762-check under the hood. Detects if Fortigate device is vulnerable to CVE-2024-21762 and is licensed under GPL-3.0.
+Uses slightly modified https://github.com/BishopFox/cve-2024-21762-check under the hood. Detects if Fortigate devices are vulnerable to CVE-2024-21762 and is licensed under GPL-3.0.
 
 ### `wpscan`
 Uses https://github.com/wpscanteam/wpscan under the hood. Finds vulnerabilities on sites that use WordPress.
