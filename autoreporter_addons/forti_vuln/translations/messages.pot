@@ -1,0 +1,6 @@
+#: autoreporter_addons/forti_vuln/template_vulnerable_fortios.jinja2:2
+msgid ""
+"We have identified that the following Fortinet VPN gateways are affected "
+"by the critical CVE-2024-21762 vulnerability, which allows remote code "
+"execution without authentication:"
+msgstr ""

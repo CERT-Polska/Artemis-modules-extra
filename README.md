@@ -29,6 +29,9 @@ AGPL-3.0.
 Uses https://github.com/sqlmapproject/sqlmap under the hood. Finds SQL injection vulnerabilities and is
 licensed under GPL-2.0.
 
+### `forti_vuln`
+Uses slightly modified https://github.com/BishopFox/cve-2024-21762-check under the hood. Detects if Fortigate devices are vulnerable to CVE-2024-21762 and is licensed under GPL-3.0.
+
 ### `wpscan`
 Uses https://github.com/wpscanteam/wpscan under the hood. Finds vulnerabilities on sites that use WordPress.
 By using this module you confirm that you have read carefully the terms and conditions of the license in
@@ -73,3 +76,4 @@ We kindly remind you that:
 * by contributing to the `dns_reaper` module you agree that the AGPL-3.0 License shall apply to your input automatically, without the need for any additional declarations to be made.
 * by contributing to the `ssl_checks` module you agree that the AGPL-3.0 License shall apply to your input automatically, without the need for any additional declarations to be made.
 * by contributing to the `sqlmap` module you agree that the GPL-2.0 License shall apply to your input automatically, without the need for any additional declarations to be made.
+* by contributing to the `forti_vuln` module you agree that the GPL-3.0 License shall apply to your input automatically, without the need for any additional declarations to be made.

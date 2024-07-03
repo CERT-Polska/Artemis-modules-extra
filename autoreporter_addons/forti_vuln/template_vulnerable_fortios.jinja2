@@ -1,0 +1,14 @@
+{% if "forti_vuln" in data.contains_type %}
+    <li>{% trans %}We have identified that the following Fortinet VPN gateways are affected by the critical CVE-2024-21762 vulnerability, which allows remote code execution without authentication:{% endtrans %}
+        <ul>
+            {% for report in data.reports %}
+                {% if report.report_type == "forti_vuln" %}
+                    <li>
+                        {{ report.target }}
+                        {{ report_meta(report) }}
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </li>
+{% endif %}
