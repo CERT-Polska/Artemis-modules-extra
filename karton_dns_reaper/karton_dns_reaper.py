@@ -2,11 +2,13 @@
 import json
 import subprocess
 
+from artemis import load_risk_class
 from artemis.binds import TaskStatus, TaskType
 from artemis.module_base import ArtemisBase
 from karton.core import Task
 
 
+@load_risk_class.load_risk_class(load_risk_class.LoadRiskClass.LOW)
 class DNSReaper(ArtemisBase):  # type: ignore
     """
     Runs DNSReaper

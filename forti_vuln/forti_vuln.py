@@ -3,6 +3,7 @@ import socket
 import ssl
 from typing import Optional, Tuple
 
+from artemis import load_risk_class
 from artemis.binds import Device, TaskStatus, TaskType
 from artemis.config import Config
 from artemis.module_base import ArtemisBase
@@ -30,6 +31,7 @@ Transfer-Encoding: chunked\r
 """
 
 
+@load_risk_class.load_risk_class(load_risk_class.LoadRiskClass.MEDIUM)
 class FortiVuln(ArtemisBase):  # type: ignore
     """
     Checks FortiOS instance for CVE-2024-21762 vulnerability

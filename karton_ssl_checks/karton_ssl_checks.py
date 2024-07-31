@@ -7,7 +7,7 @@ from typing import Any, Dict, List
 
 import hstspreload
 import requests
-from artemis import http_requests
+from artemis import http_requests, load_risk_class
 from artemis.binds import TaskStatus, TaskType
 from artemis.config import Config
 from artemis.domains import is_subdomain
@@ -23,6 +23,7 @@ from sslyze.scanner.scanner import Scanner, ServerScanRequest, ServerScanResult
 from extra_modules_config import ExtraModulesConfig
 
 
+@load_risk_class.load_risk_class(load_risk_class.LoadRiskClass.LOW)
 class SSLChecks(ArtemisBase):  # type: ignore
     """
     Runs SSL checks
