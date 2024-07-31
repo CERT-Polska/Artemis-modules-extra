@@ -10,7 +10,7 @@ import urllib
 from typing import List, Optional, Tuple
 
 import timeout_decorator
-from artemis import http_requests
+from artemis import http_requests, load_risk_class
 from artemis.binds import Service, TaskStatus, TaskType
 from artemis.config import Config
 from artemis.module_base import ArtemisBase
@@ -40,6 +40,7 @@ class FoundSQLInjection:
     used_tamper_script: Optional[str] = None
 
 
+@load_risk_class.load_risk_class(load_risk_class.LoadRiskClass.HIGH)
 class SQLmap(ArtemisBase):  # type: ignore
     """
     Runs sqlmap

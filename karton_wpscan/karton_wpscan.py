@@ -3,6 +3,7 @@ import json
 import subprocess
 import urllib.parse
 
+from artemis import load_risk_class
 from artemis.binds import TaskStatus, TaskType
 from artemis.module_base import ArtemisBase
 from karton.core import Task
@@ -14,6 +15,7 @@ class ScanningException(Exception):
     pass
 
 
+@load_risk_class.load_risk_class(load_risk_class.LoadRiskClass.MEDIUM)
 class WPScan(ArtemisBase):  # type: ignore
     """
     Runs WPScan -> WordPress Vulnerability Scanner
