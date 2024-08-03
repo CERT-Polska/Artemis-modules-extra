@@ -9,7 +9,7 @@ from karton.core import Task
 
 class DNSReaper(ArtemisBase):  # type: ignore
     """
-    Runs DNSReaper
+    Detects subdomain takeover vulnerabilities with DNSReaper
     """
 
     identity = "dns_reaper"
