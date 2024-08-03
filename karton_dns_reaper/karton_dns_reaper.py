@@ -11,7 +11,7 @@ from karton.core import Task
 @load_risk_class.load_risk_class(load_risk_class.LoadRiskClass.LOW)
 class DNSReaper(ArtemisBase):  # type: ignore
     """
-    Runs DNSReaper
+    Detects subdomain takeover vulnerabilities with DNSReaper
     """
 
     identity = "dns_reaper"
