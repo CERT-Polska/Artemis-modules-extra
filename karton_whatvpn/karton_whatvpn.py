@@ -7,7 +7,6 @@ from artemis.task_utils import get_target_url, get_target_host
 from karton.core import Task
 import string
 
-
 from extra_modules_config import ExtraModulesConfig
 
 logger = utils.build_logger(__name__)
@@ -21,13 +20,17 @@ class WhatVPN(ArtemisBase):
     filters = [
         {"type": TaskType.IP.value}, 
         {"type": TaskType.DOMAIN.value}
-        # {"type": TaskType.SERVICE.value, "service": Service.HTTP.value}
+        # {"type": TaskType.SERVICE.value, "service": Service.HTTP.value},
+        # {"type": TaskType.SERVICE.value, "service": Service.UNKNOWN.value}
     ]
 
     def _process(self, current_task: Task, host: str) -> None:
         output = subprocess.run( #print?
             [
                 "what-vpn",
+                "--keep-going-after-exception",
+                "--timeout",
+                ExtraModulesConfig.WHATVPN_TIMEOUT_S,
                 host
 
             ],
