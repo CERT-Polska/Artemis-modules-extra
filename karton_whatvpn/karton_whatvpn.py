@@ -34,12 +34,16 @@ class WhatVPN(ArtemisBase):
             capture_output=True
         )
         output = output.stdout.decode("utf-8")
-        detected_vpn = output.split(' ', 1)[1] 
+        detected_vpn = []
 
-        if "no match" in detected_vpn:
+        error_messages = ["error", "timeout", "no match"]
+        if any(msg in output for msg in error_messages):
             status = TaskStatus.OK
             status_reason = "Could not identify a VPN gateway"
         else:
+            # Format of what-vpn output:
+            # scanned_host: identified_VPN [VPN_version]
+            detected_vpn.append(output.split(' ', 1)[1])
             status = TaskStatus.INTERESTING
             status_reason = f"Detected {detected_vpn}"
 
