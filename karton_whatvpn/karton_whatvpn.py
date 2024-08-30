@@ -1,6 +1,6 @@
 import subprocess
 
-from artemis import utils
+from artemis import utils, load_risk_class
 from artemis.binds import TaskStatus, TaskType, Service
 from artemis.module_base import ArtemisBase
 from artemis.task_utils import get_target_url, get_target_host
@@ -11,6 +11,7 @@ from extra_modules_config import ExtraModulesConfig
 
 logger = utils.build_logger(__name__)
 
+@load_risk_class.load_risk_class(load_risk_class.LoadRiskClass.LOW)
 class WhatVPN(ArtemisBase):
     """ 
     Runs what-vpn -> SSL VPN identifier
@@ -18,21 +19,17 @@ class WhatVPN(ArtemisBase):
     
     identity = "what-vpn"
     filters = [
-        {"type": TaskType.IP.value}, 
-        {"type": TaskType.DOMAIN.value}
-        # {"type": TaskType.SERVICE.value, "service": Service.HTTP.value},
-        # {"type": TaskType.SERVICE.value, "service": Service.UNKNOWN.value}
+        {"type": TaskType.IP.value}
     ]
 
     def _process(self, current_task: Task, host: str) -> None:
-        output = subprocess.run( #print?
+        output = subprocess.run(
             [
                 "what-vpn",
                 "--keep-going-after-exception",
                 "--timeout",
                 ExtraModulesConfig.WHATVPN_TIMEOUT_S,
                 host
-
             ],
             capture_output=True
         )
