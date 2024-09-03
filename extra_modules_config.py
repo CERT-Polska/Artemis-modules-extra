@@ -55,10 +55,10 @@ class ExtraModulesConfig:
     )
 
     # Timeout counted in seconds, after which the what-vpn module terminates a connection and starts using the next sniffer.
-    # Some of VPN gateways do not respond in any way to the HTTP(S) requests, so the timeout variable should be optimized in 
+    # Some of VPN gateways do not respond in any way to the HTTP(S) requests, so the timeout variable should be optimized in
     # order to avoid false negatives while not blocking the task for too long.
-    WHATVPN_TIMEOUT_S = decouple.config(
-        "WHATVPN_TIMEOUT_S",
+    WHATVPN_TIMEOUT_SECONDS = decouple.config(
+        "WHATVPN_TIMEOUT_SECONDS",
         default="2",
     )
 
