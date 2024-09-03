@@ -25,20 +25,20 @@ class WhatVPN(ArtemisBase):  # type: ignore
             ["what-vpn", "--keep-going-after-exception", "--timeout", ExtraModulesConfig.WHATVPN_TIMEOUT_SECONDS, host],
             capture_output=True,
         )
-        output = output.stdout.decode("utf-8")
+        output_str = output.stdout.decode("utf-8")
         detected_vpn = []
 
         error_messages = ["error", "timeout"]
-        if any(msg in output for msg in error_messages):
+        if any(msg in output_str for msg in error_messages):
             status = TaskStatus.ERROR
             status_reason = "Error or timeout occurred"
-        elif "no match" in output:
+        elif "no match" in output_str:
             status = TaskStatus.OK
             status_reason = "Could not identify a VPN gateway"
         else:
             # Format of what-vpn output:
             # scanned_host: identified_VPN [VPN_version]
-            detected_vpn.append(output.split(" ", 1)[1])
+            detected_vpn.append(output_str.split(" ", 1)[1])
             status = TaskStatus.INTERESTING
             status_reason = f"Detected {detected_vpn}"
 
