@@ -26,7 +26,7 @@ class WhatVPN(ArtemisBase):  # type: ignore
             capture_output=True,
         )
         output_str = output.stdout.decode("utf-8")
-        detected_vpn = []
+        detected_vpn = None
 
         error_messages = ["error", "timeout"]
         if any(msg in output_str for msg in error_messages):
@@ -38,7 +38,7 @@ class WhatVPN(ArtemisBase):  # type: ignore
         else:
             # Format of what-vpn output:
             # scanned_host: identified_VPN [VPN_version]
-            detected_vpn.append(output_str.split(" ", 1)[1])
+            detected_vpn = output_str.split(" ", 1)[1]
             status = TaskStatus.INTERESTING
             status_reason = f"Detected {detected_vpn}"
 
