@@ -14,6 +14,7 @@ Hello! Welcome to Synology Web Station!
 <html> is functioning normally
 <html><title>Hosting dedykowany zapewnie Hitme.pl</title>
 HTTP Error 404. The requested resource is not found.
+http://www.kei.pl/landing/startowa
 id="contact-frame" src="https://parking.premium.pl
 jest utrzymywana na serwerach
 Jeżeli chcesz zmienić tę stronę, wgraj własny plik index.html do katalogu private_html
