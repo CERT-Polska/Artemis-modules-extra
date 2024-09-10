@@ -3,6 +3,7 @@ Account Suspended
 <div class="info underconstruction">
 <FRAME NORESIZE SRC="http://default.kei.pl/startowa">
 <FRAME NORESIZE SRC="http://www.kei.pl/landing/domyslna">
+<h1>prx0
 <h1>Tu 2click20.trol.pl</h1>
 <head><title>Error Page - Ta strona nie istnieje!</title></head>
 Hello! Welcome to Synology Web Station!
@@ -18,6 +19,7 @@ http://www.kei.pl/landing/startowa
 id="contact-frame" src="https://parking.premium.pl
 jest utrzymywana na serwerach
 Jeżeli chcesz zmienić tę stronę, wgraj własny plik index.html do katalogu private_html
+<link rel="shortcut icon" type="image/png" href="https://www.cba.pl/img/favicon.png">
 <META name="abstract" content="Cyber_Folks Lepsza szybkość stron i wsparcie bez porównania">
 //newkf.nazwa.pl/index,
 Nginx is functioning normally
