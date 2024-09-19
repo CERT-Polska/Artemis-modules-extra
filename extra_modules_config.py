@@ -45,9 +45,7 @@ class ExtraModulesConfig:
     SQLMAP_TAMPER_SCRIPTS = decouple.config(
         "SQLMAP_TAMPER_SCRIPTS",
         cast=decouple.Csv(str),
-        default=",".join(
-            []
-        ),
+        default=",".join([]),
     )
 
     # Timeout counted in seconds, after which the what-vpn module terminates a connection and starts using the next sniffer.
