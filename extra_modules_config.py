@@ -46,11 +46,7 @@ class ExtraModulesConfig:
         "SQLMAP_TAMPER_SCRIPTS",
         cast=decouple.Csv(str),
         default=",".join(
-            [
-                "chardoubleencode",
-                "charencode",
-                "/opt/karton_sqlmap/tamper/tamper_double_quotes.py",
-            ]
+            []
         ),
     )
 
