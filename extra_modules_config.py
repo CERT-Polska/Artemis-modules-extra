@@ -45,13 +45,7 @@ class ExtraModulesConfig:
     SQLMAP_TAMPER_SCRIPTS = decouple.config(
         "SQLMAP_TAMPER_SCRIPTS",
         cast=decouple.Csv(str),
-        default=",".join(
-            [
-                "chardoubleencode",
-                "charencode",
-                "/opt/karton_sqlmap/tamper/tamper_double_quotes.py",
-            ]
-        ),
+        default="",
     )
 
     # Timeout counted in seconds, after which the what-vpn module terminates a connection and starts using the next sniffer.
