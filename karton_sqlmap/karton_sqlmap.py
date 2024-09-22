@@ -302,10 +302,7 @@ class SQLmap(ArtemisBase):  # type: ignore
 
                 new_url = new_url.split("#")[0]
 
-                if any(
-                    new_url.split("?")[0].lower().endswith(extension)
-                    for extension in STATIC_EXTENSIONS
-                ):
+                if any(new_url.split("?")[0].lower().endswith(extension) for extension in STATIC_EXTENSIONS):
                     # Let's not inject image/style paths
                     continue
 
