@@ -71,14 +71,11 @@ class SQLmap(ArtemisBase):  # type: ignore
                         "-u",
                         url,
                         "--batch",
-                        "--technique",
-                        "BU",
-                        "--skip-waf",
-                        "--skip-heuristics",
                         "-v",
                         "1",
                     ]
                     + arguments
+                    + ExtraModulesConfig.SQLMAP_COMMAND_LINE_OPTIONS
                     + additional_configuration
                 )
 

@@ -42,6 +42,21 @@ class ExtraModulesConfig:
         default=25,
     )
 
+    # Command-line options that will be passed to sqlmap
+    SQLMAP_COMMAND_LINE_OPTIONS = decouple.config(
+        "SQLMAP_COMMAND_LINE_OPTIONS",
+        cast=decouple.Csv(str),
+        default=",".join(
+            [
+                "--technique",
+                "BU",
+                "--skip-waf",
+                "--skip-heuristics",
+            ]
+        ),
+    )
+
+    # Tamper scripts to be used by sqlmap (sqlmap will be executed once per tamper script + once without any)
     SQLMAP_TAMPER_SCRIPTS = decouple.config(
         "SQLMAP_TAMPER_SCRIPTS",
         cast=decouple.Csv(str),
