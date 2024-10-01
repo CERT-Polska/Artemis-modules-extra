@@ -16,6 +16,13 @@ msgid ""
 "information) will be encrypted."
 msgstr ""
 
+#: autoreporter_addons/ssl_checks/template_bad_certificate_names.jinja2:29
+#: autoreporter_addons/ssl_checks/template_certificate_authority_invalid.jinja2:22
+#: autoreporter_addons/ssl_checks/template_expired_ssl_certificate.jinja2:20
+#: autoreporter_addons/ssl_checks/template_no_https_redirect.jinja2:21
+msgid "Please note that you can obtain an SSL certificate for free."
+msgstr ""
+
 #: autoreporter_addons/ssl_checks/template_certificate_authority_invalid.jinja2:2
 msgid ""
 "SSL/TLS certificates on following addresses aren't signed by a trusted "
