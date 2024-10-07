@@ -74,6 +74,7 @@ This page is under construction. Please try again in some time.
 <title>LOGONET Sp. z o.o. [C]</title>
 <title>LOGONET Sp. z o.o. [V]</title>
 <title>Microsoft Internet Information Services 8</title>
+<title>NameBright - Coming Soon</title>
 <TITLE>Not Found</TITLE>
 <title>Page not found!</title>
 <title>Serwer WWW</title>
