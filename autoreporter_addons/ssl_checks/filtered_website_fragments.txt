@@ -5,6 +5,7 @@ Account Suspended
 <FRAME NORESIZE SRC="http://www.kei.pl/landing/domyslna">
 <h1>prx0
 <h1>Tu 2click20.trol.pl</h1>
+<h2>Domena utrzymywana na serwerach firmy ESC SA</h2>
 <head><title>Error Page - Ta strona nie istnieje!</title></head>
 Hello! Welcome to Synology Web Station!
 <html>Apache is functioning normally</html>
