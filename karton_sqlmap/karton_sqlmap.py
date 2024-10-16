@@ -87,7 +87,7 @@ class SQLmap(ArtemisBase):  # type: ignore
                 data_str = data.decode("ascii", errors="ignore")
                 self.log.info("url %s, cmd %s, output %s", url, cmd, data_str)
 
-                if "in case of continuous data retrieval problems you are advised to try a switch '--no-cast'":
+                if "try a switch '--no-cast'" in data_str:
                     cmd += ["--no-cast"]
                     data = subprocess.check_output(cmd)
                     data_str = data.decode("ascii", errors="ignore")
