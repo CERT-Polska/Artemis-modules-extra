@@ -5,4 +5,3 @@ msgstr ""
 #: autoreporter_addons/vnc_auth/template_vnc_weak_pass.jinja2:7
 msgid "password"
 msgstr ""
-

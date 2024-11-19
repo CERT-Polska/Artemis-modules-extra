@@ -1,10 +1,9 @@
 #: autoreporter_addons/vnc_auth/template_vnc_weak_pass.jinja2:2
 msgid "The following VNC servers allow authenticating with a simple password:"
 msgstr ""
-"Następujące serwery VNC umożliwiają uwierzytelnianie za pomocą trywialnego "
+"Następujące serwery VNC umożliwiają uwierzytelnianie za pomocą prostego "
 "hasła:"
 
 #: autoreporter_addons/vnc_auth/template_vnc_weak_pass.jinja2:7
 msgid "password"
 msgstr "hasło"
-

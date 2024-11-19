@@ -24,10 +24,10 @@ class VncAuthReporter(Reporter):  # type: ignore
         return [
             Report(
                 top_level_target=get_top_level_target(task_result),
-                target="vnc://" + task_result['target_string'],
+                target="vnc://" + task_result["target_string"],
                 report_type=VncAuthReporter.VNC_WEAK_PASS,
                 timestamp=task_result["created_at"],
-                additional_data={"pass": task_result["status_reason"].split(' ', 2)[2][:3] + 5 * "*"},
+                additional_data={"pass": task_result["result"]["password"][:3] + "*****"},
             )
         ]
 
