@@ -73,3 +73,13 @@ class ExtraModulesConfig:
 
     # WPScan API key
     WPSCAN_API_KEY = decouple.config("WPSCAN_API_KEY", default=None)
+
+    # List of VNC passwords for the vnc_auth module.
+    VNC_AUTH_PASSWORD_LIST = ["admin", "12345678", "password"]
+
+    # Timeout counted in seconds, after which the vnc_auth module starts checking passwords after it's launched.
+    # This is to wait after fingerprinting the service to avoid sending too many requests to the server.
+    VNC_AUTH_INITIAL_SLEEP = 60
+
+    # Number of seconds to wait between password guesses.
+    VNC_AUTH_BRUTE_DELAY = 30

@@ -1,0 +1,14 @@
+{% if "vnc_auth" in data.contains_type %}
+    <li>{% trans %}The following VNC servers allow authenticating with a simple password:{% endtrans %}
+        <ul>
+            {% for report in data.reports %}
+                {% if report.report_type == "vnc_auth" %}
+                    <li>
+                        {{ report.target }}: {% trans %}password{% endtrans %} {{ report.additional_data.pass }}
+                        {{ report_meta(report) }}
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </li>
+{% endif %}

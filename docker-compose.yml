@@ -58,6 +58,16 @@ services:
     restart: always
     command: "python3 -m artemis.modules.karton_whatvpn"
 
+  karton-vnc_auth:
+    build:
+      context: Artemis-modules-extra
+      dockerfile: karton_vnc_auth/Dockerfile
+    volumes: ["./docker/karton.ini:/etc/karton/karton.ini", "${DOCKER_COMPOSE_ADDITIONAL_SHARED_DIRECTORY:-./shared}:/shared/"]
+    depends_on: [karton-system]
+    env_file: .env
+    restart: always
+    command: "python3 -m artemis.modules.karton_vnc_auth"
+
   autoreporter:
     volumes:
       - ./Artemis-modules-extra/extra_modules_config.py:/opt/extra_modules_config.py
@@ -65,3 +75,4 @@ services:
       - ./Artemis-modules-extra/autoreporter_addons/forti_vuln/:/opt/artemis/reporting/modules/forti_vuln/
       - ./Artemis-modules-extra/autoreporter_addons/sqlmap/:/opt/artemis/reporting/modules/sqlmap/
       - ./Artemis-modules-extra/autoreporter_addons/ssl_checks/:/opt/artemis/reporting/modules/ssl_checks/
+      - ./Artemis-modules-extra/autoreporter_addons/vnc_auth/:/opt/artemis/reporting/modules/vnc_auth/
