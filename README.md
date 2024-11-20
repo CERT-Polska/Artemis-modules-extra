@@ -46,6 +46,9 @@ The module is disabled by default - to enable it, rename `docker-compose.additio
 ### what-vpn
 Uses https://github.com/dlenski/what-vpn under the hood. Identifies servers running various SSL VPNs and is licensed under GPL-3.0-or-later.
 
+### vnc_auth
+Uses https://nmap.org/nsedoc/scripts/vnc-brute.html under the hood. Performs a brute force attack on VNC servers to guess password. This is licensed under GPL-3.0-or-later.
+
 ## Testing
 To run the tests, run:
 
@@ -80,3 +83,4 @@ We kindly remind you that:
 * by contributing to the `ssl_checks` module you agree that the AGPL-3.0 License shall apply to your input automatically, without the need for any additional declarations to be made.
 * by contributing to the `sqlmap` module you agree that the GPL-2.0 License shall apply to your input automatically, without the need for any additional declarations to be made.
 * by contributing to the `forti_vuln` module you agree that the GPL-3.0 License shall apply to your input automatically, without the need for any additional declarations to be made.
+* by contributing to the `vnc_auth` module you agree that the GPL-3.0 License shall apply to your input automatically, without the need for any additional declarations to be made.
