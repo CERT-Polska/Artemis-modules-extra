@@ -68,7 +68,9 @@ class SQLmap(ArtemisBase):  # type: ignore
                     [
                         "sqlmap",
                         "--delay",
-                        str(1.0 / Config.Limits.REQUESTS_PER_SECOND) if Config.Limits.REQUESTS_PER_SECOND else "0",
+                        str(1.0 / self.requests_per_second_for_current_tasks)
+                        if self.requests_per_second_for_current_tasks
+                        else "0",
                         "-u",
                         url,
                         "--batch",
