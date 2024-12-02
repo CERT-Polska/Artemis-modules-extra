@@ -1,2 +1,2 @@
 sslyze==6.0.0
-hstspreload==2024.11.1
+hstspreload==2024.12.1
