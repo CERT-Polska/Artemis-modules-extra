@@ -7,7 +7,6 @@ services:
     volumes:
       - "./docker/karton.ini:/etc/karton/karton.ini"
       - "${DOCKER_COMPOSE_ADDITIONAL_SHARED_DIRECTORY:-./shared}:/shared/"
-    depends_on: [karton-system]
     env_file: .env
     restart: always
     command: "python3 -m artemis.modules.karton_wpscan"
