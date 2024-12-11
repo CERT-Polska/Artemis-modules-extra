@@ -66,6 +66,7 @@ This page is under construction. Please try again in some time.
 <title>dhosting.pl - pod tym adresem nie znajduje się żaden serwis WWW</title>
 <title>Domain Default page</title>
 <title>|DOMAIN|</title>
+<title>Domena utrzymywana jest w cyber_Folks</title>
 <title>Dummy site</title>
 <title>Error 404</title>
 <title>Error</title>
