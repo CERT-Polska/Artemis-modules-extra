@@ -1,1 +1,1 @@
-sqlmap==1.8.12.post1
+sqlmap==1.9
