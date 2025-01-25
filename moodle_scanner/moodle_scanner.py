@@ -3,12 +3,11 @@ import dataclasses
 import subprocess
 from typing import Any, Dict, List, Optional
 
-from karton.core import Task
-
 from artemis import load_risk_class
 from artemis.binds import Service, TaskStatus, TaskType
 from artemis.module_base import ArtemisBase
 from artemis.task_utils import get_target_url
+from karton.core import Task
 
 
 @dataclasses.dataclass
@@ -59,7 +58,7 @@ def process_moodle_json(result: Dict[str, Any]) -> List[MoodleMessage]:
 
 
 @load_risk_class.load_risk_class(load_risk_class.LoadRiskClass.MEDIUM)
-class MoodleScanner(ArtemisBase):
+class MoodleScanner(ArtemisBase):  # type: ignore
     """
     Runs Moodle-Scanner -> A Moodle Vulnerability Analyzer
     """
@@ -79,6 +78,8 @@ class MoodleScanner(ArtemisBase):
         version_info: Optional[str] = None
         vulnerabilities: List[str] = []
         error_message: Optional[str] = None
+        status: TaskStatus
+        status_reason: Optional[str]
 
         for i, line in enumerate(output_lines):
             if "Error: Can't connect" in line:
