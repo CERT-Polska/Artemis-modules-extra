@@ -21,6 +21,17 @@ services:
     restart: always
     command: "python3 -m artemis.modules.forti_vuln"
 
+  karton-moodle_scanner:
+    build:
+      context: Artemis-modules-extra
+      dockerfile: moodle_scanner/Dockerfile
+    volumes:
+      - "./docker/karton.ini:/etc/karton/karton.ini"
+      - "${DOCKER_COMPOSE_ADDITIONAL_SHARED_DIRECTORY:-./shared}:/shared/"
+    env_file: .env
+    restart: always
+    command: "python3 -m artemis.modules.moodle_scanner"
+
   karton-sqlmap:
     build:
       context: Artemis-modules-extra

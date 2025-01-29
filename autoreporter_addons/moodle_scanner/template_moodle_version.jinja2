@@ -1,0 +1,21 @@
+{% if reports %}
+<h3>Moodle Version Information</h3>
+<p>The following Moodle installations were detected:</p>
+
+<ul>
+{% for report in reports %}
+    <li>
+        <strong>{{ report.target }}</strong>
+        <ul>
+            <li>Version: {{ report.additional_data.version }}</li>
+            <li>Server: {{ report.additional_data.server }}</li>
+        </ul>
+    </li>
+{% endfor %}
+</ul>
+
+<p>
+    <strong>Recommendation:</strong> Keep track of the Moodle versions in use and ensure they are up to date with the latest security patches.
+    Check the official Moodle security advisories for any known vulnerabilities in these versions.
+</p>
+{% endif %} 
