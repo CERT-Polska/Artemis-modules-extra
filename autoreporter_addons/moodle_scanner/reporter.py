@@ -14,7 +14,7 @@ from artemis.reporting.base.templating import ReportEmailTemplateFragment
 from artemis.reporting.utils import get_top_level_target
 
 
-class MoodleScannerReporter(Reporter):
+class MoodleScannerReporter(Reporter):  # type: ignore
     MOODLE_VERSION_FOUND = ReportType("moodle_version_found")
     MOODLE_VULNERABILITY_FOUND = ReportType("moodle_vulnerability_found")
 
@@ -99,4 +99,4 @@ class MoodleScannerReporter(Reporter):
                     "version": report.additional_data["version"],
                 }
             ),
-        } 
+        }
