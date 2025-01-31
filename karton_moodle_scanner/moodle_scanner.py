@@ -4,7 +4,7 @@ import subprocess
 from typing import Any, Dict, List, Optional
 
 from artemis import load_risk_class
-from artemis.binds import Service, TaskStatus, TaskType
+from artemis.binds import TaskStatus, TaskType, WebApplication
 from artemis.module_base import ArtemisBase
 from artemis.task_utils import get_target_url
 from karton.core import Task
@@ -65,7 +65,7 @@ class MoodleScanner(ArtemisBase):  # type: ignore
 
     identity: str = "moodle_scanner"
     filters: List[Dict[str, str]] = [
-        {"type": TaskType.SERVICE.value, "service": Service.HTTP.value},
+        {"type": TaskType.WEBAPP.value, "webapp": WebApplication.MOODLE.value},
     ]
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
