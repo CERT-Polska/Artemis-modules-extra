@@ -1,21 +1,21 @@
-{% if reports %}
-<h3>Moodle Version Information</h3>
-<p>The following Moodle installations were detected:</p>
+{% if "moodle_version_found" in data.contains_type %}
+    <li>{% trans %}The following Moodle installations were detected:{% endtrans %}
 
-<ul>
-{% for report in reports %}
-    <li>
-        <strong>{{ report.target }}</strong>
-        <ul>
-            <li>Version: {{ report.additional_data.version }}</li>
-            <li>Server: {{ report.additional_data.server }}</li>
-        </ul>
-    </li>
-{% endfor %}
-</ul>
+    <ul>
+        {% for report in data.reports %}
+            {% if report.report_type == "moodle_version_found" %}
+                <li>
+                    {{ report.target }} - {% trans %}version:{% endtrans %} {{report.additional_data.version }}
+                    {{ report_meta(report) }}
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
 
-<p>
-    <strong>Recommendation:</strong> Keep track of the Moodle versions in use and ensure they are up to date with the latest security patches.
-    Check the official Moodle security advisories for any known vulnerabilities in these versions.
-</p>
+    <p>
+        {% trans trimmed %}
+            Keep track of the Moodle versions in use and ensure they are up to date with the latest security patches.
+            Check the official Moodle security advisories for any known vulnerabilities in these versions.
+        {% endtrans %}
+    </p>
 {% endif %}

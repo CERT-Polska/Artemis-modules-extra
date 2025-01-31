@@ -70,4 +70,5 @@ services:
       - ./Artemis-modules-extra/autoreporter_addons/dns_reaper/:/opt/artemis/reporting/modules/dns_reaper/
       - ./Artemis-modules-extra/autoreporter_addons/forti_vuln/:/opt/artemis/reporting/modules/forti_vuln/
       - ./Artemis-modules-extra/autoreporter_addons/sqlmap/:/opt/artemis/reporting/modules/sqlmap/
+      - ./Artemis-modules-extra/autoreporter_addons/moodle_scanner/:/opt/artemis/reporting/modules/moodle_scanner/
       - ./Artemis-modules-extra/autoreporter_addons/ssl_checks/:/opt/artemis/reporting/modules/ssl_checks/

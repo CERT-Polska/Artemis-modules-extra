@@ -20,6 +20,8 @@ class MoodleScannerReporter(Reporter):  # type: ignore
 
     @staticmethod
     def create_reports(task_result: Dict[str, Any], language: Language) -> List[Report]:
+        import sys
+        sys.stderr.write(repr(task_result["result"]))
         if task_result["headers"]["receiver"] != "moodle_scanner":
             return []
 
@@ -63,40 +65,10 @@ class MoodleScannerReporter(Reporter):  # type: ignore
         return [
             ReportEmailTemplateFragment.from_file(
                 str(Path(__file__).parents[0] / "template_moodle_version.jinja2"),
-                priority=10,
+                priority=4,
             ),
             ReportEmailTemplateFragment.from_file(
                 str(Path(__file__).parents[0] / "template_moodle_vulnerability.jinja2"),
-                priority=20,
+                priority=7,
             ),
         ]
-
-    @staticmethod
-    def get_scoring_rules() -> Dict[ReportType, Callable[[Report], List[int]]]:
-        """See the docstring in the parent class."""
-        return {
-            MoodleScannerReporter.MOODLE_VERSION_FOUND: lambda report: [get_domain_score(report.target)],
-            MoodleScannerReporter.MOODLE_VULNERABILITY_FOUND: lambda report: [get_domain_score(report.target) * 2],
-        }
-
-    @staticmethod
-    def get_normal_form_rules() -> Dict[ReportType, Callable[[Report], NormalForm]]:
-        """See the docstring in the Reporter class."""
-        return {
-            MoodleScannerReporter.MOODLE_VERSION_FOUND: lambda report: Reporter.dict_to_tuple(
-                {
-                    "type": report.report_type,
-                    "target": get_domain_normal_form(report.target),
-                    "version": report.additional_data["version"],
-                    "server": report.additional_data["server"],
-                }
-            ),
-            MoodleScannerReporter.MOODLE_VULNERABILITY_FOUND: lambda report: Reporter.dict_to_tuple(
-                {
-                    "type": report.report_type,
-                    "target": get_domain_normal_form(report.target),
-                    "vulnerability": report.additional_data["vulnerability"],
-                    "version": report.additional_data["version"],
-                }
-            ),
-        }
