@@ -24,7 +24,7 @@ services:
   karton-moodle_scanner:
     build:
       context: Artemis-modules-extra
-      dockerfile: moodle_scanner/Dockerfile
+      dockerfile: karton_moodle_scanner/Dockerfile
     volumes:
       - "./docker/karton.ini:/etc/karton/karton.ini"
       - "${DOCKER_COMPOSE_ADDITIONAL_SHARED_DIRECTORY:-./shared}:/shared/"
