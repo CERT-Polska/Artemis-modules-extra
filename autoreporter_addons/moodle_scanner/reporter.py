@@ -15,9 +15,6 @@ class MoodleScannerReporter(Reporter):  # type: ignore
 
     @staticmethod
     def create_reports(task_result: Dict[str, Any], language: Language) -> List[Report]:
-        import sys
-
-        sys.stderr.write(repr(task_result["result"]))
         if task_result["headers"]["receiver"] != "moodle_scanner":
             return []
 
