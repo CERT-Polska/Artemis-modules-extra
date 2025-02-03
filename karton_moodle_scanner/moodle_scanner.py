@@ -6,6 +6,9 @@ from typing import Any, Dict, List, Optional
 from artemis import load_risk_class
 from artemis.binds import TaskStatus, TaskType, WebApplication
 from artemis.module_base import ArtemisBase
+from artemis.modules.base.base_newer_version_comparer import (
+    BaseNewerVersionComparerModule,
+)
 from artemis.task_utils import get_target_url
 from karton.core import Task
 
@@ -58,7 +61,7 @@ def process_moodle_json(result: Dict[str, Any]) -> List[MoodleMessage]:
 
 
 @load_risk_class.load_risk_class(load_risk_class.LoadRiskClass.MEDIUM)
-class MoodleScanner(ArtemisBase):  # type: ignore
+class MoodleScanner(BaseNewerVersionComparerModule):  # type: ignore
     """
     Runs Moodle-Scanner -> A Moodle Vulnerability Analyzer
     """
