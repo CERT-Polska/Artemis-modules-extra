@@ -10,7 +10,7 @@ from artemis.reporting.utils import get_top_level_target
 
 
 class MoodleScannerReporter(Reporter):  # type: ignore
-    MOODLE_VERSION_FOUND = ReportType("moodle_version_found")
+    OBSOLETE_MOODLE_VERSION_FOUND = ReportType("obsolete_moodle_version_found")
     MOODLE_VULNERABILITY_FOUND = ReportType("moodle_vulnerability_found")
 
     @staticmethod
@@ -21,22 +21,19 @@ class MoodleScannerReporter(Reporter):  # type: ignore
         result = []
         target = get_top_level_target(task_result)
 
-        # Report version if found
-        if task_result["result"].get("version") and task_result["result"]["version"] != "Version not found":
+        if task_result["result"].get("version") and task_result["result"].get("version_is_obsolete") and task_result["result"]["version"] != "Version not found":
             result.append(
                 Report(
                     top_level_target=target,
                     target=target,
-                    report_type=MoodleScannerReporter.MOODLE_VERSION_FOUND,
+                    report_type=MoodleScannerReporter.OBSOLETE_MOODLE_VERSION_FOUND,
                     additional_data={
                         "version": task_result["result"]["version"],
-                        "server": task_result["result"].get("server", "Unknown"),
                     },
                     timestamp=task_result["created_at"],
                 )
             )
 
-        # Report vulnerabilities
         for vuln in task_result["result"].get("vulnerabilities", []):
             result.append(
                 Report(
@@ -57,11 +54,11 @@ class MoodleScannerReporter(Reporter):  # type: ignore
     def get_email_template_fragments() -> List[ReportEmailTemplateFragment]:
         return [
             ReportEmailTemplateFragment.from_file(
-                str(Path(__file__).parents[0] / "template_moodle_version.jinja2"),
-                priority=4,
-            ),
-            ReportEmailTemplateFragment.from_file(
                 str(Path(__file__).parents[0] / "template_moodle_vulnerability.jinja2"),
                 priority=7,
+            ),
+            ReportEmailTemplateFragment.from_file(
+                str(Path(__file__).parents[0] / "template_moodle_version.jinja2"),
+                priority=4,
             ),
         ]
