@@ -73,7 +73,7 @@ class MoodleScanner(BaseNewerVersionComparerModule):  # type: ignore
     Runs Moodle-Scanner -> A Moodle Vulnerability Analyzer and checks for obsolete versions
     """
 
-    identity: str = "moodle_scanner"
+    identity: str = "moodle"
     filters: List[Dict[str, str]] = [
         {"type": TaskType.WEBAPP.value, "webapp": WebApplication.MOODLE.value},
     ]
