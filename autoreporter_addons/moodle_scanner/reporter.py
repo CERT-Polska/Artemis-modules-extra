@@ -62,7 +62,7 @@ class MoodleScannerReporter(Reporter):  # type: ignore
                 priority=7,
             ),
             ReportEmailTemplateFragment.from_file(
-                str(Path(__file__).parents[0] / "template_moodle_version.jinja2"),
+                str(Path(__file__).parents[0] / "template_obsolete_moodle_version.jinja2"),
                 priority=4,
             ),
         ]
