@@ -4,17 +4,17 @@ import re
 import subprocess
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Tuple
-import requests
-from bs4 import BeautifulSoup
 
+import requests
 from artemis import load_risk_class
 from artemis.binds import TaskStatus, TaskType, WebApplication
-from artemis.module_base import ArtemisBase
 from artemis.modules.base.base_newer_version_comparer import (
     BaseNewerVersionComparerModule,
 )
 from artemis.task_utils import get_target_url
+from bs4 import BeautifulSoup
 from karton.core import Task
+
 
 @dataclasses.dataclass
 class MoodleMessage:
@@ -25,8 +25,10 @@ class MoodleMessage:
     def message(self) -> str:
         return f"{self.category}: {', '.join(self.problems)}"
 
+
 class MoodleVersionException(Exception):
     pass
+
 
 def process_moodle_json(result: Dict[str, Any]) -> List[MoodleMessage]:
     messages: Dict[str, MoodleMessage] = {}
@@ -64,6 +66,7 @@ def process_moodle_json(result: Dict[str, Any]) -> List[MoodleMessage]:
 
     return list(messages.values())
 
+
 @load_risk_class.load_risk_class(load_risk_class.LoadRiskClass.MEDIUM)
 class MoodleScanner(BaseNewerVersionComparerModule):  # type: ignore
     """
@@ -89,12 +92,12 @@ class MoodleScanner(BaseNewerVersionComparerModule):  # type: ignore
         try:
             response = requests.get(self.MOODLE_RELEASES_URL)
             response.raise_for_status()
-            soup = BeautifulSoup(response.text, 'html.parser')
+            soup = BeautifulSoup(response.text, "html.parser")
 
             # Find the version support table
             version_table = None
-            for table in soup.find_all('table'):
-                if table.find('th', text=lambda t: t and 'Version' in t):
+            for table in soup.find_all("table"):
+                if table.find("th", text=lambda t: t and "Version" in t):
                     version_table = table
                     break
 
@@ -104,8 +107,8 @@ class MoodleScanner(BaseNewerVersionComparerModule):  # type: ignore
 
             # Parse version information
             current_date = datetime.now()
-            for row in version_table.find_all('tr')[1:]:  # Skip header row
-                cols = row.find_all('td')
+            for row in version_table.find_all("tr")[1:]:  # Skip header row
+                cols = row.find_all("td")
                 if not cols:
                     continue
 
@@ -122,13 +125,13 @@ class MoodleScanner(BaseNewerVersionComparerModule):  # type: ignore
                 try:
                     end_general = datetime.strptime(cols[2].text.strip(), "%d %B %Y").strftime("%Y-%m-%d")
                     end_security = datetime.strptime(cols[3].text.strip(), "%d %B %Y").strftime("%Y-%m-%d")
-                    
+
                     # Only include versions that haven't reached end of security support
                     if datetime.strptime(end_security, "%Y-%m-%d") > current_date:
                         self._supported_versions[version] = {
                             "end_general": end_general,
                             "end_security": end_security,
-                            "type": version_type
+                            "type": version_type,
                         }
                 except (ValueError, IndexError) as e:
                     self.log.warning(f"Error parsing dates for version {version}: {str(e)}")
@@ -141,14 +144,14 @@ class MoodleScanner(BaseNewerVersionComparerModule):  # type: ignore
         """Parse version string into tuple of integers."""
         if not version_str:
             return None
-        
+
         # Extract version numbers using regex
-        match = re.search(r'(\d+(?:\.\d+)*)', version_str)
+        match = re.search(r"(\d+(?:\.\d+)*)", version_str)
         if not match:
             return None
-            
+
         try:
-            return tuple(int(x) for x in match.group(1).split('.'))
+            return tuple(int(x) for x in match.group(1).split("."))
         except (ValueError, AttributeError):
             return None
 
@@ -162,13 +165,13 @@ class MoodleScanner(BaseNewerVersionComparerModule):  # type: ignore
         """Check if the given version is obsolete based on current supported versions."""
         if not self._supported_versions:
             self._fetch_version_info()
-            
+
         version_tuple = self._parse_version(version)
         if not version_tuple:
             raise MoodleVersionException(f"Unable to parse version: {version}")
 
         major_minor = self._get_major_minor(version_tuple)
-        
+
         # Check if version is in supported versions
         if major_minor not in self._supported_versions:
             return True
@@ -212,17 +215,17 @@ class MoodleScanner(BaseNewerVersionComparerModule):  # type: ignore
 
         # Determine status and reason based on findings
         found_problems = []
-        
+
         if error_message:
             status = TaskStatus.OK
             status_reason = error_message
         else:
             if vulnerabilities:
                 found_problems.extend(vulnerabilities)
-            
+
             if is_version_obsolete:
                 found_problems.append(f"Moodle version {version_info} is obsolete")
-            
+
             if found_problems:
                 status = TaskStatus.INTERESTING
                 status_reason = f"Found: {', '.join(found_problems)}"

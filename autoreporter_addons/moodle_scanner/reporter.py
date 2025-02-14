@@ -21,7 +21,11 @@ class MoodleScannerReporter(Reporter):  # type: ignore
         result = []
         target = get_top_level_target(task_result)
 
-        if task_result["result"].get("version") and task_result["result"].get("version_is_obsolete") and task_result["result"]["version"] != "Version not found":
+        if (
+            task_result["result"].get("version")
+            and task_result["result"].get("version_is_obsolete")
+            and task_result["result"]["version"] != "Version not found"
+        ):
             result.append(
                 Report(
                     top_level_target=target,
