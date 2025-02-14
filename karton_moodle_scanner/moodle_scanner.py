@@ -78,7 +78,6 @@ class MoodleScanner(BaseNewerVersionComparerModule):  # type: ignore
         {"type": TaskType.WEBAPP.value, "webapp": WebApplication.MOODLE.value},
     ]
     software_name = "moodle_scanner"
-    MOODLE_RELEASES_URL = "https://moodledev.io/general/releases"
 
     def process_output(self, output: str) -> Dict[str, Any]:
         """Process moodlescan output and extract relevant information."""
