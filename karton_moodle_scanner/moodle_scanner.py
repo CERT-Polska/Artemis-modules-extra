@@ -67,17 +67,17 @@ def process_moodle_json(result: Dict[str, Any]) -> List[MoodleMessage]:
     return list(messages.values())
 
 
-@load_risk_class.load_risk_class(load_risk_class.LoadRiskClass.MEDIUM)
+@load_risk_class.load_risk_class(load_risk_class.LoadRiskClass.LOW)
 class MoodleScanner(BaseNewerVersionComparerModule):  # type: ignore
     """
     Runs Moodle-Scanner -> A Moodle Vulnerability Analyzer and checks for obsolete versions
     """
 
-    identity: str = "moodle"
+    identity: str = "moodle_scanner"
     filters: List[Dict[str, str]] = [
         {"type": TaskType.WEBAPP.value, "webapp": WebApplication.MOODLE.value},
     ]
-    software_name = "moodle_scanner"
+    software_name = "moodle"
 
     def process_output(self, output: str) -> Dict[str, Any]:
         """Process moodlescan output and extract relevant information."""
