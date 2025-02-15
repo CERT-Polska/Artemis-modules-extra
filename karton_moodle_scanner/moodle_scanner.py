@@ -1,18 +1,14 @@
 #!/usr/bin/env python3
 import dataclasses
-import re
 import subprocess
-from datetime import datetime
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional
 
-import requests
 from artemis import load_risk_class
 from artemis.binds import TaskStatus, TaskType, WebApplication
 from artemis.modules.base.base_newer_version_comparer import (
     BaseNewerVersionComparerModule,
 )
 from artemis.task_utils import get_target_url
-from bs4 import BeautifulSoup
 from karton.core import Task
 
 
