@@ -1,0 +1,9 @@
+from typing import Dict
+
+REFLECTED_XSS_DESCRIPTION = "Cross-Site Scripting, umożliwiającą atakującemu spreparowanie linku, który, po kliknięciu przez administratora, wykona dowolną akcję z jego uprawnieniami (taką jak np. modyfikacja treści czy kradzież danych)."
+
+TRANSLATIONS: Dict[str, str] = {
+    "[!] CVE-2022-35653: A reflected XSS issue was identified in the LTI module of Moodle. The vulnerability exists due to insufficient sanitization of user-supplied data in the LTI module. A remote attacker can trick the victim to follow a specially crafted link and execute arbitrary HTML and script code in user's browser in context of vulnerable website to steal potentially sensitive information, change appearance of the web page, can perform phishing and drive-by-download attacks. This vulnerability does not impact authenticated users.": "CVE-2022-35653: Wykryto podatność Reflected XSS, która umożliwia atakującemu spreparowanie linku do powyższej strony internetowej, który - gdy kliknięty przez ofiarę - wykona dowolne skrypty lub zmieni w dowolny sposób wygląd strony, umożliwiając np. wykradnięcie danych. Uwaga: podatność nie dotyczy zalogowanych użytkowników.",
+    "[!] CVE-2022-35651: A stored XSS and blind SSRF vulnerability was found in Moodle, occurs due to insufficient sanitization of user-supplied data in the SCORM track details. A remote attacker can trick the victim to follow a specially crafted link and execute arbitrary HTML and script code in user's browser in context of vulnerable website to steal potentially sensitive information, change appearance of the web page, can perform phishing and drive-by-download attacks.": "CVE-2022-35651: Wykryto podatność Server-Site Reuqest Forgery, umożliwiającą wykonywanie żądań do systemów w sieci lokalnej, a także podatność "
+    + REFLECTED_XSS_DESCRIPTION,
+}

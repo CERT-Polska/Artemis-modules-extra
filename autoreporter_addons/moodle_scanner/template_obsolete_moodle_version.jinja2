@@ -1,0 +1,20 @@
+{% if "obsolete_moodle_version_found" in data.contains_type %}
+    <li>{% trans %}The following Moodle installations with outdated versions were detected:{% endtrans %}
+
+    <ul>
+        {% for report in data.reports %}
+            {% if report.report_type == "obsolete_moodle_version_found" %}
+                <li>
+                    {{ report.target }} - {% trans %}version:{% endtrans %} {{report.additional_data.version }}
+                    {{ report_meta(report) }}
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+
+    <p>
+        {% trans trimmed %}
+            Keep track of the Moodle versions in use and ensure they are up to date.
+        {% endtrans %}
+    </p>
+{% endif %}
