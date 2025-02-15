@@ -15,6 +15,15 @@ services:
     command: python -m unittest discover
     env_file: env.test
 
+  test-moodle-scanner:
+    build:
+      context: .
+      dockerfile: karton_moodle_scanner/Dockerfile
+    command: python -m unittest discover
+    env_file: env.test
+    depends_on:
+      - test-service-moodle
+
   test-ssl_checks:
     build:
       context: .
@@ -55,3 +64,27 @@ services:
     environment:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root
+
+  test-service-moodle:
+    image: bitnami/moodle:4.2
+    ports:
+      - "8080:8080"
+      - "8443:8443"
+    environment:
+      - MOODLE_DATABASE_HOST=test-service-moodle-db
+      - MOODLE_DATABASE_PORT_NUMBER=3306
+      - MOODLE_DATABASE_USER=bn_moodle
+      - MOODLE_DATABASE_NAME=bitnami_moodle
+      - MOODLE_DATABASE_PASSWORD=bitnami123
+      - MOODLE_USERNAME=admin
+      - MOODLE_PASSWORD=Admin123!
+    depends_on:
+      - test-service-moodle-db
+
+  test-service-moodle-db:
+    image: mariadb:10.6
+    environment:
+      - MYSQL_ROOT_PASSWORD=root123
+      - MYSQL_USER=bn_moodle
+      - MYSQL_PASSWORD=bitnami123
+      - MYSQL_DATABASE=bitnami_moodle
