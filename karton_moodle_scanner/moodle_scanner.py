@@ -1,18 +1,14 @@
 #!/usr/bin/env python3
 import dataclasses
-import re
 import subprocess
-from datetime import datetime
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional
 
-import requests
 from artemis import load_risk_class
 from artemis.binds import TaskStatus, TaskType, WebApplication
 from artemis.modules.base.base_newer_version_comparer import (
     BaseNewerVersionComparerModule,
 )
 from artemis.task_utils import get_target_url
-from bs4 import BeautifulSoup
 from karton.core import Task
 
 
@@ -98,11 +94,14 @@ class MoodleScanner(BaseNewerVersionComparerModule):  # type: ignore
             if "server" in line.lower() and ":" in line:
                 server_info = line.split(":", 1)[1].strip()
             elif "version" in line.lower() and not line.startswith("."):
-                # Look at next line for version info if it's not dots or error
-                if i + 1 < len(output_lines):
-                    next_line = output_lines[i + 1].strip()
-                    if next_line and not next_line.startswith(".") and "error" not in next_line.lower():
-                        version_info = next_line
+                if "Moodle v" in line:
+                    version_info = line.split("Moodle v")[1]
+                else:
+                    # Look at next line for version info if it's not dots or error
+                    if i + 1 < len(output_lines):
+                        next_line = output_lines[i + 1].strip()
+                        if next_line and not next_line.startswith(".") and "error" not in next_line.lower():
+                            version_info = next_line
             elif "vulnerability" in line.lower() or "cve" in line.lower():
                 vulnerabilities.append(line.strip())
 
