@@ -8,6 +8,12 @@ from artemis.reporting.base.reporter import Reporter
 from artemis.reporting.base.templating import ReportEmailTemplateFragment
 from artemis.reporting.utils import get_top_level_target
 
+from .translations.moodle_messages import pl_PL as translations_moodle_messages_pl_PL
+
+
+class TranslationNotFoundException(Exception):
+    pass
+
 
 class MoodleScannerReporter(Reporter):  # type: ignore
     OBSOLETE_MOODLE_VERSION_FOUND = ReportType("obsolete_moodle_version_found")
@@ -23,7 +29,7 @@ class MoodleScannerReporter(Reporter):  # type: ignore
 
         if (
             task_result["result"].get("version")
-            and task_result["result"].get("version_is_obsolete")
+            and task_result["result"].get("is_version_obsolete")
             and task_result["result"]["version"] != "Version not found"
         ):
             result.append(
@@ -39,13 +45,31 @@ class MoodleScannerReporter(Reporter):  # type: ignore
             )
 
         for vuln in task_result["result"].get("vulnerabilities", []):
+            if vuln in ["Vulnerability type: Exec Code XSS"] or vuln.startswith("Reference: "):
+                continue
+
+            if language == Language.en_US:
+                vuln_translated = vuln
+            elif language == Language.pl_PL:
+                vuln = vuln.strip()
+
+                if vuln in translations_moodle_messages_pl_PL.TRANSLATIONS:
+                    vuln_translated = translations_moodle_messages_pl_PL.TRANSLATIONS[vuln]
+                else:
+                    raise TranslationNotFoundException(
+                        f"Unable to find translation for message '{vuln}'."
+                        f"You may add in in Artemis-modules-extra/autoreporter_addons/moodle_scanner/translations/moodle_messages/"
+                    )
+            else:
+                raise NotImplementedError()
+
             result.append(
                 Report(
                     top_level_target=target,
                     target=target,
                     report_type=MoodleScannerReporter.MOODLE_VULNERABILITY_FOUND,
                     additional_data={
-                        "vulnerability": vuln,
+                        "vulnerability": vuln_translated,
                         "version": task_result["result"].get("version", "Unknown"),
                     },
                     timestamp=task_result["created_at"],
