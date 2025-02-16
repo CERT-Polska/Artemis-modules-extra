@@ -6,9 +6,7 @@ RUN pip install --no-cache-dir -r /moodle_scanner/requirements.txt
 WORKDIR /opt/
 
 COPY extra_modules_config.py /opt/
-COPY karton_moodle_scanner/moodle_scanner.py /opt/artemis/modules/
+COPY karton_moodle_scanner/karton_moodle_scanner.py /opt/artemis/modules/
 COPY karton_moodle_scanner/test_moodle_scanner.py /opt/
-
-RUN touch /opt/karton_moodle_scanner/__init__.py
 
 COPY test /opt/test

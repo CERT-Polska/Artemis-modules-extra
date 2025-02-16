@@ -23,6 +23,7 @@ services:
     env_file: env.test
     depends_on:
       - test-service-moodle
+      - test-service-moodle-db
 
   test-ssl_checks:
     build:
