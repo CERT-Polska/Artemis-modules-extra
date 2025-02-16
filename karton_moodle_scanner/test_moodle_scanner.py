@@ -20,16 +20,17 @@ class MoodleScannerTestCase(ArtemisModuleTestCase):
         self.assertEqual(call.kwargs["status"], TaskStatus.INTERESTING)
         self.assertEqual(
             call.kwargs["status_reason"],
-            "Found Moodle 4.2 installation at http://test-service-moodle:8080",
+            "Found: Moodle version 3.5.12 is obsolete",
         )
 
         # Verify complete data structure
         data = call.kwargs["data"]
-        self.assertEqual(data[0]["extracted_version"], "4.2")
-        self.assertIsNone(data[0]["error"])
-        self.assertIn("raw_output", data[0])
-        self.assertFalse(data[0]["is_version_obsolete"])
-        self.assertEqual(len(data[0]["vulnerabilities"]), 0)
+        self.assertEqual(data["version"], "3.5.12")
+        self.assertIsNone(data["error"])
+        self.assertIn("raw_output", data)
+        self.assertTrue(data["is_version_obsolete"])
+        self.assertEqual(len(data["vulnerabilities"]), 0)
+        self.assertIsNotNone(data["server"])
 
     def test_moodle_vulnerabilities(self) -> None:
         task = Task(
@@ -40,17 +41,17 @@ class MoodleScannerTestCase(ArtemisModuleTestCase):
         (call,) = self.mock_db.save_task_result.call_args_list
 
         # Verify status and reason
-        self.assertEqual(call.kwargs["status"], TaskStatus.OK)
+        self.assertEqual(call.kwargs["status"], TaskStatus.INTERESTING)
         self.assertEqual(
             call.kwargs["status_reason"],
-            "No vulnerabilities found in Moodle installation",
+            "Found: Moodle version 3.5.12 is obsolete",
         )
 
         # Verify complete data structure
         data = call.kwargs["data"]
-        self.assertIsNotNone(data["version"])
+        self.assertEqual(data["version"], "3.5.12")
         self.assertIsNone(data["error"])
         self.assertIn("raw_output", data)
-        self.assertFalse(data["is_version_obsolete"])
+        self.assertTrue(data["is_version_obsolete"])
         self.assertEqual(len(data["vulnerabilities"]), 0)
         self.assertIsNotNone(data["server"])
