@@ -4,6 +4,7 @@ from artemis.binds import TaskStatus, TaskType, WebApplication
 from artemis.modules.karton_moodle_scanner import MoodleScanner
 from karton.core import Task
 
+
 class MoodleScannerTestCase(ArtemisModuleTestCase):
     karton_class = MoodleScanner
 
@@ -14,14 +15,14 @@ class MoodleScannerTestCase(ArtemisModuleTestCase):
         )
         self.run_task(task)
         (call,) = self.mock_db.save_task_result.call_args_list
-        
+
         # Verify status and reason
         self.assertEqual(call.kwargs["status"], TaskStatus.INTERESTING)
         self.assertEqual(
             call.kwargs["status_reason"],
             "Found Moodle 4.2 installation at http://test-service-moodle:8080",
         )
-        
+
         # Verify complete data structure
         data = call.kwargs["data"]
         self.assertEqual(data[0]["extracted_version"], "4.2")
@@ -37,14 +38,14 @@ class MoodleScannerTestCase(ArtemisModuleTestCase):
         )
         self.run_task(task)
         (call,) = self.mock_db.save_task_result.call_args_list
-        
+
         # Verify status and reason
         self.assertEqual(call.kwargs["status"], TaskStatus.OK)
         self.assertEqual(
             call.kwargs["status_reason"],
             "No vulnerabilities found in Moodle installation",
         )
-        
+
         # Verify complete data structure
         data = call.kwargs["data"]
         self.assertIsNotNone(data["version"])
