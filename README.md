@@ -83,4 +83,4 @@ We kindly remind you that:
 * by contributing to the `ssl_checks` module you agree that the AGPL-3.0 License shall apply to your input automatically, without the need for any additional declarations to be made.
 * by contributing to the `sqlmap` module you agree that the GPL-2.0 License shall apply to your input automatically, without the need for any additional declarations to be made.
 * by contributing to the `forti_vuln` module you agree that the GPL-3.0 License shall apply to your input automatically, without the need for any additional declarations to be made.
-* by contributing to the `moodle_scanner` module you agree that the GPL-3.0 License shall apply to your input automatically, without the need for any additional declarations to be made.
+* by contributing to the `moodle_scanner` module you agree that the MIT License shall apply to your input automatically, without the need for any additional declarations to be made.
