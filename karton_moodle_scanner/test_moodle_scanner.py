@@ -4,7 +4,6 @@ from artemis.binds import TaskStatus, TaskType, WebApplication
 from artemis.modules.karton_moodle_scanner import MoodleScanner
 from karton.core import Task
 
-
 class MoodleScannerTestCase(ArtemisModuleTestCase):
     karton_class = MoodleScanner
 
