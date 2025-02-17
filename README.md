@@ -33,7 +33,7 @@ licensed under GPL-2.0.
 Uses slightly modified https://github.com/BishopFox/cve-2024-21762-check under the hood. Detects if Fortigate devices are vulnerable to CVE-2024-21762 and is licensed under GPL-3.0.
 
 ### `moodle_scanner`
-Uses https://github.com/inc0d3/moodlescan under the hood. Detects vulnerabilities and outdated versions in Moodle installations and is licensed under MIT.
+Uses https://github.com/inc0d3/moodlescan under the hood. Detects vulnerabilities and outdated versions in Moodle installations and is licensed under GPL-3.0.
 
 ### `wpscan`
 Uses https://github.com/wpscanteam/wpscan under the hood. Finds vulnerabilities on sites that use WordPress.
@@ -83,4 +83,4 @@ We kindly remind you that:
 * by contributing to the `ssl_checks` module you agree that the AGPL-3.0 License shall apply to your input automatically, without the need for any additional declarations to be made.
 * by contributing to the `sqlmap` module you agree that the GPL-2.0 License shall apply to your input automatically, without the need for any additional declarations to be made.
 * by contributing to the `forti_vuln` module you agree that the GPL-3.0 License shall apply to your input automatically, without the need for any additional declarations to be made.
-* by contributing to the `moodle_scanner` module you agree that the MIT License shall apply to your input automatically, without the need for any additional declarations to be made.
+* by contributing to the `moodle_scanner` module you agree that the GPL-3.0 License shall apply to your input automatically, without the need for any additional declarations to be made.

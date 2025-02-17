@@ -89,3 +89,27 @@ services:
       - MYSQL_USER=bn_moodle
       - MYSQL_PASSWORD=bitnami123
       - MYSQL_DATABASE=bitnami_moodle
+
+  test-service-moodle-3-11:
+    image: bitnami/moodle:3.11.4
+    ports:
+      - "8081:8080"
+      - "8444:8443"
+    environment:
+      - MOODLE_DATABASE_HOST=test-service-moodle-3-11-db
+      - MOODLE_DATABASE_PORT_NUMBER=3306
+      - MOODLE_DATABASE_USER=bn_moodle
+      - MOODLE_DATABASE_NAME=bitnami_moodle
+      - MOODLE_DATABASE_PASSWORD=bitnami123
+      - MOODLE_USERNAME=admin
+      - MOODLE_PASSWORD=Admin123!
+    depends_on:
+      - test-service-moodle-3-11-db
+
+  test-service-moodle-3-11-db:
+    image: mariadb:10.6
+    environment:
+      - MYSQL_ROOT_PASSWORD=root123
+      - MYSQL_USER=bn_moodle
+      - MYSQL_PASSWORD=bitnami123
+      - MYSQL_DATABASE=bitnami_moodle
