@@ -25,7 +25,8 @@ class MoodleScannerReporter(Reporter):  # type: ignore
             return []
 
         result = []
-        target = get_top_level_target(task_result)
+        top_level_target = get_top_level_target(task_result)
+        target = task_result["task"]["payload"]["url"]
 
         if (
             task_result["result"].get("version")
@@ -34,7 +35,7 @@ class MoodleScannerReporter(Reporter):  # type: ignore
         ):
             result.append(
                 Report(
-                    top_level_target=target,
+                    top_level_target=top_level_target,
                     target=target,
                     report_type=MoodleScannerReporter.OBSOLETE_MOODLE_VERSION_FOUND,
                     additional_data={
@@ -65,7 +66,7 @@ class MoodleScannerReporter(Reporter):  # type: ignore
 
             result.append(
                 Report(
-                    top_level_target=target,
+                    top_level_target=top_level_target,
                     target=target,
                     report_type=MoodleScannerReporter.MOODLE_VULNERABILITY_FOUND,
                     additional_data={
