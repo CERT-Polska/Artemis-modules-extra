@@ -35,13 +35,6 @@ class ExtraModulesConfig:
         default=50,
     )
 
-    # Max URLs to be visited by sqlmap
-    SQLMAP_MAX_URLS_TO_CRAWL = decouple.config(
-        "SQLMAP_MAX_URLS_TO_CRAWL",
-        cast=int,
-        default=25,
-    )
-
     # Command-line options that will be passed to sqlmap
     SQLMAP_COMMAND_LINE_OPTIONS = decouple.config(
         "SQLMAP_COMMAND_LINE_OPTIONS",

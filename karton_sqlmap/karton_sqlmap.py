@@ -324,7 +324,7 @@ class SQLmap(ArtemisBase):  # type: ignore
         expanded_urls_with_example_values = list(expanded_urls_with_example_values_dict.items())
         random.shuffle(expanded_urls_with_example_values)
         expanded_urls_with_example_values = expanded_urls_with_example_values[
-            : ExtraModulesConfig.SQLMAP_MAX_URLS_TO_CRAWL
+            : Config.Miscellaneous.MAX_URLS_TO_SCAN
         ]
 
         for url_with_injection_point, example_value in expanded_urls_with_example_values:
