@@ -21,7 +21,7 @@ id="contact-frame" src="https://parking.premium.pl
 jest utrzymywana na serwerach
 Jeżeli chcesz zmienić tę stronę, wgraj własny plik index.html do katalogu private_html
 <link rel="shortcut icon" type="image/png" href="https://www.cba.pl/img/favicon.png">
-<META HTTP-EQUIV=\"refresh\" CONTENT=\"0;URL=/cgi-sys/defaultwebpage.cgi\">
+<META HTTP-EQUIV="refresh" CONTENT="0;URL=/cgi-sys/defaultwebpage.cgi">
 <META name="abstract" content="Cyber_Folks Lepsza szybkość stron i wsparcie bez porównania">
 //newkf.nazwa.pl/index,
 Nginx is functioning normally
