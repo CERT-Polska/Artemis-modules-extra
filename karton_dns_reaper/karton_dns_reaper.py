@@ -5,6 +5,7 @@ import subprocess
 from artemis import load_risk_class
 from artemis.binds import TaskStatus, TaskType
 from artemis.module_base import ArtemisBase
+from artemis.task_utils import has_ip_range
 from karton.core import Task
 
 
@@ -20,6 +21,11 @@ class DNSReaper(ArtemisBase):  # type: ignore
     ]
 
     def run(self, current_task: Task) -> None:
+        # If the task originated from an IP-based one, that means, that we are scanning a domain that came from reverse DNS search.
+        # Subdomain takeover on these domains are not actually related to scanned IP ranges, therefore let's skip it.
+        if has_ip_range(current_task):
+            return
+
         domain = current_task.payload["domain"]
 
         data = subprocess.check_output(
