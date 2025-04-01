@@ -24,6 +24,13 @@ msgstr ""
 "wolna. Atakujący może zarejestrować taką domenę w serwisie Netlify aby umieścić tam swoje treści."
 
 msgid ""
+" The defined domain has CNAME or A/AAAA records configured for Shopify but a web request shows the domain "
+"is unclaimed. An attacker can register this domain on Shopify and serve their own web content."
+msgstr ""
+"Domena ma skonfigurowany rekord CNAME lub A/AAAA skierowany do narzędzia Shopify, ale domena docelowa jest "
+"wolna. Atakujący może zarejestrować taką domenę w serwisie Shopify aby umieścić tam swoje treści."
+
+msgid ""
 " The defined domain has CNAME records configured for Netlify but a web request shows the domain is "
 "unclaimed. An attacker can register this domain on Netlify and serve their own web content."
 msgstr ""
