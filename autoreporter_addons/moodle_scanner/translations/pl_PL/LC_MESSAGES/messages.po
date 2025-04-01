@@ -31,4 +31,3 @@ msgid "Keep track of the Moodle versions in use and ensure they are up to date."
 msgstr ""
 "Zalecamy regularne sprawdzanie, czy używane wersje systemu Moodle są "
 "aktualne."
-

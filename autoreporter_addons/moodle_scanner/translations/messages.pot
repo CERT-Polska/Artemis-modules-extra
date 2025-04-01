@@ -23,4 +23,3 @@ msgstr ""
 #: autoreporter_addons/moodle_scanner/template_obsolete_moodle_version.jinja2:16
 msgid "Keep track of the Moodle versions in use and ensure they are up to date."
 msgstr ""
-

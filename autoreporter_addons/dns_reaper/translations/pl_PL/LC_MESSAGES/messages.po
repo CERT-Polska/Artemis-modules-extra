@@ -11,4 +11,3 @@ msgstr ""
 "Prosimy o weryfikację i jeśli przejęcie domeny jest możliwe, zmianę "
 "konfiguracji. Przejęcie domeny przez atakującego umożliwi mu umieszczenie"
 " na niej dowolnych treści, w tym np. szkodliwego oprogramowania."
-
