@@ -1,27 +1,29 @@
+import requests
 import subprocess
-from splinter import Browser
 from fuzzywuzzy import fuzz
+from urllib.parse import quote
 
 from artemis import load_risk_class, utils
-from artemis.binds import TaskStatus, TaskType
+from artemis.binds import TaskStatus
 from artemis.module_base import ArtemisBase
-from artemis.task_utils import get_target_host
+from artemis.task_utils import get_target_url
 from karton.core import Task
-
-from extra_modules_config import ExtraModulesConfig
 
 logger = utils.build_logger(__name__)
 
-# Ignore for now
-PAYLOADS = {"test_payload"}
-FUZZY_LEVEL = 95
-CRAWLING_LEVEL = 1
 
-
+@load_risk_class.load_risk_class(load_risk_class.LoadRiskClass.LOW)
 class XssScanner(ArtemisBase):  # type: ignore
     identity = "xss-scanner"
+    '''can for XSS vulnerabilities'''
+
+    # Ignore for now
+    PAYLOADS = {"<payload"}
+    FUZZY_LEVEL = 50
+    CRAWLING_LEVEL = 5
 
     def prepare_crawling_result(self, output_str: str) -> set:
+        # Prepare set of vectors based on output from XSStrike library.
         lines = output_str.splitlines()
         vectors = set()
 
@@ -50,24 +52,22 @@ class XssScanner(ArtemisBase):  # type: ignore
     def test_vectors(self, vectors: set, payloads: set, fuzzy_level: int = 95) -> set:
         payload_present = False
         results = set()
-        for vector in vectors:
-            print(vector)
 
         for vector in vectors:
             for payload in payloads:
-                print(vector, payload)
                 link = vector.replace('{xss}', payload)
+                html = requests.get(link)
 
-                browser = Browser('phantomjs')
-                browser.visit(link)
+                # browser = Browser('phantomjs')
+                # browser.visit(link)
 
                 partial_score = fuzz.token_set_ratio(
-                    payload.lower(), browser.html.lower())
+                    payload.lower(), html.lower())
 
-                if payload.lower() in browser.html.lower():
+                if payload.lower() in html.lower():
                     payload_present = True
 
-                elif fuzzy_level and partial_score > fuzzy_level:
+                elif fuzzy_level and partial_score >= fuzzy_level:
                     payload_present = True
 
                 if payload_present:
@@ -76,23 +76,25 @@ class XssScanner(ArtemisBase):  # type: ignore
         return results
 
     def _process(self, current_task: Task, host: str) -> None:
-        output = subprocess.run(['sh', 'run_crawler.sh', host, CRAWLING_LEVEL], capture_output=True)
+        host_sanitazed = host
+        CRAWLING_LEVEL = str(self.CRAWLING_LEVEL) if isinstance(self.CRAWLING_LEVEL, int) else '1'
+        output = subprocess.run(['sh', 'run_crawler.sh', host_sanitazed, CRAWLING_LEVEL], capture_output=True)
         output_str = output.stdout.decode("utf-8")
         vectors = self.prepare_crawling_result(output_str)
-        results = self.test_vectors(vectors, PAYLOADS, FUZZY_LEVEL)
+        results = self.test_vectors(vectors, self.PAYLOADS, self.FUZZY_LEVEL)
         results = ",".join(results)
-
+        self.log.info('XSS Scanner process: '+ results)
         error_messages = ["error", "timeout"]
         if results:
-            status = 'Interesting'
-            status_reason = "Detected {} XSS vulnerabilities".format(len(results))
+            status = TaskStatus.INTERESTING
+            status_reason = "Detected XSS vulnerabilities: {}".format(results)
 
         elif any(msg in output_str for msg in error_messages):
-            status = 'ERROR'
+            status = TaskStatus.Error
             status_reason = "Error or timeout occurred"
 
         else:
-            status = 'OK'
+            status = TaskStatus.OK
             status_reason = "Could not identify any XSS Vulnerability"
 
         self.db.save_task_result(
@@ -103,7 +105,7 @@ class XssScanner(ArtemisBase):  # type: ignore
         )
 
     def run(self, current_task: Task) -> None:
-        target_host = get_target_host(current_task)
+        target_host = get_target_url(current_task)
 
         self.log.info("Requested to check if %s has XSS Vulnerabilities", target_host)
         self._process(current_task, target_host)

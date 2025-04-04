@@ -8,6 +8,20 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
 
+  test-xss_scanner:
+    build:
+      context: .
+      dockerfile: xss_scanner/Dockerfile
+    command: python -m unittest discover
+    env_file: env.test
+
+  test_apache-with-xss:
+    build:
+      dockerfile: test/images/php-xss/Dockerfile
+    command: systemctl start apache2.service
+    volumes:
+      - ./test/data/xss_scanner/:/var/www/html/
+
   test-sqlmap:
     build:
       context: .
@@ -55,3 +69,4 @@ services:
     environment:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root
+
