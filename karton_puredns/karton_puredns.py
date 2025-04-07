@@ -236,9 +236,120 @@ class PurednsModule(ArtemisBase):
                         self.log.error(f"Error removing temporary file {f.name}: {e}")
 
     def perform_subdomain_bruteforce(self, task: Task) -> None:
-        # Placeholder for subdomain bruteforce
-        self.log.info("Performing subdomain bruteforce task...")
-        pass
+        """
+        Performs subdomain bruteforce using puredns.
+        Sends results as a new SUBDOMAIN_BRUTEFORCE task.
+        """
+        payload = task.get_payload(TaskType.SUBDOMAIN_BRUTEFORCE)
+        if not isinstance(payload, dict) or "domain" not in payload:
+            self.log.warning("Received invalid payload for subdomain bruteforce. Expected dict with 'domain'. Skipping.")
+            return
+
+        root_domain = payload["domain"]
+        wordlist_path = payload.get("wordlist_path") # Optional path from payload
+
+        self.log.info(f"Performing subdomain bruteforce task for: {root_domain}")
+
+        # Define default wordlist path (adjust as needed, e.g., from config)
+        default_wordlist = os.environ.get("DEFAULT_WORDLIST", "/opt/wordlists/default.txt")
+
+        if wordlist_path and os.path.exists(wordlist_path):
+            final_wordlist = wordlist_path
+            self.log.info(f"Using provided wordlist: {final_wordlist}")
+        elif os.path.exists(default_wordlist):
+            final_wordlist = default_wordlist
+            self.log.info(f"Using default wordlist: {final_wordlist}")
+        else:
+            self.log.error(f"No valid wordlist found. Neither provided '{wordlist_path}' nor default '{default_wordlist}' exist. Skipping bruteforce.")
+            return
+
+        temp_domain_list_file = None # Not needed for bruteforce
+        output_file = None
+        wildcards_file = None
+        massdns_file = None
+
+        puredns_path = os.environ.get("PUREDNS_PATH", "puredns")
+        resolvers_file = os.environ.get("RESOLVERS_FILE", "resolvers.txt")
+
+        if not os.path.exists(resolvers_file):
+            self.log.error(f"Resolvers file not found at {resolvers_file}. Skipping puredns.")
+            return
+
+        try:
+            # No temporary input file needed for bruteforce
+
+            # 2. Create temporary output files
+            output_file = tempfile.NamedTemporaryFile(delete=False, suffix="-puredns-bf-output.txt")
+            output_file.close()
+            wildcards_file = tempfile.NamedTemporaryFile(delete=False, suffix="-puredns-bf-wildcards.txt")
+            wildcards_file.close()
+            massdns_file = tempfile.NamedTemporaryFile(delete=False, suffix="-puredns-bf-massdns.txt")
+            massdns_file.close()
+
+            # 3. Execute puredns bruteforce
+            cmd = [
+                puredns_path,
+                "bruteforce",
+                final_wordlist,
+                root_domain,
+                "--resolvers", resolvers_file,
+                "--write", output_file.name,
+                "--write-wildcards", wildcards_file.name,
+                "--write-massdns", massdns_file.name,
+            ]
+            self.log.info(f"Running puredns bruteforce command: {' '.join(cmd)}")
+
+            process = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
+                check=False
+            )
+
+            if process.returncode != 0:
+                self.log.error(f"Puredns bruteforce failed for {root_domain} with return code {process.returncode}")
+                self.log.error(f"Puredns stdout: {process.stdout}")
+                self.log.error(f"Puredns stderr: {process.stderr}")
+                return # Stop processing if puredns fails
+
+            self.log.info(f"Puredns bruteforce completed successfully for {root_domain}.")
+
+            # 5. Read results
+            subdomains_list = self._read_file(output_file.name)
+            wildcard_domains_list = self._read_file(wildcards_file.name)
+
+            # 6. Create new task with results
+            result_payload = {
+                "root_domain": root_domain,
+                "subdomains": subdomains_list,
+                "wildcard_domains": wildcard_domains_list,
+                "massdns_file": massdns_file.name
+            }
+
+            new_task = Task(
+                {
+                    # Send results as SUBDOMAIN_BRUTEFORCE or maybe a specific result type?
+                    "type": TaskType.SUBDOMAIN_BRUTEFORCE,
+                    "origin": self.identity,
+                },
+                payload=result_payload,
+            )
+            self.send_task(new_task)
+            self.log.info(f"Sent {len(subdomains_list)} subdomains found for {root_domain}.")
+
+        except FileNotFoundError as e:
+             self.log.error(f"Puredns executable not found at '{puredns_path}'. Please ensure it's installed and in PATH or configure the correct path. Error: {e}")
+        except Exception as e:
+            self.log.exception(f"An error occurred during puredns bruteforce for {root_domain}: {e}")
+        finally:
+            # 7. Cleanup temporary files (only output files needed cleanup)
+            for f in [output_file, wildcards_file, massdns_file]:
+                if f and hasattr(f, 'name') and os.path.exists(f.name):
+                    try:
+                        os.remove(f.name)
+                        self.log.debug(f"Removed temporary file: {f.name}")
+                    except OSError as e:
+                        self.log.error(f"Error removing temporary file {f.name}: {e}")
 
     def _read_file(self, file_path: str) -> list[str]:
         """Helper method to read lines from a file."""
