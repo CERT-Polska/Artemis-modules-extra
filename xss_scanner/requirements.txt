@@ -1,0 +1,3 @@
+fuzzywuzzy==0.15.1
+splinter==0.7.5
+
