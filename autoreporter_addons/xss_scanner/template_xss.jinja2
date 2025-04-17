@@ -1,0 +1,29 @@
+{% if "xss_scanner" in data.contains_type %}
+    <li>
+        {% trans trimmed %}We identified that the following URLs contain XSS vulnerabilities:{% endtrans %}
+
+        <ul>
+            {% for report in data.reports %}
+                {% if report.report_type == "xss_scanner" %}
+                    {% for message in report.additional_data.vuln.values() %}
+                         <li>
+                            {% trans trimmed %}we identified an potential XSS vulnerability:{% endtrans %}
+                                <b>{{ message }}</b>
+                            </p>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endfor %}
+        </ul>
+
+        {% trans trimmed %}
+            A Cross-Site Scripting vulnerability allows an attacker to craft a link that, when clicked by an administrator,
+            performs any action with their permissions (such as modifying content).
+        {% endtrans %}
+        {% trans trimmed %}
+            The above examples are automatically generated - contact us if they aren't sufficient for
+            you to reproduce the vulnerability.
+        {% endtrans %}
+    </li>
+{% endif %}

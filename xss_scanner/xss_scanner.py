@@ -1,10 +1,7 @@
-import requests
 import subprocess
-from fuzzywuzzy import fuzz
-from urllib.parse import quote
 
 from artemis import load_risk_class, utils
-from artemis.binds import TaskStatus
+from artemis.binds import Service, TaskStatus, TaskType
 from artemis.module_base import ArtemisBase
 from artemis.task_utils import get_target_url
 from karton.core import Task
@@ -14,13 +11,13 @@ logger = utils.build_logger(__name__)
 
 @load_risk_class.load_risk_class(load_risk_class.LoadRiskClass.LOW)
 class XssScanner(ArtemisBase):  # type: ignore
-    identity = "xss-scanner"
-    '''can for XSS vulnerabilities'''
+    identity = "xss_scanner"
 
-    # Ignore for now
-    PAYLOADS = {"<payload"}
-    FUZZY_LEVEL = 50
-    CRAWLING_LEVEL = 5
+    filters = [
+        # We run on all HTTP services, as even if it's a known CMS, it may contain custom plugins
+        # and therefore it's worth scanning.
+        {"type": TaskType.SERVICE.value, "service": Service.HTTP.value},
+    ]
 
     def prepare_crawling_result(self, output_str: str) -> set:
         # Prepare set of vectors based on output from XSStrike library.
@@ -47,47 +44,17 @@ class XssScanner(ArtemisBase):  # type: ignore
                 if webpage:
                     vectors.add(webpage + vector)
 
-        return vectors
-
-    def test_vectors(self, vectors: set, payloads: set, fuzzy_level: int = 95) -> set:
-        payload_present = False
-        results = set()
-
-        for vector in vectors:
-            for payload in payloads:
-                link = vector.replace('{xss}', payload)
-                html = requests.get(link)
-
-                # browser = Browser('phantomjs')
-                # browser.visit(link)
-
-                partial_score = fuzz.token_set_ratio(
-                    payload.lower(), html.lower())
-
-                if payload.lower() in html.lower():
-                    payload_present = True
-
-                elif fuzzy_level and partial_score >= fuzzy_level:
-                    payload_present = True
-
-                if payload_present:
-                    results.add(link)
-
-        return results
+        return tuple(vectors)
 
     def _process(self, current_task: Task, host: str) -> None:
-        host_sanitazed = host
-        CRAWLING_LEVEL = str(self.CRAWLING_LEVEL) if isinstance(self.CRAWLING_LEVEL, int) else '1'
-        output = subprocess.run(['sh', 'run_crawler.sh', host_sanitazed, CRAWLING_LEVEL], capture_output=True)
+        output = subprocess.run(['sh', 'run_crawler.sh', host], capture_output=True)
         output_str = output.stdout.decode("utf-8")
         vectors = self.prepare_crawling_result(output_str)
-        results = self.test_vectors(vectors, self.PAYLOADS, self.FUZZY_LEVEL)
-        results = ",".join(results)
-        self.log.info('XSS Scanner process: '+ results)
+
         error_messages = ["error", "timeout"]
-        if results:
+        if vectors:
             status = TaskStatus.INTERESTING
-            status_reason = "Detected XSS vulnerabilities: {}".format(results)
+            status_reason = "Detected XSS vulnerabilities: {}".format(vectors)
 
         elif any(msg in output_str for msg in error_messages):
             status = TaskStatus.Error
@@ -101,7 +68,7 @@ class XssScanner(ArtemisBase):  # type: ignore
             task=current_task,
             status=status,
             status_reason=status_reason,
-            data=results,
+            data={'result' : vectors},
         )
 
     def run(self, current_task: Task) -> None:
