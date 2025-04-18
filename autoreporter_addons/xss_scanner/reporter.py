@@ -10,7 +10,7 @@ from artemis.reporting.utils import get_top_level_target
 
 
 class XSSReporter(Reporter):  # type: ignore
-    VULNERABILITIES_XSS = ReportType("xss_scanner")
+    VULNERABILITY_XSS = ReportType("xss_scanner")
 
     @staticmethod
     def create_reports(task_result: Dict[str, Any], language: Language) -> List[Report]:
@@ -22,7 +22,7 @@ class XSSReporter(Reporter):  # type: ignore
                 Report(
                     top_level_target=get_top_level_target(task_result),
                     target=f"https://{task_result['target_string']}",
-                    report_type=XSSReporter.VULNERABILITIES_XSS,
+                    report_type=XSSReporter.VULNERABILITY_XSS,
                     timestamp=task_result["created_at"],
                     additional_data={"vuln": task_result["result"]},
                 )
@@ -34,6 +34,6 @@ class XSSReporter(Reporter):  # type: ignore
     def get_email_template_fragments() -> List[ReportEmailTemplateFragment]:
         return [
             ReportEmailTemplateFragment.from_file(
-                os.path.join(os.path.dirname(__file__), "template_xss.jinja2"), priority=7
+                os.path.join(os.path.dirname(__file__), "template_xss_vulnerability.jinja2"), priority=7
             ),
         ]

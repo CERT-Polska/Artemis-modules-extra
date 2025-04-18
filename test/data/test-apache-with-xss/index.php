@@ -10,8 +10,6 @@
             <input type="text" id="password" name="password">
             <input type="submit" value="Send">
         </form>
-        <a href="http://test-apache-with-xss/vuln.php">vuln</a>
-        <a href="http://test-apache-with-xss/index.php">index</a>
         <!-- Displaying the entered name and password -->
         <p>Hello!, <?php echo $_GET['username']; ?>!</p>
         <p>This is your password, <?php echo $_GET['password']; ?>!</p>
