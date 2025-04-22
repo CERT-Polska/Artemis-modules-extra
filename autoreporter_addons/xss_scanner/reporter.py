@@ -10,7 +10,7 @@ from artemis.reporting.utils import get_top_level_target
 
 
 class XSSReporter(Reporter):  # type: ignore
-    XSS_VULNERABILITY = ReportType("xss_scanner")
+    xss_vulnerability = ReportType("xss_scanner")
 
     @staticmethod
     def create_reports(task_result: Dict[str, Any], language: Language) -> List[Report]:
@@ -26,7 +26,7 @@ class XSSReporter(Reporter):  # type: ignore
                 Report(
                     top_level_target=get_top_level_target(task_result),
                     target=f"https://{task_result['target_string']}",
-                    report_type=XSSReporter.XSS_VULNERABILITY,
+                    report_type=XSSReporter.xss_vulnerability,
                     timestamp=task_result["created_at"],
                     additional_data={"vuln": task_result["result"]},
                 )

@@ -52,8 +52,8 @@ class XssScanner(ArtemisBase):  # type: ignore
     ]
 
     def _process(self, current_task: Task, host: str) -> None:
-        host_sanitazed = quote(host, safe="/:.?=&")
-        output = subprocess.call(["sh", "run_crawler.sh", host_sanitazed])
+        host_sanitized = quote(host, safe="/:.?=&-")
+        output = subprocess.call(["sh", "run_crawler.sh", host_sanitized])
         output_str = output.stdout.decode("utf-8")  # type: ignore
         vectors = prepare_crawling_result(output_str)
 
