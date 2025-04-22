@@ -10,7 +10,7 @@ from karton.core import Task
 logger = utils.build_logger(__name__)
 
 
-def prepare_crawling_result(output_str: str) -> set:
+def prepare_crawling_result(output_str: str) -> list[str]:
     # Prepare set of vectors based on output from XSStrike library.
     lines = output_str.splitlines()
     vectors = set()
@@ -19,7 +19,7 @@ def prepare_crawling_result(output_str: str) -> set:
         line = line.lower().replace(" ", "")
 
         if "vulnerablewebpage:" in line:
-            webpage = 0
+            webpage = ""
             webpage = line.split("vulnerablewebpage:")[1]
             if webpage.count("http") == 2:
                 webpage = webpage[: webpage[webpage.index("http") + 4 :].index("http") + 4]
@@ -53,8 +53,8 @@ class XssScanner(ArtemisBase):  # type: ignore
 
     def _process(self, current_task: Task, host: str) -> None:
         host_sanitazed = quote(host, safe="/:.?=&")
-        output = subprocess.call(["sh", "run_crawler.sh", host_sanitazed], capture_output=True)
-        output_str = output.stdout.decode("utf-8")
+        output = subprocess.call(["sh", "run_crawler.sh", host_sanitazed])
+        output_str = output.stdout.decode("utf-8")  # type: ignore
         vectors = prepare_crawling_result(output_str)
 
         error_messages = ["error", "timeout"]

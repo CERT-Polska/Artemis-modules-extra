@@ -17,7 +17,7 @@ services:
   test-xss_scanner:
     build:
       context: .
-      dockerfile: xss_scanner/Dockerfile
+      dockerfile: karton_xss_scanner/Dockerfile
     command: python -m unittest discover
     env_file: env.test
 
