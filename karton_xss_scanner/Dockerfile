@@ -10,5 +10,5 @@ WORKDIR /opt/
 COPY karton_xss_scanner/test_xss_scanner.py test_xss_scanner.py
 COPY karton_xss_scanner/run_crawler.sh run_crawler.sh
 COPY karton_xss_scanner/test_output.log test_output.log
-COPY karton_xss_scanner/xss_scanner.py /opt/artemis/modules
+COPY karton_xss_scanner/karton_xss_scanner.py /opt/artemis/modules
 COPY test /opt/test

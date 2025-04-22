@@ -71,7 +71,7 @@ services:
     volumes: ["./docker/karton.ini:/etc/karton/karton.ini", "${DOCKER_COMPOSE_ADDITIONAL_SHARED_DIRECTORY:-./shared}:/shared/"]
     env_file: .env
     restart: always
-    command: "python3 -m artemis.modules.xss_scanner"
+    command: "python3 -m artemis.modules.karton_xss_scanner"
 
   autoreporter:
     volumes:
