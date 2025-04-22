@@ -68,9 +68,11 @@ class SQLmap(ArtemisBase):  # type: ignore
                     [
                         "sqlmap",
                         "--delay",
-                        str(1.0 / self.requests_per_second_for_current_tasks)
-                        if self.requests_per_second_for_current_tasks
-                        else "0",
+                        (
+                            str(1.0 / self.requests_per_second_for_current_tasks)
+                            if self.requests_per_second_for_current_tasks
+                            else "0"
+                        ),
                         "-u",
                         url,
                         "--batch",
@@ -161,7 +163,9 @@ class SQLmap(ArtemisBase):  # type: ignore
                                     url, sqlmap_options, find_in_output, timeout_seconds=SQLI_ADDITIONAL_DATA_TIMEOUT
                                 ).output,
                             )
-                        except Exception:  # Whatever happens, we prefer to report SQLi without additional data than no SQLi
+                        except (
+                            Exception
+                        ):  # Whatever happens, we prefer to report SQLi without additional data than no SQLi
                             self.log.exception(f"Unable to obtain {information_name} via blind SQL injection")
                     return found_sql_injection
         return None

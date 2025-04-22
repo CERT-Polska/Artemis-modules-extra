@@ -63,7 +63,7 @@ services:
     env_file: .env
     restart: always
     command: "python3 -m artemis.modules.karton_whatvpn"
-  
+
   xss_scanner:
     build:
       context: Artemis-modules-extra
@@ -72,7 +72,6 @@ services:
     env_file: .env
     restart: always
     command: "python3 -m artemis.modules.xss_scanner"
-
 
   autoreporter:
     volumes:

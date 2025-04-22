@@ -12,7 +12,16 @@ class XssScannerTestCase(ArtemisModuleTestCase):
             mock_output_str = f.read()
         vectors = set(prepare_crawling_result(output_str=mock_output_str))
 
-        vectors_expected = set(['https://mocktest.pl/kupuje?a={xss}', 'http://mockdomain.pl/index.php?searchword={xss}', 'http://testdomain.pl/test.php?searchword={xss}', 'http://testdomain.gov.pl/test.php?searchword={xss}', 'https://mocktest.gov.pl/kupuje?a={xss}', 'http://mockdomain.gov.pl/index.php?searchword={xss}'])
+        vectors_expected = set(
+            [
+                "https://mocktest.pl/kupuje?a={xss}",
+                "http://mockdomain.pl/index.php?searchword={xss}",
+                "http://testdomain.pl/test.php?searchword={xss}",
+                "http://testdomain.gov.pl/test.php?searchword={xss}",
+                "https://mocktest.gov.pl/kupuje?a={xss}",
+                "http://mockdomain.gov.pl/index.php?searchword={xss}",
+            ]
+        )
         self.assertEqual(len(vectors), 6)
         self.assertEqual(vectors, vectors_expected)
 

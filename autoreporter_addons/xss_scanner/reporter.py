@@ -15,8 +15,12 @@ class XSSReporter(Reporter):  # type: ignore
     @staticmethod
     def create_reports(task_result: Dict[str, Any], language: Language) -> List[Report]:
 
-        if all([task_result.get("headers", {}).get("receiver") == "xss_scanner",
-                task_result.get("status") == "INTERESTING"]):
+        if all(
+            [
+                task_result.get("headers", {}).get("receiver") == "xss_scanner",
+                task_result.get("status") == "INTERESTING",
+            ]
+        ):
 
             return [
                 Report(

@@ -16,22 +16,21 @@ def prepare_crawling_result(output_str: str) -> set:
     vectors = set()
 
     for line in lines:
-        line = line.lower().replace(' ', '')
+        line = line.lower().replace(" ", "")
 
-        if 'vulnerablewebpage:' in line:
+        if "vulnerablewebpage:" in line:
             webpage = 0
-            webpage = line.split('vulnerablewebpage:')[1]
-            if webpage.count('http') == 2:
-                webpage = webpage[
-                    :webpage[webpage.index('http') + 4:].index('http') + 4]
+            webpage = line.split("vulnerablewebpage:")[1]
+            if webpage.count("http") == 2:
+                webpage = webpage[: webpage[webpage.index("http") + 4 :].index("http") + 4]
 
-            elif webpage.count('http') > 2:
+            elif webpage.count("http") > 2:
                 continue
 
-            webpage = webpage[:-1] if webpage[-1] == '/' else webpage
+            webpage = webpage[:-1] if webpage[-1] == "/" else webpage
 
-        elif 'vectorfor' in line:
-            vector = "?" + line.split('vectorfor')[1].split(':')[0] + "={xss}"
+        elif "vectorfor" in line:
+            vector = "?" + line.split("vectorfor")[1].split(":")[0] + "={xss}"
             if webpage:
                 vectors.add(webpage + vector)
 
@@ -54,7 +53,7 @@ class XssScanner(ArtemisBase):  # type: ignore
 
     def _process(self, current_task: Task, host: str) -> None:
         host_sanitazed = quote(host, safe="/:.?=&")
-        output = subprocess.call(['sh', 'run_crawler.sh', host_sanitazed], capture_output=True)
+        output = subprocess.call(["sh", "run_crawler.sh", host_sanitazed], capture_output=True)
         output_str = output.stdout.decode("utf-8")
         vectors = prepare_crawling_result(output_str)
 
@@ -75,7 +74,7 @@ class XssScanner(ArtemisBase):  # type: ignore
             task=current_task,
             status=status,
             status_reason=status_reason,
-            data={'result' : vectors},
+            data={"result": vectors},
         )
 
     def run(self, current_task: Task) -> None:
