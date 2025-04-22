@@ -43,8 +43,12 @@ NASK is relieved of such liability to the fullest extent possible.
 The module is disabled by default - to enable it, rename `docker-compose.additional.wpscan.yml.disabled` to
 `docker-compose.additional.wpscan.yml` and re-run ``./scripts/start``.
 
-### what-vpn
+### `what-vpn`
 Uses https://github.com/dlenski/what-vpn under the hood. Identifies servers running various SSL VPNs and is licensed under GPL-3.0-or-later.
+
+### `ssl_checks`
+Uses https://github.com/s0md3v/XSStrike.git under the hood. Finds potential XSS vulnerabilities and is licensed under
+GPL-3.0.
 
 ## Testing
 To run the tests, run:
@@ -79,4 +83,5 @@ We kindly remind you that:
 * by contributing to the `dns_reaper` module you agree that the AGPL-3.0 License shall apply to your input automatically, without the need for any additional declarations to be made.
 * by contributing to the `ssl_checks` module you agree that the AGPL-3.0 License shall apply to your input automatically, without the need for any additional declarations to be made.
 * by contributing to the `sqlmap` module you agree that the GPL-2.0 License shall apply to your input automatically, without the need for any additional declarations to be made.
-* by contributing to the `forti_vuln` module you agree that the GPL-3.0 License shall apply to your input automatically, without the need for any additional declarations to be made.
+* by contributing to the `forti_vuln` module you agree that the GPL-3.0 license shall apply to your input automatically, without the need for any additional declarations to be made.
+* by contributing to the `xss_scanner` module you agree that the GPL-3.0 license shall apply to your input automatically, without the need for any additional declarations to be made.
