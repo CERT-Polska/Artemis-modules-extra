@@ -1,7 +1,8 @@
 from test.base import ArtemisModuleTestCase
-from karton.core import Task
-from artemis.modules.xss_scanner import XssScanner, prepare_crawling_result
+
 from artemis.binds import Service, TaskType
+from artemis.modules.xss_scanner import XssScanner, prepare_crawling_result
+from karton.core import Task
 
 
 class XssScannerTestCase(ArtemisModuleTestCase):
