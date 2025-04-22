@@ -4,7 +4,6 @@ RUN apk add git
 COPY xss_scanner/requirements.txt _requirements.txt
 RUN pip install -r _requirements.txt
 RUN git clone https://github.com/s0md3v/XSStrike.git
-RUN ls
 
 WORKDIR /opt/
 

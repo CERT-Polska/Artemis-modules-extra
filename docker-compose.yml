@@ -74,7 +74,6 @@ services:
     command: "python3 -m artemis.modules.xss_scanner"
 
 
-
   autoreporter:
     volumes:
       - ./Artemis-modules-extra/extra_modules_config.py:/opt/extra_modules_config.py
