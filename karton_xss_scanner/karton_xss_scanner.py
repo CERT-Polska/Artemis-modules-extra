@@ -38,7 +38,7 @@ def prepare_crawling_result(output_str: str) -> list[str]:
     return list(vectors)
 
 
-@load_risk_class.load_risk_class(load_risk_class.LoadRiskClass.LOW)
+@load_risk_class.load_risk_class(load_risk_class.LoadRiskClass.MEDIUM)
 class XssScanner(ArtemisBase):  # type: ignore
     identity = "xss_scanner"
     """
