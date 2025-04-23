@@ -65,7 +65,7 @@ class XssScanner(ArtemisBase):  # type: ignore
             status_reason = "Detected XSS vulnerabilities: {}".format(str(vectors))
 
         elif any(msg in output_str for msg in error_messages):
-            status = TaskStatus.Error
+            status = TaskStatus.ERROR
             status_reason = "Error or timeout occurred"
 
         else:
