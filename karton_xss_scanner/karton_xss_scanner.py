@@ -56,7 +56,7 @@ class XssScanner(ArtemisBase):  # type: ignore
         host_sanitized = quote(host, safe="/:.?=&-")
         assert host_sanitized.startswith("http://") or host_sanitized.startswith("https://")
         assert all(i.lower() in "/:.?=&-" + string.ascii_lowercase + string.digits for i in host_sanitized)
-        output = subprocess.call(["sh", "run_crawler.sh", host_sanitized])
+        output = subprocess.run(["sh", "run_crawler.sh", host_sanitized])
         output_str = output.stdout.decode("utf-8")  # type: ignore
         vectors = prepare_crawling_result(output_str)
 
