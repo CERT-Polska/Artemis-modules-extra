@@ -1,4 +1,5 @@
 Account Suspended
+<center><h1>415 Unsupported Media Type</h1></center>
 <center>Widzisz ten komunikat ponieważ twoja domena nie jest dodana do konta.
 <div class="info underconstruction">
 <FRAME NORESIZE SRC="http://default.kei.pl/startowa">
