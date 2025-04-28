@@ -25,4 +25,3 @@ msgid ""
 msgstr ""
 "Powyższe przykłady są generowane automatycznie - prosimy o kontakt, jeśli"
 " nie są wystarczające, aby odtworzyć podatność po Państwa stronie."
-

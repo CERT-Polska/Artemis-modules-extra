@@ -20,4 +20,3 @@ msgid ""
 "The above examples are automatically generated - contact us if they "
 "aren't sufficient for you to reproduce the vulnerability."
 msgstr ""
-
