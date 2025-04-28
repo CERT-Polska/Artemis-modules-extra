@@ -1,2 +1,2 @@
-fuzzywuzzy==0.15.1
+fuzzywuzzy==0.18.0
 splinter==0.21.0
