@@ -10,6 +10,7 @@ docker compose -f docker-compose.test.yaml run test-sqlmap /wait-for-it.sh test-
 docker compose -f docker-compose.test.yaml run test-sqlmap /wait-for-it.sh test-service-with-sql-injection-postgres:80
 docker compose -f docker-compose.test.yaml run test-sqlmap /wait-for-it.sh test-service-with-sql-injection-mysql-db:3306
 docker compose -f docker-compose.test.yaml run test-sqlmap /wait-for-it.sh test-service-with-sql-injection-postgres-db:5432
+docker compose -f docker-compose.test.yaml run test-xss_scanner /wait-for-it.sh test-apache-with-xss:80
 
 # Now we are ready to start the tests
 docker compose -f docker-compose.test.yaml run test-sqlmap

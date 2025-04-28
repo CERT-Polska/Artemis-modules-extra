@@ -1,0 +1,27 @@
+#: autoreporter_addons/xss_scanner/template_xss_vulnerability.jinja2:3
+msgid "We identified that the following URLs contain XSS vulnerabilities:"
+msgstr "Wykryliśmy, że następujące adresy zawierają podatności XSS:"
+
+#: autoreporter_addons/xss_scanner/template_xss_vulnerability.jinja2:10
+msgid ""
+"we identified the vulnerability on (the vulnerable parameter has been "
+"marked with an asterisk):"
+msgstr "zidentyfikowaliśmy podatność w (podatny parametr oznaczono gwiazdką):"
+
+#: autoreporter_addons/xss_scanner/template_xss_vulnerability.jinja2:23
+msgid ""
+"A Cross-Site Scripting vulnerability allows an attacker to craft a link "
+"that, when clicked by an administrator, performs any action with their "
+"permissions (such as modifying content)."
+msgstr ""
+"Podatność Cross-Site Scripting umożliwia atakującemu spreparowanie linku,"
+" który po kliknięciu przez administratora wykona dowolną akcję z jego "
+"uprawnieniami (taką jak np. modyfikacja treści)."
+
+#: autoreporter_addons/xss_scanner/template_xss_vulnerability.jinja2:27
+msgid ""
+"The above examples are automatically generated - contact us if they "
+"aren't sufficient for you to reproduce the vulnerability."
+msgstr ""
+"Powyższe przykłady są generowane automatycznie - prosimy o kontakt, jeśli"
+" nie są wystarczające, aby odtworzyć podatność po Państwa stronie."

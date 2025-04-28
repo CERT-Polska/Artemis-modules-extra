@@ -64,6 +64,15 @@ services:
     restart: always
     command: "python3 -m artemis.modules.karton_whatvpn"
 
+  karton_xss_scanner:
+    build:
+      context: Artemis-modules-extra
+      dockerfile: karton_xss_scanner/Dockerfile
+    volumes: ["./docker/karton.ini:/etc/karton/karton.ini", "${DOCKER_COMPOSE_ADDITIONAL_SHARED_DIRECTORY:-./shared}:/shared/"]
+    env_file: .env
+    restart: always
+    command: "python3 -m artemis.modules.karton_xss_scanner"
+
   autoreporter:
     volumes:
       - ./Artemis-modules-extra/extra_modules_config.py:/opt/extra_modules_config.py
@@ -72,3 +81,4 @@ services:
       - ./Artemis-modules-extra/autoreporter_addons/sqlmap/:/opt/artemis/reporting/modules/sqlmap/
       - ./Artemis-modules-extra/autoreporter_addons/moodle_scanner/:/opt/artemis/reporting/modules/moodle_scanner/
       - ./Artemis-modules-extra/autoreporter_addons/ssl_checks/:/opt/artemis/reporting/modules/ssl_checks/
+      - ./Artemis-modules-extra/autoreporter_addons/xss_scanner/:/opt/artemis/reporting/modules/xss_scanner/

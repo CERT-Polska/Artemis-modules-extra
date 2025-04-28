@@ -8,6 +8,19 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
 
+  test-apache-with-xss:
+    build:
+      dockerfile: test/images/php-xss/Dockerfile
+    volumes:
+      - ./test/data/test-apache-with-xss/:/var/www/html/
+
+  test-xss_scanner:
+    build:
+      context: .
+      dockerfile: karton_xss_scanner/Dockerfile
+    command: python -m unittest discover
+    env_file: env.test
+
   test-sqlmap:
     build:
       context: .
