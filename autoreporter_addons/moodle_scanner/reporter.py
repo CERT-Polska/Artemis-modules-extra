@@ -28,6 +28,9 @@ class MoodleScannerReporter(Reporter):  # type: ignore
         top_level_target = get_top_level_target(task_result)
         target = task_result["task"]["payload"]["url"]
 
+        if "result" not in task_result:
+            return []
+
         if (
             task_result["result"].get("version")
             and task_result["result"].get("is_version_obsolete")
