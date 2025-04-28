@@ -85,6 +85,7 @@ This page is under construction. Please try again in some time.
 <TITLE>Not Found</TITLE>
 <title>Page not found!</title>
 <title>Serwer WWW</title>
+<title>Serwery WWW, VPS, dedykowane. Hosting stron WWW, poczta e-mail, domeny najlepiej w IDHosting - domyślna strona www</title>
 <title>Shared IP
 <title>Site Under Service</title>
 <title>Strona jest w trakcie przygotowywania...</title>
