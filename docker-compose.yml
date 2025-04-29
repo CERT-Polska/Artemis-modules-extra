@@ -32,6 +32,17 @@ services:
     restart: always
     command: "python3 -m artemis.modules.moodle_scanner"
 
+  karton-puredns:
+    build:
+      context: Artemis-modules-extra
+      dockerfile: karton_puredns/Dockerfile
+    volumes:
+      - "./docker/karton.ini:/etc/karton/karton.ini"
+      - "${DOCKER_COMPOSE_ADDITIONAL_SHARED_DIRECTORY:-./shared}:/shared/"
+    env_file: .env
+    restart: always
+    command: "python3 -m artemis.modules.karton_puredns"
+
   karton-sqlmap:
     build:
       context: Artemis-modules-extra
