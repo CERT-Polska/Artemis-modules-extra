@@ -2,13 +2,16 @@ import string
 import subprocess
 from urllib.parse import quote
 
-from artemis import load_risk_class, utils
+import requests
+from artemis import http_requests, load_risk_class, utils
 from artemis.binds import Service, TaskStatus, TaskType
 from artemis.module_base import ArtemisBase
 from artemis.task_utils import get_target_url
 from karton.core import Task
 
 logger = utils.build_logger(__name__)
+
+XSS_PLACEHOLDER = "{xss}"
 
 
 def prepare_crawling_result(output_str: str) -> list[str]:
@@ -31,7 +34,7 @@ def prepare_crawling_result(output_str: str) -> list[str]:
             webpage = webpage[:-1] if webpage[-1] == "/" else webpage
 
         elif "vectorfor" in line:
-            vector = "?" + line.split("vectorfor")[1].split(":")[0] + "={xss}"
+            vector = "?" + line.split("vectorfor")[1].split(":")[0] + "=" + XSS_PLACEHOLDER
             if webpage:
                 vectors.add(webpage + vector)
 
@@ -59,11 +62,20 @@ class XssScanner(ArtemisBase):  # type: ignore
         output = subprocess.run(["sh", "run_crawler.sh", host_sanitized], stdout=subprocess.PIPE)
         output_str = output.stdout.decode("utf-8")
         vectors = prepare_crawling_result(output_str)
+        vectors_filtered = []
+        for vector in vectors:
+            payload = '"><testpayload'
+            try:
+                response = http_requests.get(vector.replace(XSS_PLACEHOLDER, payload)).content
+                if payload in response.content:
+                    vectors_filtered.append(vector)
+            except requests.exceptions.RequestException:
+                continue
 
         error_messages = ["error", "timeout"]
-        if vectors:
+        if vectors_filtered:
             status = TaskStatus.INTERESTING
-            status_reason = "Detected XSS vulnerabilities: {}".format(str(vectors))
+            status_reason = "Detected XSS vulnerabilities: {}".format(str(vectors_filtered))
 
         elif any(msg in output_str for msg in error_messages):
             status = TaskStatus.ERROR
@@ -77,7 +89,7 @@ class XssScanner(ArtemisBase):  # type: ignore
             task=current_task,
             status=status,
             status_reason=status_reason,
-            data={"result": vectors},
+            data={"result": vectors_filtered},
         )
 
     def run(self, current_task: Task) -> None:
