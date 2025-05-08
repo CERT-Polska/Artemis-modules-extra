@@ -2,6 +2,7 @@ import string
 import subprocess
 from urllib.parse import quote
 
+import requests
 from artemis import http_requests, load_risk_class, utils
 from artemis.binds import Service, TaskStatus, TaskType
 from artemis.module_base import ArtemisBase
@@ -10,7 +11,7 @@ from karton.core import Task
 
 logger = utils.build_logger(__name__)
 
-XSS_PLACEHOLDER = '{xss}'
+XSS_PLACEHOLDER = "{xss}"
 
 
 def prepare_crawling_result(output_str: str) -> list[str]:
