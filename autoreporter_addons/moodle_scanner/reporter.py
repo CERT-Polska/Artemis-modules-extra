@@ -31,6 +31,9 @@ class MoodleScannerReporter(Reporter):  # type: ignore
         if "result" not in task_result:
             return []
 
+        if not task_result["result"]:
+            return []
+
         if (
             task_result["result"].get("version")
             and task_result["result"].get("is_version_obsolete")
