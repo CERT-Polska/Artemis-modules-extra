@@ -93,6 +93,13 @@ msgstr ""
 "czy ta podatność w rzeczywistości występuje."
 
 msgid ""
+" The defined domain has CNAME records configured for teamwork but a web request shows the domain is unclaimed. An attacker can register this domain on teamwork and serve their own web content."
+msgstr ""
+"Domena ma skonfigurowany rekord CNAME kierujący do narzędzia teamwork ale domena docelowa tego "
+"rekordu nie jest zarejestrowana. Atakujący może zarejestrować taką domenę w serwisie teamwork "
+"oraz umieścić tam swoje treści."
+
+msgid ""
 " The defined domain has CNAME records configured for AWS Elastic Beanstalk but these records do not resolve. "
 "An attacker can register this domain on AWS Elastic Beanstalk and serve their own web content."
 msgstr ""
