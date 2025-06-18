@@ -41,6 +41,8 @@ class ExtraModulesConfig:
         cast=decouple.Csv(str),
         default=",".join(
             [
+                "--level",
+                "2",
                 "--technique",
                 "BU",
                 "--skip-waf",
