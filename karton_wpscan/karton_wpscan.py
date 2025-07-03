@@ -21,6 +21,7 @@ class WPScan(ArtemisBase):  # type: ignore
     Runs WPScan -> WordPress Vulnerability Scanner
     """
 
+    num_retries = Config.Miscellaneous.SLOW_MODULE_NUM_RETRIES
     identity = "wpscan"
     filters = [
         {"type": TaskType.WEBAPP.value, "webapp": "wordpress"},
