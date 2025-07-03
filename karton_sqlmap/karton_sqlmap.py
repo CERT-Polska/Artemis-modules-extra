@@ -47,6 +47,7 @@ class SQLmap(ArtemisBase):  # type: ignore
     Runs sqlmap
     """
 
+    num_retries = Config.Miscellaneous.SLOW_MODULE_NUM_RETRIES
     identity = "sqlmap"
     filters = [
         # We run on all HTTP services, as even if it's a known CMS, it may contain custom plugins
