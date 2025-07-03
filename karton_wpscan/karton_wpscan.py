@@ -5,6 +5,7 @@ import urllib.parse
 
 from artemis import load_risk_class
 from artemis.binds import TaskStatus, TaskType
+from artemis.config import Config
 from artemis.module_base import ArtemisBase
 from karton.core import Task
 
@@ -21,6 +22,7 @@ class WPScan(ArtemisBase):  # type: ignore
     Runs WPScan -> WordPress Vulnerability Scanner
     """
 
+    num_retries = Config.Miscellaneous.SLOW_MODULE_NUM_RETRIES
     identity = "wpscan"
     filters = [
         {"type": TaskType.WEBAPP.value, "webapp": "wordpress"},

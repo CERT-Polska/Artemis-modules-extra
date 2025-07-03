@@ -5,6 +5,7 @@ from urllib.parse import quote
 import requests
 from artemis import http_requests, load_risk_class, utils
 from artemis.binds import Service, TaskStatus, TaskType
+from artemis.config import Config
 from artemis.module_base import ArtemisBase
 from artemis.task_utils import get_target_url
 from karton.core import Task
@@ -49,6 +50,7 @@ class XssScanner(ArtemisBase):  # type: ignore
     Preapre result with parameters that can be exploited and further test with specific payloads.
     """
 
+    num_retries = Config.Miscellaneous.SLOW_MODULE_NUM_RETRIES
     filters = [
         # We run on all HTTP services, as even if it's a known CMS, it may contain custom plugins
         # and therefore it's worth scanning.
