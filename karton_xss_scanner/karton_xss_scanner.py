@@ -5,6 +5,7 @@ from urllib.parse import quote
 import requests
 from artemis import http_requests, load_risk_class, utils
 from artemis.binds import Service, TaskStatus, TaskType
+from artemis.config import Config
 from artemis.module_base import ArtemisBase
 from artemis.task_utils import get_target_url
 from karton.core import Task

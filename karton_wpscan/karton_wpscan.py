@@ -5,6 +5,7 @@ import urllib.parse
 
 from artemis import load_risk_class
 from artemis.binds import TaskStatus, TaskType
+from artemis.config import Config
 from artemis.module_base import ArtemisBase
 from karton.core import Task
 
