@@ -19,5 +19,5 @@ class WhatVPNRreporter(Reporter):  # type: ignore
                     additional_type=task_result["result"].strip(),
                 )
             ]
-         else:
+        else:
             return []
