@@ -82,3 +82,4 @@ services:
       - ./Artemis-modules-extra/autoreporter_addons/moodle_scanner/:/opt/artemis/reporting/modules/moodle_scanner/
       - ./Artemis-modules-extra/autoreporter_addons/ssl_checks/:/opt/artemis/reporting/modules/ssl_checks/
       - ./Artemis-modules-extra/autoreporter_addons/xss_scanner/:/opt/artemis/reporting/modules/xss_scanner/
+      - ./Artemis-modules-extra/autoreporter_addons/whatvpn/:/opt/artemis/reporting/modules/whatvpn/
