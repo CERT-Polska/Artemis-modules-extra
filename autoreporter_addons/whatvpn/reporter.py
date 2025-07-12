@@ -11,10 +11,13 @@ class WhatVPNRreporter(Reporter):  # type: ignore
         if task_result["headers"]["receiver"] != "what-vpn":
             return []
 
-        return [
-            Asset(
-                asset_type=AssetType.VPN,
-                name=task_result["target_string"],
-                additional_type=task_result["result"].strip(),
-            )
-        ]
+        if task_result["result"]:
+            return [
+                Asset(
+                    asset_type=AssetType.VPN,
+                    name=task_result["target_string"],
+                    additional_type=task_result["result"].strip(),
+                )
+            ]
+        else:
+            return []
