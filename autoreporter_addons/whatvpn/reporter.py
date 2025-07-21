@@ -11,6 +11,9 @@ class WhatVPNRreporter(Reporter):  # type: ignore
         if task_result["headers"]["receiver"] != "what-vpn":
             return []
 
+        if task_result.get("status") != "INTERESTING":
+            return []
+
         if task_result["result"]:
             return [
                 Asset(
