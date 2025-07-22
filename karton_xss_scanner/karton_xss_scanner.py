@@ -1,6 +1,7 @@
+import os
 import string
 import subprocess
-from urllib.parse import quote
+from urllib.parse import parse_qs, quote, urlencode, urlparse, urlunparse
 
 import requests
 from artemis import http_requests, load_risk_class, utils
@@ -91,6 +92,24 @@ class XssScanner(ArtemisBase):  # type: ignore
             status_reason=status_reason,
             data={"result": vectors_filtered},
         )
+
+    def add_common_xss_params(url: str) -> str:
+        xss_params_file = os.path.join(os.path.dirname(__file__), "xss_params.txt")
+        with open(xss_params_file, "r") as file:
+            params = file.read().splitlines()
+            params = [param.strip() for param in params if param.strip() and not param.startswith("#")]
+
+        parsed_url = urlparse(url)
+
+        query_params = parse_qs(parsed_url.query)
+
+        for param in params:
+            if param not in query_params:
+                query_params[param] = ["testvalue"]
+
+        new_query = urlencode(query_params, doseq=True)
+
+        return urlunparse(parsed_url._replace(query=new_query))
 
     def run(self, current_task: Task) -> None:
         target_host = get_target_url(current_task)
