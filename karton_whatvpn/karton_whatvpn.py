@@ -39,6 +39,10 @@ class WhatVPN(ArtemisBase):  # type: ignore
             # Format of what-vpn output:
             # scanned_host: identified_VPN [VPN_version]
             detected_vpn = output_str.split(" ", 1)[1]
+
+            if "(" in detected_vpn:  # cases like 'Juniper Secure Connect (80%)'
+                detected_vpn = detected_vpn.split("(")[0]
+
             status = TaskStatus.INTERESTING
             status_reason = f"Detected {detected_vpn}"
 
