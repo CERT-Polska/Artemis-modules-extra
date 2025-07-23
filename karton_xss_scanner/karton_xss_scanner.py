@@ -93,7 +93,7 @@ class XssScanner(ArtemisBase):  # type: ignore
             data={"result": vectors_filtered},
         )
 
-    def add_common_xss_params(url: str) -> str:
+    def add_common_xss_params(self, url: str) -> str:
         xss_params_file = os.path.join(os.path.dirname(__file__), "xss_params.txt")
         with open(xss_params_file, "r") as file:
             params = file.read().splitlines()
@@ -113,6 +113,8 @@ class XssScanner(ArtemisBase):  # type: ignore
 
     def run(self, current_task: Task) -> None:
         target_host = get_target_url(current_task)
+
+        target_host = self.add_common_xss_params(target_host)
 
         self.log.info("Requested to check if %s has XSS Vulnerabilities", target_host)
         self._process(current_task, target_host)
