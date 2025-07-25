@@ -13,5 +13,7 @@
         <!-- Displaying the entered name and password -->
         <p>Hello!, <?php echo $_GET['username']; ?>!</p>
         <p>This is your password, <?php echo $_GET['password']; ?>!</p>
+        <!-- Hidden XSS reflection -->
+        <p>Search keyword was: <?php echo $_GET['search'] ?? ''; ?></p>
     </body>
 </html>
