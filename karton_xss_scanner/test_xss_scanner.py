@@ -51,14 +51,12 @@ class XssScannerTestCase(ArtemisModuleTestCase):
         )
         self.run_task(task)
         (call,) = self.mock_db.save_task_result.call_args_list
-        # expected_status_reason = "Detected XSS vulnerabilities: ['http://test-apache-with-xss/index.php?username={xss}', 'http://test-apache-with-xss/index.php?search={xss}', 'http://test-apache-with-xss/index.php?password={xss}']"
         expected_result = {
             "http://test-apache-with-xss/index.php?username={xss}",
             "http://test-apache-with-xss/index.php?search={xss}",
             "http://test-apache-with-xss/index.php?password={xss}",
         }
         self.assertIsNotNone(call.kwargs["status_reason"])
-        # self.assertEqual(call.kwargs["status_reason"], expected_status_reason)
         self.assertEqual(call.kwargs["status"], "INTERESTING")
         self.assertEqual(set(call.kwargs["data"].get("result")), expected_result)
         self.assertTrue(len(call.kwargs["data"]["result"]) == 3)
