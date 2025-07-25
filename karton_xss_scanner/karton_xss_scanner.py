@@ -42,6 +42,25 @@ def prepare_crawling_result(output_str: str) -> list[str]:
     return list(vectors)
 
 
+def add_common_xss_params(url: str) -> str:
+    xss_params_file = os.path.join("/opt/xss_params.txt")
+    with open(xss_params_file, "r") as file:
+        params = file.read().splitlines()
+        params = [param.strip() for param in params if param.strip() and not param.startswith("#")]
+
+    parsed_url = urlparse(url)
+
+    query_params = parse_qs(parsed_url.query)
+
+    for param in params:
+        if param not in query_params:
+            query_params[param] = ["testvalue"]
+
+    new_query = urlencode(query_params, doseq=True)
+
+    return urlunparse(parsed_url._replace(query=new_query))
+
+
 @load_risk_class.load_risk_class(load_risk_class.LoadRiskClass.MEDIUM)
 class XssScanner(ArtemisBase):  # type: ignore
     identity = "xss_scanner"
@@ -59,7 +78,7 @@ class XssScanner(ArtemisBase):  # type: ignore
     def _process(self, current_task: Task, host: str) -> None:
         host_sanitized = quote(host, safe="/:.?=&-")
         assert host_sanitized.startswith("http://") or host_sanitized.startswith("https://")
-        assert all(i.lower() in "/:.?=&-" + string.ascii_lowercase + string.digits for i in host_sanitized)
+        assert all(i.lower() in "/:.?=&-_" + string.ascii_lowercase + string.digits for i in host_sanitized)
         output = subprocess.run(["sh", "run_crawler.sh", host_sanitized], stdout=subprocess.PIPE)
         output_str = output.stdout.decode("utf-8")
         vectors = prepare_crawling_result(output_str)
@@ -93,28 +112,10 @@ class XssScanner(ArtemisBase):  # type: ignore
             data={"result": vectors_filtered},
         )
 
-    def add_common_xss_params(self, url: str) -> str:
-        xss_params_file = os.path.join(os.path.dirname(__file__), "xss_params.txt")
-        with open(xss_params_file, "r") as file:
-            params = file.read().splitlines()
-            params = [param.strip() for param in params if param.strip() and not param.startswith("#")]
-
-        parsed_url = urlparse(url)
-
-        query_params = parse_qs(parsed_url.query)
-
-        for param in params:
-            if param not in query_params:
-                query_params[param] = ["testvalue"]
-
-        new_query = urlencode(query_params, doseq=True)
-
-        return urlunparse(parsed_url._replace(query=new_query))
-
     def run(self, current_task: Task) -> None:
         target_host = get_target_url(current_task)
 
-        target_host = self.add_common_xss_params(target_host)
+        target_host = add_common_xss_params(target_host)
 
         self.log.info("Requested to check if %s has XSS Vulnerabilities", target_host)
         self._process(current_task, target_host)
