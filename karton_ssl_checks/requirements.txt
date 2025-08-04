@@ -1,3 +1,3 @@
 setuptools==80.9.0
 hstspreload==2025.1.1
-sslyze==6.1.0
+sslyze==6.2.0
