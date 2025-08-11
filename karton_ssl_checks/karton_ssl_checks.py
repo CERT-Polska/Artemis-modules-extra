@@ -175,7 +175,7 @@ class SSLChecks(ArtemisBase):  # type: ignore
 
                 if err_cert_authority_invalid:
                     self._cert_authority_invalid_message(messages, result, domain)
-                    continue
+                continue
 
             certinfo_result = server_scan_result.scan_result.certificate_info.result
 
