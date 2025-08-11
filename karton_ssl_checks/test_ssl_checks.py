@@ -1,7 +1,7 @@
 from test.base import ArtemisModuleTestCase
 
 from artemis.binds import TaskStatus, TaskType
-from artemis.modules.karton_ssl_checks import SSLChecks
+from artemis.modules.karton_ssl_checks import ExtraModulesConfig, SSLChecks
 from karton.core import Task
 
 
@@ -27,6 +27,16 @@ class SSLChecksTestCase(ArtemisModuleTestCase):
         (call,) = self.mock_db.save_task_result.call_args_list
         self.assertEqual(call.kwargs["status"], TaskStatus.INTERESTING)
         self.assertEqual(call.kwargs["status_reason"], "untrusted-root.badssl.com: certificate authority invalid")
+
+    def test_untrusted_root_whitelisted(self) -> None:
+        ExtraModulesConfig.SSL_CHECKS_CA_ISSUER_WHITELIST = ["BadSSL Untrusted Root Certificate Authority"]
+        task = Task(
+            {"type": TaskType.DOMAIN.value},
+            payload={"domain": "untrusted-root.badssl.com"},
+        )
+        self.run_task(task)
+        (call,) = self.mock_db.save_task_result.call_args_list
+        self.assertEqual(call.kwargs["status"], TaskStatus.OK)
 
     def test_expired(self) -> None:
         task = Task(

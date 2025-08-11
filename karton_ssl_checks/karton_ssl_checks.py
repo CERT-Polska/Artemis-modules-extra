@@ -44,6 +44,10 @@ class SSLChecks(ArtemisBase):  # type: ignore
                 return True
         return False
 
+    def _cert_authority_invalid_message(self, messages: list[str], result: Dict[str, Any], domain: Any) -> None:
+        messages.append(f"{domain}: certificate authority invalid")
+        result["certificate_authority_invalid"] = True
+
     def run(self, current_task: Task) -> None:
         domain = current_task.payload["domain"]
 
@@ -107,10 +111,10 @@ class SSLChecks(ArtemisBase):  # type: ignore
         except Exception as e:
             result["certificate_authority_check_error"] = repr(e)
 
+        err_cert_authority_invalid = False
         if stderr:
             if "SSL error code 1, net_error -202" in stderr:  # -202 is ERR_CERT_AUTHORITY_INVALID
-                messages.append(f"{domain}: certificate authority invalid")
-                result["certificate_authority_invalid"] = True
+                err_cert_authority_invalid = True
 
         try:
             original_url = f"http://{domain}"
@@ -160,7 +164,7 @@ class SSLChecks(ArtemisBase):  # type: ignore
             return list(scanner.get_results())
 
         try:
-            results = throttle_request(scan)
+            results: list[ServerScanResult] = throttle_request(scan)
         except Exception:
             self.log.exception(f"Unable to complete scan for {domain}")
             results = []
@@ -184,6 +188,11 @@ class SSLChecks(ArtemisBase):  # type: ignore
                     result["cn_different_from_hostname"] = True
                     result["names"] = names
                     result["hostname"] = domain
+
+            if err_cert_authority_invalid:
+                issuer_cn = get_common_names(cert_deployment.received_certificate_chain[0].issuer)[0]
+                if issuer_cn not in ExtraModulesConfig.SSL_CHECKS_CA_ISSUER_WHITELIST:
+                    self._cert_authority_invalid_message(messages, result, domain)
 
             days_left = (cert_deployment.received_certificate_chain[0].not_valid_after - datetime.datetime.now()).days
             if days_left <= 0:
