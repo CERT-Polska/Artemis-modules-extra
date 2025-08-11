@@ -35,6 +35,8 @@ class ExtraModulesConfig:
         default=50,
     )
 
+    # List of CA issuers Common Names to be whitelisted. This is to skip reporting bad certificate authority for CA
+    # that are not accepted by browsers but should not be reported.
     SSL_CHECKS_CA_ISSUER_WHITELIST = decouple.config(
         "SSL_CHECKS_CA_ISSUER_WHITELIST",
         cast=decouple.Csv(str),

@@ -193,7 +193,6 @@ class SSLChecks(ArtemisBase):  # type: ignore
                     result["hostname"] = domain
 
             if err_cert_authority_invalid:
-                breakpoint()
                 issuer_cn = get_common_names(cert_deployment.received_certificate_chain[0].issuer)[0]
                 if issuer_cn not in ExtraModulesConfig.SSL_CHECKS_CA_ISSUER_WHITELIST:
                     self._cert_authority_invalid_message(messages, result, domain)
