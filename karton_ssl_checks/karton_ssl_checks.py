@@ -172,9 +172,6 @@ class SSLChecks(ArtemisBase):  # type: ignore
         for server_scan_result in results:
             if not server_scan_result.scan_result:
                 self.log.error(f"Unable to complete scan for {domain}. Full result: {server_scan_result}")
-
-                if err_cert_authority_invalid:
-                    self._cert_authority_invalid_message(messages, result, domain)
                 continue
 
             certinfo_result = server_scan_result.scan_result.certificate_info.result
