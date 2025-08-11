@@ -35,6 +35,12 @@ class ExtraModulesConfig:
         default=50,
     )
 
+    SSL_CHECKS_CA_ISSUER_WHITELIST = decouple.config(
+        "SSL_CHECKS_CA_ISSUER_WHITELIST",
+        cast=decouple.Csv(str),
+        default="",
+    )
+
     # Command-line options that will be passed to sqlmap
     SQLMAP_COMMAND_LINE_OPTIONS = decouple.config(
         "SQLMAP_COMMAND_LINE_OPTIONS",
