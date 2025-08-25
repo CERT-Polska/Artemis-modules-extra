@@ -1,3 +1,4 @@
+import logging
 import os
 import string
 import subprocess
@@ -7,6 +8,7 @@ import requests
 from artemis import http_requests, load_risk_class, utils
 from artemis.binds import Service, TaskStatus, TaskType
 from artemis.config import Config
+from artemis.crawling import get_injectable_parameters
 from artemis.module_base import ArtemisBase
 from artemis.task_utils import get_target_url
 from karton.core import Task
@@ -43,17 +45,20 @@ def prepare_crawling_result(output_str: str) -> list[str]:
     return list(vectors)
 
 
-def add_common_xss_params(url: str) -> str:
+def add_params(log: logging.Logger, url: str) -> str:
+    injectable_params = get_injectable_parameters(url)
+    log.info("Obtained parameters: %s for url %s", injectable_params, url)
+
     xss_params_file = os.path.join("/opt/xss_params.txt")
     with open(xss_params_file, "r") as file:
-        params = file.read().splitlines()
-        params = [param.strip() for param in params if param.strip() and not param.startswith("#")]
+        common_params = file.read().splitlines()
+        common_params = [param.strip() for param in common_params if param.strip() and not param.startswith("#")]
 
     parsed_url = urlparse(url)
 
     query_params = parse_qs(parsed_url.query)
 
-    for param in params:
+    for param in injectable_params + common_params:
         if param not in query_params:
             query_params[param] = ["testvalue"]
 
@@ -117,7 +122,7 @@ class XssScanner(ArtemisBase):  # type: ignore
     def run(self, current_task: Task) -> None:
         target_host = get_target_url(current_task)
 
-        target_host = add_common_xss_params(target_host)
+        target_host = add_params(self.log, target_host)
 
         self.log.info("Requested to check if %s has XSS Vulnerabilities", target_host)
         self._process(current_task, target_host)
