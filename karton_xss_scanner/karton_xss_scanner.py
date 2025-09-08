@@ -94,7 +94,7 @@ class XssScanner(ArtemisBase):  # type: ignore
             payload = '"><testpayload'
             try:
                 response = http_requests.get(vector.replace(XSS_PLACEHOLDER, payload)).content
-                if payload in response.content:
+                if payload in response:
                     vectors_filtered.append(vector)
             except requests.exceptions.RequestException:
                 continue

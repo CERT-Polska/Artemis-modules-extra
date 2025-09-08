@@ -21,4 +21,10 @@ fi
 
 docker compose -f docker-compose.test.yaml run test-ssl_checks
 
+if [ $? -ne 0 ]; then
+    exit 1
+fi
+
+docker compose -f docker-compose.test.yaml run test-xss_scanner
+
 exit $?
