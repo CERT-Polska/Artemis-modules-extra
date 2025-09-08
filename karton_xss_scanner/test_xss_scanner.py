@@ -4,7 +4,8 @@ from test.base import ArtemisModuleTestCase
 from artemis.binds import Service, TaskType
 from artemis.modules.karton_xss_scanner import (
     XssScanner,
-    add_common_xss_params,
+    add_params,
+    logger,
     prepare_crawling_result,
 )
 from karton.core import Task
@@ -33,7 +34,7 @@ class XssScannerTestCase(ArtemisModuleTestCase):
 
     def test_add_common_xss_params(self) -> None:
         url = "http://example.com/test?param1=value1"
-        modified_url = add_common_xss_params(url)
+        modified_url = add_params(logger, url)
         xss_params_file = os.path.join(os.path.dirname(__file__), "xss_params.txt")
         with open(xss_params_file, "r") as file:
             params = file.read().splitlines()
