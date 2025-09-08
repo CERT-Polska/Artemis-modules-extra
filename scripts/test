@@ -13,7 +13,7 @@ docker compose -f docker-compose.test.yaml run test-sqlmap /wait-for-it.sh test-
 docker compose -f docker-compose.test.yaml run test-xss_scanner /wait-for-it.sh test-apache-with-xss:80
 
 # Now we are ready to start the tests
-docker compose -f docker-compose.test.yaml run test-sqlmap
+docker compose -f docker-compose.test.yaml run test-xss_scanner
 
 if [ $? -ne 0 ]; then
     exit 1
@@ -25,6 +25,6 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-docker compose -f docker-compose.test.yaml run test-xss_scanner
+docker compose -f docker-compose.test.yaml run test-sqlmap
 
 exit $?
