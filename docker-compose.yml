@@ -4,7 +4,6 @@ services:
       context: Artemis-modules-extra
       dockerfile: karton_dns_reaper/Dockerfile
     volumes:
-      - "./docker/karton.ini:/etc/karton/karton.ini"
       - "${DOCKER_COMPOSE_ADDITIONAL_SHARED_DIRECTORY:-./shared}:/shared/"
     env_file: .env
     restart: always
@@ -15,7 +14,6 @@ services:
       context: Artemis-modules-extra
       dockerfile: forti_vuln/Dockerfile
     volumes:
-      - "./docker/karton.ini:/etc/karton/karton.ini"
       - "${DOCKER_COMPOSE_ADDITIONAL_SHARED_DIRECTORY:-./shared}:/shared/"
     env_file: .env
     restart: always
@@ -26,7 +24,6 @@ services:
       context: Artemis-modules-extra
       dockerfile: karton_moodle_scanner/Dockerfile
     volumes:
-      - "./docker/karton.ini:/etc/karton/karton.ini"
       - "${DOCKER_COMPOSE_ADDITIONAL_SHARED_DIRECTORY:-./shared}:/shared/"
     env_file: .env
     restart: always
@@ -37,7 +34,6 @@ services:
       context: Artemis-modules-extra
       dockerfile: karton_sqlmap/Dockerfile
     volumes:
-      - "./docker/karton.ini:/etc/karton/karton.ini"
       - "${DOCKER_COMPOSE_ADDITIONAL_SHARED_DIRECTORY:-./shared}:/shared/"
     env_file: .env
     restart: always
@@ -48,7 +44,6 @@ services:
       context: Artemis-modules-extra
       dockerfile: karton_ssl_checks/Dockerfile
     volumes:
-      - "./docker/karton.ini:/etc/karton/karton.ini"
       - "${DOCKER_COMPOSE_ADDITIONAL_SHARED_DIRECTORY:-./shared}:/shared/"
     env_file: .env
     restart: always
@@ -59,7 +54,7 @@ services:
     build:
       context: Artemis-modules-extra
       dockerfile: karton_whatvpn/Dockerfile
-    volumes: ["./docker/karton.ini:/etc/karton/karton.ini", "${DOCKER_COMPOSE_ADDITIONAL_SHARED_DIRECTORY:-./shared}:/shared/"]
+    volumes: ["${DOCKER_COMPOSE_ADDITIONAL_SHARED_DIRECTORY:-./shared}:/shared/"]
     env_file: .env
     restart: always
     command: "python3 -m artemis.modules.karton_whatvpn"
@@ -68,7 +63,7 @@ services:
     build:
       context: Artemis-modules-extra
       dockerfile: karton_xss_scanner/Dockerfile
-    volumes: ["./docker/karton.ini:/etc/karton/karton.ini", "${DOCKER_COMPOSE_ADDITIONAL_SHARED_DIRECTORY:-./shared}:/shared/"]
+    volumes: ["${DOCKER_COMPOSE_ADDITIONAL_SHARED_DIRECTORY:-./shared}:/shared/"]
     env_file: .env
     restart: always
     command: "python3 -m artemis.modules.karton_xss_scanner"
