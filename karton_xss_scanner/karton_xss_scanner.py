@@ -1,3 +1,4 @@
+import math
 import logging
 import os
 import string
@@ -93,7 +94,7 @@ class XssScanner(ArtemisBase):  # type: ignore
             user_agent = "Mozilla/5.0"
 
         if self.requests_per_second_for_current_tasks:
-            delay = 1.0 / self.requests_per_second_for_current_tasks
+            delay = math.ceil(1.0 / self.requests_per_second_for_current_tasks)
         else:
             delay = 0
 
