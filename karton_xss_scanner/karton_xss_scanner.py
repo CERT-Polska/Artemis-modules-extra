@@ -97,7 +97,7 @@ class XssScanner(ArtemisBase):  # type: ignore
         else:
             delay = 0
 
-        output = subprocess.run(["sh", "run_crawler.sh", host_sanitized, user_agent, delay], stdout=subprocess.PIPE)
+        output = subprocess.run(["sh", "run_crawler.sh", host_sanitized, user_agent, str(delay)], stdout=subprocess.PIPE)
         output_str = output.stdout.decode("utf-8")
         vectors = prepare_crawling_result(output_str)
         vectors_filtered = []
