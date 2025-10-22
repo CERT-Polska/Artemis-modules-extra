@@ -1,4 +1,5 @@
 import logging
+import math
 import os
 import string
 import subprocess
@@ -86,7 +87,20 @@ class XssScanner(ArtemisBase):  # type: ignore
         host_sanitized = quote(host, safe="/:.?=&-")
         assert host_sanitized.startswith("http://") or host_sanitized.startswith("https://")
         assert all(i.lower() in "/:.?=&-_" + string.ascii_lowercase + string.digits for i in host_sanitized)
-        output = subprocess.run(["sh", "run_crawler.sh", host_sanitized], stdout=subprocess.PIPE)
+
+        if Config.Miscellaneous.CUSTOM_USER_AGENT:
+            user_agent = Config.Miscellaneous.CUSTOM_USER_AGENT
+        else:
+            user_agent = "Mozilla/5.0"
+
+        if self.requests_per_second_for_current_tasks:
+            delay = math.ceil(1.0 / self.requests_per_second_for_current_tasks)
+        else:
+            delay = 0
+
+        output = subprocess.run(
+            ["sh", "run_crawler.sh", host_sanitized, user_agent, str(delay)], stdout=subprocess.PIPE
+        )
         output_str = output.stdout.decode("utf-8")
         vectors = prepare_crawling_result(output_str)
         vectors_filtered = []
