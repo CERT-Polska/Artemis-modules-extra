@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import dataclasses
 import subprocess
 from typing import Any, Dict, List, Optional
 
@@ -10,57 +9,6 @@ from artemis.modules.base.base_newer_version_comparer import (
 )
 from artemis.task_utils import get_target_url
 from karton.core import Task
-
-
-@dataclasses.dataclass
-class MoodleMessage:
-    category: str
-    problems: List[str]
-
-    @property
-    def message(self) -> str:
-        return f"{self.category}: {', '.join(self.problems)}"
-
-
-class MoodleVersionException(Exception):
-    pass
-
-
-def process_moodle_json(result: Dict[str, Any]) -> List[MoodleMessage]:
-    messages: Dict[str, MoodleMessage] = {}
-
-    for key, value in result.items():
-        key_parts = key.replace("[", "").replace("]", "").split(". ")
-
-        if key in [
-            "[2. Moodle Security Checks]",
-            "[3. Deprecated Moodle Versions]",
-        ]:
-            continue
-
-        if len(key_parts) >= 2:
-            category = key_parts[1].capitalize()
-
-            if category.lower() != "info":
-                if isinstance(value, dict):
-                    for subkey, subvalue in value.items():
-                        if subvalue and subvalue not in [
-                            "Nothing to report, all seems OK!",
-                        ]:
-                            problem = f"{subkey} {subvalue}"
-                            if category not in messages:
-                                messages[category] = MoodleMessage(category=category, problems=[])
-                            messages[category].problems.append(problem)
-                elif isinstance(value, list):
-                    for item in value:
-                        if item and item not in [
-                            "Nothing to report, all seems OK!",
-                        ]:
-                            if category not in messages:
-                                messages[category] = MoodleMessage(category=category, problems=[])
-                            messages[category].problems.append(str(item))
-
-    return list(messages.values())
 
 
 @load_risk_class.load_risk_class(load_risk_class.LoadRiskClass.LOW)
@@ -107,11 +55,7 @@ class MoodleScanner(BaseNewerVersionComparerModule):  # type: ignore
 
         # Check if version is obsolete
         if version_info:
-            try:
-                is_version_obsolete = self.is_version_obsolete(version_info)
-            except MoodleVersionException as e:
-                self.log.warning(f"Version check failed: {str(e)}")
-                is_version_obsolete = None
+            is_version_obsolete = self.is_version_obsolete(version_info)
 
         # Determine status and reason based on findings
         found_problems = []
