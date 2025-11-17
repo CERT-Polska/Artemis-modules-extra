@@ -68,3 +68,8 @@ services:
     environment:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root
+
+  test-service-with-obsolete-moodle:
+    build: test/images/moodle-obsolete
+    volumes:
+      - ./test/data/moodle-obsolete/:/var/www/moodledata/
