@@ -28,4 +28,10 @@ fi
 
 docker compose -f docker-compose.test.yaml run test-sqlmap
 
+if [ $? -ne 0 ]; then
+    exit 1
+fi
+
+docker compose -f docker-compose.test.yaml run test-moodle-scanner
+
 exit $?

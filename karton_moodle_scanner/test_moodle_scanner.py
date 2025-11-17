@@ -5,7 +5,7 @@ from artemis.modules.moodle_scanner import MoodleScanner
 from karton.core import Task
 
 
-class SQLmapTestCase(ArtemisModuleTestCase):
+class MoodleScannerTestCase(ArtemisModuleTestCase):
     karton_class = MoodleScanner
 
     def test_moodle_obsolete_version(self) -> None:
