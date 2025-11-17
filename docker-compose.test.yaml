@@ -73,3 +73,10 @@ services:
     build: test/images/moodle-obsolete
     volumes:
       - ./test/data/moodle-obsolete/:/var/www/moodledata/
+
+  test-moodle-scanner:
+    build:
+      context: .
+      dockerfile: karton_moodle_scanner/Dockerfile
+    command: python -m unittest discover
+    env_file: env.test
