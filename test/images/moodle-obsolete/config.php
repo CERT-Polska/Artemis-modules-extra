@@ -3,15 +3,16 @@ unset($CFG);
 global $CFG;
 $CFG = new stdClass();
 
-$CFG->wwwroot   = 'http://localhost:8080';
+$CFG->wwwroot   = 'http://test-service-with-obsolete-moodle:80';
 $CFG->dirroot   = '/var/www/html';
 $CFG->dataroot  = '/var/www/moodledata';
 
-$CFG->dbtype    = 'sqlite3';
+$CFG->dbtype    = 'mysqli';
 $CFG->dblibrary = 'native';
+$CFG->dbhost    = 'test-db-for-obsolete-moodle';
+$CFG->dbuser    = 'moodle';
+$CFG->dbpass    = 'password';
 $CFG->dbname    = 'moodle';
 $CFG->prefix    = 'mdl_';
-
-$CFG->directorypermissions = 0777;
 
 require_once(__DIR__ . '/lib/setup.php');
