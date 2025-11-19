@@ -51,25 +51,39 @@ class MoodleScanner(BaseNewerVersionComparerModule):  # type: ignore
                 versions.append({"ver": ver, "hash": hash, "file": file})
 
         for file in files:
-            filehash = md5(get(url + file).text.encode("utf8")).hexdigest()
-            version = next((ver["ver"] for ver in versions if filehash == ver["hash"] and file == ver["file"]), None)
-            if version:
-                return version[1:]
+            response = get(url + file)
+            if response.status_code == 200:
+                filehash = md5(response.text.encode("utf8")).hexdigest()
+                version = next(
+                    (ver["ver"] for ver in versions if filehash == ver["hash"] and file == ver["file"]), None
+                )
+                if version:
+                    return version
 
         return None
 
     def extract_version_legacy_upgrade_file(self, url: str) -> str | None:
         # pattern: === x.y ===
-        # ignores line "=== 4.5 Onwards ===", that can be included in legacy upgrade file
-        pattern = re.compile(r"(?m)^===\s*(?P<ver>\d+(?:\.\d+){1,2})(?!\s+Onwards)\s*===")
+        # there is possibility for === x.y.z+ === ; we will extract version without +
+        pattern = re.compile(r"^===\s*(\d+(?:\.\d+)*)(?:\+)?\s*===$")
 
         legacy_files = ["/lib/upgrade.txt", "/question/upgrade.txt"]
 
         for file in legacy_files:
-            text = get(url + file).text
-            pattern_match = pattern.search(text)
-            if pattern_match:
-                return pattern_match.group(1)
+            response = get(url + file)
+            if response.status_code != 200:
+                continue
+
+            text = response.text
+
+            for line in text.splitlines():
+                # ignores line "=== 4.5 Onwards ===", that can be included in legacy upgrade file
+                if "Onwards" in line:
+                    continue
+
+                match = pattern.search(line)
+                if match:
+                    return match.group(1)
 
         return None
 
@@ -78,7 +92,11 @@ class MoodleScanner(BaseNewerVersionComparerModule):  # type: ignore
         pattern = re.compile(r"(?m)^##\s*([0-9]+(?:\.[0-9]+){0,2})\s*$")
 
         new_file = "/UPGRADING.md"
-        text = get(url + new_file).text
+        response = get(url + new_file)
+        if response.status_code != 200:
+            return None
+
+        text = response.text
         pattern_match = pattern.search(text)
         return pattern_match.group(1) if pattern_match else None
 
@@ -113,7 +131,9 @@ class MoodleScanner(BaseNewerVersionComparerModule):  # type: ignore
             status = TaskStatus.ERROR
             status_reason = "Cannot identify moodle version."
 
-        self.db.save_task_result(task=current_task, status=status, status_reason=status_reason)
+        self.db.save_task_result(
+            task=current_task, status=status, status_reason=status_reason, data={"version": version}
+        )
 
 
 if __name__ == "__main__":
