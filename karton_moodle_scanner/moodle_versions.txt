@@ -1,4 +1,4 @@
-# hashes to determine versions of moodle
+# md5 hashes to determine versions of moodle
 # based on: https://github.com/inc0d3/moodlescan/blob/master/data/version.txt
 # licensed under GNU General Public License v3.0
 # upgraded with legacy versions
