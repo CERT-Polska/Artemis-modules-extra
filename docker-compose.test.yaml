@@ -68,3 +68,23 @@ services:
     environment:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root
+
+  test-db-for-obsolete-moodle:
+    image: mariadb:10.6
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: moodle
+      MYSQL_USER: moodle
+      MYSQL_PASSWORD: password
+
+  test-service-with-obsolete-moodle:
+    build: test/images/moodle-obsolete
+    depends_on:
+      - test-db-for-obsolete-moodle
+
+  test-moodle-scanner:
+    build:
+      context: .
+      dockerfile: karton_moodle_scanner/Dockerfile
+    command: python -m unittest discover
+    env_file: env.test

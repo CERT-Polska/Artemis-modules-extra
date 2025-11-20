@@ -1,21 +1,3 @@
-#: autoreporter_addons/moodle_scanner/template_moodle_vulnerability.jinja2:2
-msgid ""
-"The following security vulnerabilities were detected in Moodle "
-"installations:"
-msgstr "Wykryto następujące podatności w systemach Moodle:"
-
-#: autoreporter_addons/moodle_scanner/template_moodle_vulnerability.jinja2:16
-msgid ""
-"These vulnerabilities should be addressed by updating to the latest "
-"secure version of Moodle. If a site is no longer used, we recommend "
-"shutting it down to eliminate the risk of exploitation of known "
-"vulnerabilities in older Moodle versions."
-msgstr ""
-"Zalecamy szybką naprawę tych podatności za pomocą aktualizacji do "
-"najnowszej wersji systemu Moodle. Jeśli strona nie jest już używana, "
-"rekomendujemy jej wyłączenie, aby wyeliminować ryzyko ataku przy użyciu "
-"znanych podatności w starszych wersjach systemu Moodle."
-
 #: autoreporter_addons/moodle_scanner/template_obsolete_moodle_version.jinja2:2
 msgid "The following Moodle installations with outdated versions were detected:"
 msgstr ""

@@ -1,66 +1,17 @@
 #!/usr/bin/env python3
-import dataclasses
-import subprocess
-from typing import Any, Dict, List, Optional
+import re
+from hashlib import md5
+from pathlib import Path
+from typing import Tuple
 
 from artemis import load_risk_class
 from artemis.binds import TaskStatus, TaskType, WebApplication
+from artemis.http_requests import get
 from artemis.modules.base.base_newer_version_comparer import (
     BaseNewerVersionComparerModule,
 )
 from artemis.task_utils import get_target_url
 from karton.core import Task
-
-
-@dataclasses.dataclass
-class MoodleMessage:
-    category: str
-    problems: List[str]
-
-    @property
-    def message(self) -> str:
-        return f"{self.category}: {', '.join(self.problems)}"
-
-
-class MoodleVersionException(Exception):
-    pass
-
-
-def process_moodle_json(result: Dict[str, Any]) -> List[MoodleMessage]:
-    messages: Dict[str, MoodleMessage] = {}
-
-    for key, value in result.items():
-        key_parts = key.replace("[", "").replace("]", "").split(". ")
-
-        if key in [
-            "[2. Moodle Security Checks]",
-            "[3. Deprecated Moodle Versions]",
-        ]:
-            continue
-
-        if len(key_parts) >= 2:
-            category = key_parts[1].capitalize()
-
-            if category.lower() != "info":
-                if isinstance(value, dict):
-                    for subkey, subvalue in value.items():
-                        if subvalue and subvalue not in [
-                            "Nothing to report, all seems OK!",
-                        ]:
-                            problem = f"{subkey} {subvalue}"
-                            if category not in messages:
-                                messages[category] = MoodleMessage(category=category, problems=[])
-                            messages[category].problems.append(problem)
-                elif isinstance(value, list):
-                    for item in value:
-                        if item and item not in [
-                            "Nothing to report, all seems OK!",
-                        ]:
-                            if category not in messages:
-                                messages[category] = MoodleMessage(category=category, problems=[])
-                            messages[category].problems.append(str(item))
-
-    return list(messages.values())
 
 
 @load_risk_class.load_risk_class(load_risk_class.LoadRiskClass.LOW)
@@ -70,128 +21,126 @@ class MoodleScanner(BaseNewerVersionComparerModule):  # type: ignore
     """
 
     identity: str = "moodle_scanner"
-    filters: List[Dict[str, str]] = [
+    filters: list[dict[str, str]] = [
         {"type": TaskType.WEBAPP.value, "webapp": WebApplication.MOODLE.value},
     ]
     software_name = "moodle"
 
-    def process_output(self, output: str) -> Dict[str, Any]:
-        """Process moodlescan output and extract relevant information."""
-        output_lines = output.splitlines()
-        server_info: Optional[str] = None
-        version_info: Optional[str] = None
-        vulnerabilities: List[str] = []
-        error_message: Optional[str] = None
-        status: TaskStatus
-        status_reason: Optional[str]
-        is_version_obsolete: Optional[bool] = None
+    def get_version_based_on_hash_file(self, url: str) -> Tuple[str, str] | None:
+        files = [
+            "/admin/environment.xml",
+            "/composer.lock",
+            "/privacy/export_files/general.js",
+            "/composer.json",
+            "/admin/tool/lp/tests/behat/course_competencies.feature",
+        ]
+        script_dir = Path(__file__).resolve().parent
+        versions_file_path = script_dir / "moodle_versions.txt"
 
-        for i, line in enumerate(output_lines):
-            if "Error: Can't connect" in line:
-                error_message = line
-                break
+        versions = []
+        with versions_file_path.open("r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if not line or line.startswith("#"):
+                    continue
+                parts = line.split(";")
 
-            if "server" in line.lower() and ":" in line:
-                server_info = line.split(":", 1)[1].strip()
-            elif "version" in line.lower() and not line.startswith("."):
-                if "Moodle v" in line:
-                    version_info = line.split("Moodle v")[1]
-                else:
-                    # Look at next line for version info if it's not dots or error
-                    if i + 1 < len(output_lines):
-                        next_line = output_lines[i + 1].strip()
-                        if next_line and not next_line.startswith(".") and "error" not in next_line.lower():
-                            version_info = next_line
-            elif "vulnerability" in line.lower() or "cve" in line.lower():
-                vulnerabilities.append(line.strip())
+                if len(parts) != 3:
+                    raise ValueError(f"Malformed line in version file: {line}")
 
-        # Check if version is obsolete
-        if version_info:
-            try:
-                is_version_obsolete = self.is_version_obsolete(version_info)
-            except MoodleVersionException as e:
-                self.log.warning(f"Version check failed: {str(e)}")
-                is_version_obsolete = None
+                ver, hash, file = parts
+                versions.append({"ver": ver, "hash": hash, "file": file})
 
-        # Determine status and reason based on findings
-        found_problems = []
+        for file in files:
+            response = get(url + file)
+            if response.status_code == 200:
+                filehash = md5(response.text.encode("utf8")).hexdigest()
+                version = next(
+                    (ver["ver"] for ver in versions if filehash == ver["hash"] and file == ver["file"]), None
+                )
+                if version:
+                    return version, f"Identified {version} based of hash of {file} being {filehash}"
 
-        if error_message:
-            status = TaskStatus.OK
-            status_reason = error_message
-        else:
-            if vulnerabilities:
-                found_problems.extend(vulnerabilities)
+        return None
 
-            if is_version_obsolete:
-                found_problems.append(f"Moodle version {version_info} is obsolete")
+    def extract_version_legacy_upgrade_file(self, url: str) -> Tuple[str, str] | None:
+        # pattern: === x.y ===
+        # there is possibility for === x.y.z+ === ; we will extract version without +
+        pattern = re.compile(r"^===\s*(\d+(?:\.\d+)*)(?:\+)?\s*===$")
 
-            if found_problems:
-                status = TaskStatus.INTERESTING
-                status_reason = f"Found: {', '.join(found_problems)}"
-            elif version_info:
-                status = TaskStatus.OK
-                status_reason = f"Found version: {version_info} (up to date)"
-            else:
-                status = TaskStatus.OK
-                status_reason = "Version not found"
+        legacy_files = ["/lib/upgrade.txt", "/question/upgrade.txt"]
 
-        return {
-            "server": server_info,
-            "version": version_info,
-            "vulnerabilities": vulnerabilities,
-            "is_version_obsolete": is_version_obsolete,
-            "error": error_message,
-            "raw_output": output,
-            "status": status,
-            "status_reason": status_reason,
-        }
+        for file in legacy_files:
+            response = get(url + file)
+            if response.status_code != 200:
+                continue
+
+            text = response.text
+
+            for line in text.splitlines():
+                # ignores line "=== 4.5 Onwards ===", that can be included in legacy upgrade file
+                if "Onwards" in line:
+                    continue
+
+                match = pattern.search(line)
+                if match:
+                    return match.group(1), f"Found {match.group(0)} in {file}"
+
+        return None
+
+    def extract_version_upgrade_file(self, url: str) -> Tuple[str, str] | None:
+        # pattern: ## x.y (UPGRADING.md file)
+        pattern = re.compile(r"(?m)^##\s*([0-9]+(?:\.[0-9]+){0,2})\s*$")
+
+        new_file = "/UPGRADING.md"
+        response = get(url + new_file)
+        if response.status_code != 200:
+            return None
+
+        text = response.text
+        pattern_match = pattern.search(text)
+        return (pattern_match.group(1), f"Found {pattern_match.group(0)} in {new_file}") if pattern_match else None
+
+    def get_moodle_specific_version(self, url: str) -> Tuple[str, str] | None:
+        # moodle currently is using UPGRADING.md file that can help in determining version
+        # it was moved from upgrade.txt file
+        # if either file is found we fallback to use hashes built on official releases to determine the version
+        if data := self.extract_version_upgrade_file(url):
+            return data
+
+        if data := self.extract_version_legacy_upgrade_file(url):
+            return data
+
+        if data := self.get_version_based_on_hash_file(url):
+            return data
+
+        return None
 
     def run(self, current_task: Task) -> None:
         base_url = get_target_url(current_task)
-        self.log.info(f"Starting moodlescan for {base_url}")
 
-        try:
-            # Run moodlescan with error output captured
-            process = subprocess.run(
-                ["python3", "moodlescan.py", "-u", base_url, "-r", "-k"],
-                cwd="/moodle_scanner",
-                capture_output=True,
-                text=True,
-                check=True,
-            )
-        except subprocess.CalledProcessError as e:
-            self.log.error(f"Failed to run moodlescan for {base_url}")
-            self.log.error(f"Exit code: {e.returncode}")
-            self.log.error(f"Stdout: {e.stdout}")
-            self.log.error(f"Stderr: {e.stderr}")
-            self.db.save_task_result(
-                task=current_task,
-                status=TaskStatus.ERROR,
-                status_reason=f"Failed to execute moodlescan: {e.stderr}",
-                data={"stdout": e.stdout, "stderr": e.stderr},
-            )
-            return
+        status = None
+        status_reason = ""
+        if data := self.get_moodle_specific_version(base_url):
+            version, reason = data
 
-        self.log.info(f"Moodlescan stdout: {process.stdout}")
-        if process.stderr:
-            self.log.warning(f"Moodlescan stderr: {process.stderr}")
-
-        result = self.process_output(process.stdout)
-
-        if result["error"]:
-            self.log.info(f"Connection error: {result['error']}")
-            self.db.save_task_result(
-                task=current_task,
-                status=result["status"],
-                status_reason=result["status_reason"],
-                data={"raw_output": result["raw_output"]},
-            )
-            return
-
-        self.db.save_task_result(
-            task=current_task, status=result["status"], status_reason=result["status_reason"], data=result
-        )
+            if self.is_version_obsolete(version):
+                status = TaskStatus.INTERESTING
+                status_reason = f"Moodle version: {version} is obsolete (reason: {reason})."
+                self.db.save_task_result(
+                    task=current_task,
+                    status=status,
+                    status_reason=status_reason,
+                    data={"version": version, "reason": reason},
+                )
+            else:
+                status = TaskStatus.OK
+                status_reason = f"Moodle version: {version} is up to date."
+                self.db.save_task_result(task=current_task, status=status, status_reason=status_reason)
+        else:
+            status = TaskStatus.ERROR
+            status_reason = "Cannot identify moodle version."
+            self.db.save_task_result(task=current_task, status=status, status_reason=status_reason)
 
 
 if __name__ == "__main__":
