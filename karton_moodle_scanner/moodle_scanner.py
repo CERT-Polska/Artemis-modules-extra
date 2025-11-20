@@ -2,6 +2,7 @@
 import re
 from hashlib import md5
 from pathlib import Path
+from typing import Tuple
 
 from artemis import load_risk_class
 from artemis.binds import TaskStatus, TaskType, WebApplication
@@ -25,7 +26,7 @@ class MoodleScanner(BaseNewerVersionComparerModule):  # type: ignore
     ]
     software_name = "moodle"
 
-    def get_version_based_on_hash_file(self, url: str) -> str | None:
+    def get_version_based_on_hash_file(self, url: str) -> Tuple[str, str] | None:
         files = [
             "/admin/environment.xml",
             "/composer.lock",
@@ -58,11 +59,11 @@ class MoodleScanner(BaseNewerVersionComparerModule):  # type: ignore
                     (ver["ver"] for ver in versions if filehash == ver["hash"] and file == ver["file"]), None
                 )
                 if version:
-                    return version
+                    return version, f"Identified {version} based of hash of {file} being {filehash}"
 
         return None
 
-    def extract_version_legacy_upgrade_file(self, url: str) -> str | None:
+    def extract_version_legacy_upgrade_file(self, url: str) -> Tuple[str, str] | None:
         # pattern: === x.y ===
         # there is possibility for === x.y.z+ === ; we will extract version without +
         pattern = re.compile(r"^===\s*(\d+(?:\.\d+)*)(?:\+)?\s*===$")
@@ -83,11 +84,11 @@ class MoodleScanner(BaseNewerVersionComparerModule):  # type: ignore
 
                 match = pattern.search(line)
                 if match:
-                    return match.group(1)
+                    return match.group(1), f"Found {match.group(0)} in {file}"
 
         return None
 
-    def extract_version_upgrade_file(self, url: str) -> str | None:
+    def extract_version_upgrade_file(self, url: str) -> Tuple[str, str] | None:
         # pattern: ## x.y (UPGRADING.md file)
         pattern = re.compile(r"(?m)^##\s*([0-9]+(?:\.[0-9]+){0,2})\s*$")
 
@@ -98,20 +99,20 @@ class MoodleScanner(BaseNewerVersionComparerModule):  # type: ignore
 
         text = response.text
         pattern_match = pattern.search(text)
-        return pattern_match.group(1) if pattern_match else None
+        return (pattern_match.group(1), f"Found {pattern_match.group(0)} in {new_file}") if pattern_match else None
 
-    def get_moodle_specific_version(self, url: str) -> str | None:
+    def get_moodle_specific_version(self, url: str) -> Tuple[str, str] | None:
         # moodle currently is using UPGRADING.md file that can help in determining version
         # it was moved from upgrade.txt file
         # if either file is found we fallback to use hashes built on official releases to determine the version
-        if version := self.extract_version_upgrade_file(url):
-            return version
+        if data := self.extract_version_upgrade_file(url):
+            return data
 
-        if version := self.extract_version_legacy_upgrade_file(url):
-            return version
+        if data := self.extract_version_legacy_upgrade_file(url):
+            return data
 
-        if version := self.get_version_based_on_hash_file(url):
-            return version
+        if data := self.get_version_based_on_hash_file(url):
+            return data
 
         return None
 
@@ -120,20 +121,27 @@ class MoodleScanner(BaseNewerVersionComparerModule):  # type: ignore
 
         status = None
         status_reason = ""
-        if version := self.get_moodle_specific_version(base_url):
+        if data := self.get_moodle_specific_version(base_url):
+            version, reason = data
+
             if self.is_version_obsolete(version):
                 status = TaskStatus.INTERESTING
-                status_reason = f"Moodle version: {version} is obsolete."
+                status_reason = f"Moodle version: {version} is obsolete (reason: {reason})."
+                self.db.save_task_result(
+                    task=current_task, status=status, status_reason=status_reason, data={"version": version, "reason": reason}
+                )
             else:
                 status = TaskStatus.OK
                 status_reason = f"Moodle version: {version} is up to date."
+                self.db.save_task_result(
+                    task=current_task, status=status, status_reason=status_reason
+                )
         else:
             status = TaskStatus.ERROR
             status_reason = "Cannot identify moodle version."
-
-        self.db.save_task_result(
-            task=current_task, status=status, status_reason=status_reason, data={"version": version}
-        )
+            self.db.save_task_result(
+                task=current_task, status=status, status_reason=status_reason
+            )
 
 
 if __name__ == "__main__":
