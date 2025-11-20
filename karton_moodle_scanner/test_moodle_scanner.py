@@ -18,5 +18,5 @@ class MoodleScannerTestCase(ArtemisModuleTestCase):
         self.assertEqual(call.kwargs["status"], TaskStatus.INTERESTING)
         self.assertEqual(
             call.kwargs["status_reason"],
-            "Moodle version: 4.5 is obsolete.",
+            "Moodle version: 4.5 is obsolete (reason: Found ## 4.5\n in /UPGRADING.md).",
         )
