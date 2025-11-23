@@ -47,6 +47,7 @@ Something amazing will be constructed here...
 Strona dodana prawidłowo
 Strona w budowie
 Strona w przygotowaniu
+Strona zablokowana
 Tanie domeny dostarcza
 Testing 123
 The resource you are looking for has been removed, had its name changed, or is temporarily unavailable.
