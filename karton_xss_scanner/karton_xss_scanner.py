@@ -86,7 +86,7 @@ class XssScanner(ArtemisBase):  # type: ignore
     def _process(self, current_task: Task, host: str) -> None:
         host_sanitized = quote(host, safe="/:.?=&-")
         assert host_sanitized.startswith("http://") or host_sanitized.startswith("https://")
-        assert all(i.lower() in "/:.?=&-_" + string.ascii_lowercase + string.digits for i in host_sanitized)
+        assert all(i.lower() in "/:.?=&-_[]%" + string.ascii_lowercase + string.digits for i in host_sanitized)
 
         if Config.Miscellaneous.CUSTOM_USER_AGENT:
             user_agent = Config.Miscellaneous.CUSTOM_USER_AGENT
