@@ -190,8 +190,8 @@ class SSLChecks(ArtemisBase):  # type: ignore
                     result["hostname"] = domain
 
             if err_cert_authority_invalid:
-                issuer_cn = get_common_names(cert_deployment.received_certificate_chain[0].issuer)[0]
-                if issuer_cn not in ExtraModulesConfig.SSL_CHECKS_CA_ISSUER_WHITELIST:
+                common_names = get_common_names(cert_deployment.received_certificate_chain[0].issuer)
+                if not common_names or common_names[0] not in ExtraModulesConfig.SSL_CHECKS_CA_ISSUER_WHITELIST:
                     self._cert_authority_invalid_message(messages, result, domain)
 
             days_left = (cert_deployment.received_certificate_chain[0].not_valid_after - datetime.datetime.now()).days
