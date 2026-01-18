@@ -105,7 +105,11 @@ class XssScanner(ArtemisBase):  # type: ignore
         vectors = prepare_crawling_result(output_str)
         vectors_filtered = []
         for vector in vectors:
-            payload = '"><testpayload'
+            # We need to add something before " in order to check whether " is not prefixed with \ to prevent
+            # FPs when the payload is echoed back in Javascript context. The same is done e.g. by
+            # https://github.com/projectdiscovery/nuclei-templates/blob/main/http/vulnerabilities/generic/xss-fuzz.yaml
+
+            payload = 'test"><testpayload'
             try:
                 response = http_requests.get(vector.replace(XSS_PLACEHOLDER, payload)).content
                 if payload in response:
