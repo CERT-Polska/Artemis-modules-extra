@@ -137,8 +137,10 @@ class SSLChecks(ArtemisBase):  # type: ignore
                 redirect_url_parsed = urllib.parse.urlparse(redirect_url)
                 result["redirect_url"] = redirect_url
 
-                if redirect_url_parsed.scheme != "https" and not hstspreload.in_hsts_preload(
-                    redirect_url_parsed.hostname
+                if (
+                    redirect_url_parsed.scheme != "https"
+                    and not hstspreload.in_hsts_preload(redirect_url_parsed.hostname)
+                    and "Strict-Transport-Security" not in response.headers
                 ):
                     messages.append(
                         f"No https redirect from {original_url} to https detected, final url: {redirect_url}"

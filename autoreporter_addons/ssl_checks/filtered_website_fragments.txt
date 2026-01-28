@@ -10,12 +10,12 @@ Account Suspended
 <h2>Domena utrzymywana na serwerach firmy ESC SA</h2>
 <head><title>Error Page - Ta strona nie istnieje!</title></head>
 Hello! Welcome to Synology Web Station!
+<html> is functioning normally
 <html>Apache is functioning normally</html>
 <html><body></body></html>
 <html><body>Ready.</body></html>
 <html><head></head><body></body></html>
 <html>Hosting Zapewnia
-<html> is functioning normally
 <html><title>Hosting dedykowany zapewnie Hitme.pl</title>
 HTTP Error 404. The requested resource is not found.
 http://www.kei.pl/landing/startowa
@@ -28,12 +28,12 @@ Jeżeli chcesz zmienić tę stronę, wgraj własny plik index.html do katalogu p
 //newkf.nazwa.pl/index,
 Nginx is functioning normally
 Oops, an error occurred
-Page not exist. Contact
 <p class="subtitle">Rejestrator domen i Dostawca profesjonalnych rozwiązań hostingowych</p>
+Page not exist. Contact
 Pliki strony www proszę umieścić w katalogu
 <p>No Web page here</p>
-Pod tym adresem nie ma żadnej strony.
 Po zalogowaniu będziesz mógł zarządzać swoim serwerem poprzez intuicyjny, prosty w obsłudze i przyjazny interfejs
+Pod tym adresem nie ma żadnej strony.
 Przepraszamy - strona w produkcji !
 Przerwa techniczna
 <p><span class="Style1">mobylee web site not found!<br>
@@ -58,10 +58,10 @@ This is a placeholder for the subdomain
 This is the default index page of your website.
 This page is under construction. Please try again in some time.
 <title> 404 Not Found
-<title>Apache2 Debian Default Page: It works</title>
-<title>Apache2 Ubuntu Default Page: It works</title>
 <title>Apache HTTP Server Test Page
 <title>Apache HTTP Server Test Page powered by Linux</title>
+<title>Apache2 Debian Default Page: It works</title>
+<title>Apache2 Ubuntu Default Page: It works</title>
 <title>apache</title
 <title>BIP - Błąd</title>
 <title>Błąd: Serwis tymczasowo niedostępny.</title>
@@ -81,6 +81,7 @@ This page is under construction. Please try again in some time.
 <title>IIS Windows Server</title>
 <title>LOGONET Sp. z o.o. [C]</title>
 <title>LOGONET Sp. z o.o. [V]</title>
+<title>LOGONET Sp. z o.o. [W]</title>
 <title>Microsoft Internet Information Services 8</title>
 <title>NameBright - Coming Soon</title>
 <TITLE>Not Found</TITLE>
