@@ -43,10 +43,10 @@ NASK is relieved of such liability to the fullest extent possible.
 The module is disabled by default - to enable it, rename `docker-compose.additional.wpscan.yml.disabled` to
 `docker-compose.additional.wpscan.yml` and re-run ``./scripts/start``.
 
-### `what-vpn`
+### `whatvpn`
 Uses https://github.com/dlenski/what-vpn under the hood. Identifies servers running various SSL VPNs and is licensed under GPL-3.0-or-later.
 
-### `ssl_checks`
+### `xss_scanner`
 Uses https://github.com/s0md3v/XSStrike.git under the hood. Finds potential XSS vulnerabilities and is licensed under
 GPL-3.0.
 
