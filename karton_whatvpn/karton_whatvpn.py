@@ -56,12 +56,12 @@ class WhatVPN(ArtemisBase):  # type: ignore
 
             detected_vpn = detected_vpn.strip()
 
+            status_reason = f"Detected {detected_vpn}"
+
             # in that exact version of what-vpn, library only scans
             # for the vpns on the 443 port
             if library_version == "0.7":
                 detected_vpn += ":443"
-
-            status_reason = f"Detected {detected_vpn}"
 
         # Save the task result to the database
         self.db.save_task_result(
