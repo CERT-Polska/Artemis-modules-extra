@@ -14,13 +14,22 @@ class WhatVPNRreporter(Reporter):  # type: ignore
         if task_result.get("status") != "INTERESTING":
             return []
 
-        if task_result["result"]:
-            return [
-                Asset(
-                    asset_type=AssetType.VPN,
-                    name=task_result["target_string"],
-                    additional_type=task_result["result"].strip(),
-                )
-            ]
-        else:
+        if not task_result.get("result"):
             return []
+
+        result = task_result.get("result")
+
+        hostname = task_result["target_string"]
+
+        vpn, port = (result.split(":") + [None])[:2]
+
+        if port:
+            hostname = f"{hostname}:{port}"
+
+        return [
+            Asset(
+                asset_type=AssetType.VPN,
+                name=hostname.strip(),
+                additional_type=vpn.strip(),
+            )
+        ]
