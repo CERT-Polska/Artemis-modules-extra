@@ -14,10 +14,10 @@ class WhatVPNRreporter(Reporter):  # type: ignore
         if task_result.get("status") != "INTERESTING":
             return []
 
-        if not task_result.get("result"):
-            return []
-
         result = task_result.get("result")
+
+        if not result:
+            return []
 
         hostname = task_result["target_string"]
 
