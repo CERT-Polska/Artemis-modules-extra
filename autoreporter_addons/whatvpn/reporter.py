@@ -21,7 +21,8 @@ class WhatVPNRreporter(Reporter):  # type: ignore
 
         hostname = task_result["target_string"]
 
-        vpn, port = (result.split(":") + [None])[:2]
+        vpn = result.get("vpn")
+        port = result.get("port")
 
         if port:
             hostname = f"{hostname}:{port}"
