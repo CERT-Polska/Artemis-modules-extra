@@ -58,6 +58,8 @@ class WhatVPN(ArtemisBase):  # type: ignore
 
             status_reason = f"Detected {detected_vpn}"
 
+            data: dict[str, str | None] = dict()
+
             # in that exact version of what-vpn, library only scans
             # for the vpns on the 443 port
             if library_version == "0.7":
