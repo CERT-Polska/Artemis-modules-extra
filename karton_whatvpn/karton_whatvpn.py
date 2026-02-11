@@ -21,10 +21,19 @@ class WhatVPN(ArtemisBase):  # type: ignore
     filters = [{"type": TaskType.IP.value}]
 
     def _process(self, current_task: Task, host: str) -> None:
+
+        version_output = subprocess.run(
+            ["what-vpn", "--version"],
+            capture_output=True,
+        )
+
+        library_version = version_output.stdout.decode("utf-8").strip().split(" ")[1]
+
         output = subprocess.run(
             ["what-vpn", "--keep-going-after-exception", "--timeout", ExtraModulesConfig.WHATVPN_TIMEOUT_SECONDS, host],
             capture_output=True,
         )
+
         output_str = output.stdout.decode("utf-8")
         detected_vpn = None
 
@@ -44,14 +53,27 @@ class WhatVPN(ArtemisBase):  # type: ignore
                 detected_vpn = detected_vpn.split("(")[0]
 
             status = TaskStatus.INTERESTING
+
+            detected_vpn = detected_vpn.strip()
+
             status_reason = f"Detected {detected_vpn}"
+
+            data: dict[str, str | None] = dict()
+
+            # in that exact version of what-vpn, library only scans
+            # for the vpns on the 443 port
+            if library_version == "0.7":
+                data = {"vpn": detected_vpn, "port": "443"}
+                status_reason += " on port 443"
+            else:
+                data = {"vpn": detected_vpn, "port": None}
 
         # Save the task result to the database
         self.db.save_task_result(
             task=current_task,
             status=status,
             status_reason=status_reason,
-            data=detected_vpn,
+            data=data,
         )
 
     def run(self, current_task: Task) -> None:
