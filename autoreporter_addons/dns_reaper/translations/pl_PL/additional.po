@@ -17,7 +17,7 @@ msgstr ""
 "jest wolna. Atakujący może zarejestrować taką domenę w serwisie GetResponse aby umieścić tam swoje treści."
 
 msgid ""
-"The defined domain has CNAME records configured for aha.io but a web request shows the domain is unclaimed."
+"The defined domain has CNAME records configured for aha.io but a web request shows the domain is unclaimed. "
 "An attacker can register this domain on aha.io and serve their own web content."
 msgstr ""
 "Domena ma skonfigurowany rekord CNAME skierowany do narzędzia aha.io, ale domena docelowa "
