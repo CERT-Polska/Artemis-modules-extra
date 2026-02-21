@@ -36,6 +36,7 @@ class WhatVPN(ArtemisBase):  # type: ignore
 
         output_str = output.stdout.decode("utf-8")
         detected_vpn = None
+        data: dict[str, str | None] = dict()
 
         error_messages = ["error", "timeout"]
         if any(msg in output_str for msg in error_messages):
@@ -57,8 +58,6 @@ class WhatVPN(ArtemisBase):  # type: ignore
             detected_vpn = detected_vpn.strip()
 
             status_reason = f"Detected {detected_vpn}"
-
-            data: dict[str, str | None] = dict()
 
             # in that exact version of what-vpn, library only scans
             # for the vpns on the 443 port
