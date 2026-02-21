@@ -36,6 +36,7 @@ class WhatVPN(ArtemisBase):  # type: ignore
 
         output_str = output.stdout.decode("utf-8")
         detected_vpn = None
+        data = None
 
         error_messages = ["error", "timeout"]
         if any(msg in output_str for msg in error_messages):
