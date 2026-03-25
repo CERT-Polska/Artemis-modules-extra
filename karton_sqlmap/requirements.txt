@@ -1,1 +1,2 @@
 sqlmap==1.10.3
+setuptools==80.10.2
