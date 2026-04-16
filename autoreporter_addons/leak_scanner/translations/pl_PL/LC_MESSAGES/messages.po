@@ -3,10 +3,12 @@ msgid ""
 "The following PDF documents contain improperly redacted (censored) "
 "sensitive data that can be extracted:"
 msgstr ""
+"Następujące dokumenty PDF zawierają nieprawidłowo zredagowane "
+"wrażliwe dane, które można wyodrębnić:"
 
 #: autoreporter_addons/leak_scanner/template_leaked_sensitive_data.jinja2:7
 msgid "hidden item(s) found beneath redaction overlays"
-msgstr ""
+msgstr "ukryte elementy znalezione pod warstwami redakcji"
 
 #: autoreporter_addons/leak_scanner/template_leaked_sensitive_data.jinja2:14
 msgid ""
@@ -17,3 +19,8 @@ msgid ""
 "recommend re-creating these documents with proper redaction that "
 "permanently removes the underlying text rather than merely covering it."
 msgstr ""
+"Wymienione dokumenty PDF zawierają tekst ukryty pod wizualnymi nakładkami "
+"używanymi do cenzury. Prowadzić to może do ujawnienia wrażliwych danych osobowych, "
+"informacji poufnych i tym podobnych. "
+"Zalecamy ponowne utworzenie tych dokumentów z użyciem prawidłowej redakcji, "
+"która trwale usuwa tekst źródłowy, zamiast jedynie go zakrywać."
