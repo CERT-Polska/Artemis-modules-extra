@@ -7,7 +7,7 @@
                         {{ report.target }} - {% trans %}hidden item(s) found beneath redaction overlays{% endtrans %}:
                         <ul>
                             {% for item in report.additional_data.leaked_items %}
-                                <li>{{ item }}</li>
+                                <li>{{ item.SECRET }}</li>
                             {% endfor %}
                         </ul>
                         {{ report_meta(report) }}
