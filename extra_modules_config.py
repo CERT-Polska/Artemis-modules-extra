@@ -74,3 +74,19 @@ class ExtraModulesConfig:
 
     # WPScan API key
     WPSCAN_API_KEY = decouple.config("WPSCAN_API_KEY", default=None)
+
+    # Maximum crawling depth when discovering documents on a website.
+    # Depth 1 means only the initial page is checked; depth 3 means links
+    # are followed up to 3 levels deep.
+    LEAK_SCANNER_CRAWL_DEPTH = decouple.config("LEAK_SCANNER_CRAWL_DEPTH", default=3, cast=int)
+
+    # Maximum number of HTML pages to fetch while crawling for documents.
+    LEAK_SCANNER_MAX_PAGES_TO_CRAWL = decouple.config("LEAK_SCANNER_MAX_PAGES_TO_CRAWL", default=1000, cast=int)
+
+    # Maximum number of documents (PDFs, etc.) to download and scan per website.
+    LEAK_SCANNER_MAX_DOCUMENTS_TO_CHECK = decouple.config("LEAK_SCANNER_MAX_DOCUMENTS_TO_CHECK", default=100, cast=int)
+
+    # Maximum size of a single document to download for scanning (in bytes).
+    LEAK_SCANNER_MAX_DOCUMENT_SIZE_BYTES = decouple.config(
+        "LEAK_SCANNER_MAX_DOCUMENT_SIZE_BYTES", default=20 * 1024 * 1024, cast=int
+    )

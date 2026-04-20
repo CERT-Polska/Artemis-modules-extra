@@ -68,11 +68,22 @@ services:
     restart: always
     command: "python3 -m artemis.modules.karton_xss_scanner"
 
+  karton-leak_scanner:
+    build:
+      context: Artemis-modules-extra
+      dockerfile: karton_leak_scanner/Dockerfile
+    volumes:
+      - "${DOCKER_COMPOSE_ADDITIONAL_SHARED_DIRECTORY:-./shared}:/shared/"
+    env_file: .env
+    restart: always
+    command: "python3 -m artemis.modules.leak_scanner"
+
   autoreporter:
     volumes:
       - ./Artemis-modules-extra/extra_modules_config.py:/opt/extra_modules_config.py
       - ./Artemis-modules-extra/autoreporter_addons/dns_reaper/:/opt/artemis/reporting/modules/dns_reaper/
       - ./Artemis-modules-extra/autoreporter_addons/forti_vuln/:/opt/artemis/reporting/modules/forti_vuln/
+      - ./Artemis-modules-extra/autoreporter_addons/leak_scanner/:/opt/artemis/reporting/modules/leak_scanner/
       - ./Artemis-modules-extra/autoreporter_addons/sqlmap/:/opt/artemis/reporting/modules/sqlmap/
       - ./Artemis-modules-extra/autoreporter_addons/moodle_scanner/:/opt/artemis/reporting/modules/moodle_scanner/
       - ./Artemis-modules-extra/autoreporter_addons/ssl_checks/:/opt/artemis/reporting/modules/ssl_checks/
