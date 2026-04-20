@@ -1,5 +1,5 @@
 {% if "leaked_sensitive_data" in data.contains_type %}
-    <li>{% trans %}The following PDF documents contain improperly redacted (censored) sensitive data that can be extracted:{% endtrans %}
+    <li>{% trans %}The following documents contain improperly redacted (censored) sensitive data that can be extracted:{% endtrans %}
         <ul>
             {% for report in data.reports %}
                 {% if report.report_type == "leaked_sensitive_data" %}
@@ -12,7 +12,7 @@
         </ul>
         <p>
             {% trans trimmed %}
-                The listed PDF documents contain text hidden beneath visual overlays (such as black rectangles)
+                The listed documents contain text hidden beneath visual overlays (such as black rectangles)
                 used for censorship. This text can be extracted by removing the overlay objects, potentially
                 exposing sensitive personal data, confidential information, or other protected content.
                 We recommend re-creating these documents with proper redaction that permanently removes
