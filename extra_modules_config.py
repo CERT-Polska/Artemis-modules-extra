@@ -88,5 +88,5 @@ class ExtraModulesConfig:
 
     # Maximum size of a single document to download for scanning (in bytes).
     LEAK_SCANNER_MAX_DOCUMENT_SIZE_BYTES = decouple.config(
-        "LEAK_SCANNER_MAX_DOCUMENT_SIZE_BYTES", default=5 * 1024 * 1024, cast=int
+        "LEAK_SCANNER_MAX_DOCUMENT_SIZE_BYTES", default=20 * 1024 * 1024, cast=int
     )
