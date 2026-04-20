@@ -4,7 +4,12 @@
             {% for report in data.reports %}
                 {% if report.report_type == "leaked_sensitive_data" %}
                     <li>
-                        {{ report.target }} - {{ report.additional_data.num_leaked_items }} {% trans %}hidden item(s) found beneath redaction overlays{% endtrans %}
+                        {{ report.target }} - {% trans %}hidden item(s) found beneath redaction overlays{% endtrans %}:
+                        <ul>
+                            {% for item in report.additional_data.leaked_items %}
+                                <li>{{ item }}</li>
+                            {% endfor %}
+                        </ul>
                         {{ report_meta(report) }}
                     </li>
                 {% endif %}
