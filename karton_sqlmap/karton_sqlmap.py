@@ -350,4 +350,4 @@ class SQLmap(ArtemisBase):  # type: ignore
 
 
 if __name__ == "__main__":
-    SQLmap().loop()
+    SQLmap.parallel_loop()
