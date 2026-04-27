@@ -144,4 +144,4 @@ class MoodleScanner(BaseNewerVersionComparerModule):  # type: ignore
 
 
 if __name__ == "__main__":
-    MoodleScanner().loop()
+    MoodleScanner.parallel_loop()

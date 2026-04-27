@@ -147,4 +147,4 @@ class XssScanner(ArtemisBase):  # type: ignore
 
 
 if __name__ == "__main__":
-    XssScanner().loop()
+    XssScanner.parallel_loop()

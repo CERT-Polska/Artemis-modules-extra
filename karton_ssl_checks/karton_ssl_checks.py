@@ -229,4 +229,4 @@ class SSLChecks(ArtemisBase):  # type: ignore
 
 
 if __name__ == "__main__":
-    SSLChecks().loop()
+    SSLChecks.parallel_loop()

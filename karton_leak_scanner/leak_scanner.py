@@ -227,4 +227,4 @@ class LeakScanner(ArtemisBase):  # type: ignore[misc]
 
 
 if __name__ == "__main__":
-    LeakScanner().loop()
+    LeakScanner.parallel_loop()
