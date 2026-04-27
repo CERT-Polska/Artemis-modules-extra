@@ -8,7 +8,7 @@ from artemis.reporting.base.reporter import Reporter
 from artemis.reporting.base.templating import ReportEmailTemplateFragment
 from artemis.reporting.utils import get_top_level_target
 
-LEAKED_INFORMATION_LENGTH_THRESHOLD = 5
+LEAKED_INFORMATION_LENGTH_THRESHOLD = 20
 
 
 class LeakScannerReporter(Reporter):  # type: ignore

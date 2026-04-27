@@ -116,4 +116,4 @@ class FortiVuln(ArtemisBase):  # type: ignore
 
 
 if __name__ == "__main__":
-    FortiVuln().loop()
+    FortiVuln.parallel_loop()

@@ -119,4 +119,4 @@ class WPScan(ArtemisBase):  # type: ignore
 
 
 if __name__ == "__main__":
-    WPScan().loop()
+    WPScan.parallel_loop()

@@ -84,4 +84,4 @@ class WhatVPN(ArtemisBase):  # type: ignore
 
 
 if __name__ == "__main__":
-    WhatVPN().loop()
+    WhatVPN.parallel_loop()

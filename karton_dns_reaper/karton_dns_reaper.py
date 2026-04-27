@@ -65,4 +65,4 @@ class DNSReaper(ArtemisBase):  # type: ignore
 
 
 if __name__ == "__main__":
-    DNSReaper().loop()
+    DNSReaper.parallel_loop()
