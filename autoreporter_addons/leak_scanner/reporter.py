@@ -8,6 +8,8 @@ from artemis.reporting.base.reporter import Reporter
 from artemis.reporting.base.templating import ReportEmailTemplateFragment
 from artemis.reporting.utils import get_top_level_target
 
+LEAKED_INFORMATION_LENGTH_THRESHOLD = 5
+
 
 class LeakScannerReporter(Reporter):  # type: ignore
     LEAKED_SENSITIVE_DATA = ReportType("leaked_sensitive_data")
@@ -29,6 +31,8 @@ class LeakScannerReporter(Reporter):  # type: ignore
             all_items = []
             for check_name, items in doc_data.get("findings", {}).items():
                 for item in items:
+                    if len(item["text"]) < LEAKED_INFORMATION_LENGTH_THRESHOLD:
+                        continue
                     all_items.append({**item, "check": check_name})
 
             if all_items:
