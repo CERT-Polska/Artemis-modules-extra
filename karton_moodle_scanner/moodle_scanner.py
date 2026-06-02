@@ -78,9 +78,9 @@ class MoodleScanner(BaseNewerVersionComparerModule):  # type: ignore
             text = response.text
 
             for line in text.splitlines():
-                # ignores line "=== 4.5 Onwards ===", that can be included in legacy upgrade file
+                # line "=== 4.5 Onwards ===" indicates that version is at least 4.5 and cannot be extracted from this file
                 if "Onwards" in line:
-                    continue
+                    return None
 
                 match = pattern.search(line)
                 if match:
