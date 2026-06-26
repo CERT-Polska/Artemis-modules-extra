@@ -3,7 +3,7 @@
 # licensed under GNU General Public License v3.0
 # upgraded with legacy versions
 # The list is based on version 4.3.12 after removing non-unique hash occurrences.
-# It's done to avoid FP as often files like e.g; /privacy/export_files/general.js did not change at all during 6 years span
+# This helps avoid false positives, as some files (e.g. /privacy/export_files/general.js) have remained unchanged for over 6 years.```
 4.0.3;422fa13e71788fe36cc6604c3518a925;/composer.lock
 4.0.3;548d48d4af572f37524f18ce396ecd1e;/composer.json
 4.0.3;d5d453336e108d159a52dbc7237eee80;/admin/tool/lp/tests/behat/course_competencies.feature
