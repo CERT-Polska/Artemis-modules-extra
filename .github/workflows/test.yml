@@ -3,7 +3,7 @@ on:
   pull_request:
     branches: [ '**' ]
   schedule:
-    - cron: '12 0 * * *'
+    - cron: '0 12 * * *'
 
 jobs:
   test:
