@@ -61,4 +61,4 @@ class XssScannerTestCase(ArtemisModuleTestCase):
         self.assertEqual(call.kwargs["status"], "INTERESTING")
         self.assertEqual(set(call.kwargs["data"].get("result")), expected_result)
         self.assertTrue(len(call.kwargs["data"]["result"]) == 3)
-        self.assertEqual(call.kwargs["task"].payload["url"], url)
+        self.assertEqual(call.args[0].payload["url"], url)

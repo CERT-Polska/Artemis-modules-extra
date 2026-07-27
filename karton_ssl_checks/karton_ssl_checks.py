@@ -53,7 +53,7 @@ class SSLChecks(ArtemisBase):  # type: ignore
 
         domain_parts = [part for part in domain.split(".") if part]
         if domain_parts[0] in ExtraModulesConfig.SUBDOMAINS_TO_SKIP_SSL_CHECKS:
-            self.db.save_task_result(task=current_task, status=TaskStatus.OK)
+            self.save_task_result(task=current_task, status=TaskStatus.OK)
             return
 
         try:
@@ -64,7 +64,7 @@ class SSLChecks(ArtemisBase):  # type: ignore
                 # Do not report misconfigurations if a domain has identical content to a parent domain - e.g.
                 # if we have mail.domain.com with identical content to domain.com, we assume that it's domain.com
                 # which is actually used, and therefore don't report subdomains.
-                self.db.save_task_result(
+                self.save_task_result(
                     task=current_task,
                     status=TaskStatus.OK,
                     status_reason=f"Detected that {domain} has similar content to {parent_domain}, not scanning to avoid duplicate reports",
@@ -225,7 +225,7 @@ class SSLChecks(ArtemisBase):  # type: ignore
             status = TaskStatus.OK
             status_reason = None
 
-        self.db.save_task_result(task=current_task, status=status, status_reason=status_reason, data=result)
+        self.save_task_result(task=current_task, status=status, status_reason=status_reason, data=result)
 
 
 if __name__ == "__main__":

@@ -346,7 +346,7 @@ class SQLmap(ArtemisBase):  # type: ignore
             status = TaskStatus.OK
             status_reason = None
 
-        self.db.save_task_result(task=current_task, status=status, status_reason=status_reason, data=results_as_dict)
+        self.save_task_result(task=current_task, status=status, status_reason=status_reason, data=results_as_dict)
 
 
 if __name__ == "__main__":

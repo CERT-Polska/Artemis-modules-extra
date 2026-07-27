@@ -68,7 +68,7 @@ class WhatVPN(ArtemisBase):  # type: ignore
                 data = {"vpn": detected_vpn, "port": None}
 
         # Save the task result to the database
-        self.db.save_task_result(
+        self.save_task_result(
             task=current_task,
             status=status,
             status_reason=status_reason,
