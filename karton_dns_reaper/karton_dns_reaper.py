@@ -61,7 +61,7 @@ class DNSReaper(ArtemisBase):  # type: ignore
             status = TaskStatus.OK
             status_reason = None
 
-        self.db.save_task_result(task=current_task, status=status, status_reason=status_reason, data=result)
+        self.save_task_result(task=current_task, status=status, status_reason=status_reason, data=result)
 
 
 if __name__ == "__main__":
