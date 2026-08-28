@@ -1,6 +1,9 @@
 from pathlib import Path
 from typing import Any, Dict, List
 
+from artemis.cpe_tools.cpe_utils import lookup_cpe
+from artemis.reporting.base.asset import Asset
+from artemis.reporting.base.asset_type import AssetType
 from artemis.reporting.base.language import Language
 from artemis.reporting.base.report import Report
 from artemis.reporting.base.report_type import ReportType
@@ -11,6 +14,27 @@ from artemis.reporting.utils import get_top_level_target
 
 class MoodleScannerReporter(Reporter):  # type: ignore
     OBSOLETE_MOODLE_VERSION_FOUND = ReportType("obsolete_moodle_version_found")
+
+    @staticmethod
+    def get_assets(task_result: Dict[str, Any]) -> List[Asset]:
+        if task_result["headers"]["receiver"] != "moodle_scanner":
+            return []
+
+        if task_result.get("status") != "INTERESTING":
+            return []
+
+        if not isinstance(task_result.get("result"), dict):
+            return []
+
+        return [
+            Asset(
+                asset_type=AssetType.CMS,
+                name=task_result["task"]["payload"]["url"],
+                additional_type="moodle",
+                version=task_result["result"].get("version", None),
+                cpe=lookup_cpe("Moodle"),
+            )
+        ]
 
     @staticmethod
     def create_reports(task_result: Dict[str, Any], language: Language) -> List[Report]:
