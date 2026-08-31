@@ -54,7 +54,8 @@ services:
     build:
       context: Artemis-modules-extra
       dockerfile: karton_whatvpn/Dockerfile
-    volumes: ["${DOCKER_COMPOSE_ADDITIONAL_SHARED_DIRECTORY:-./shared}:/shared/"]
+    volumes:
+      - "${DOCKER_COMPOSE_ADDITIONAL_SHARED_DIRECTORY:-./shared}:/shared/"
     env_file: .env
     restart: always
     command: "python3 -m artemis.modules.karton_whatvpn"
