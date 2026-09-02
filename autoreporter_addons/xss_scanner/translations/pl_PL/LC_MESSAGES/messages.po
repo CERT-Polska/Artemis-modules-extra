@@ -16,7 +16,10 @@ msgid ""
 msgstr ""
 "Podatność Cross-Site Scripting umożliwia atakującemu spreparowanie linku,"
 " który po kliknięciu przez administratora wykona dowolną akcję z jego "
-"uprawnieniami (taką jak np. modyfikacja treści)."
+"uprawnieniami (taką jak np. modyfikacja treści). Aby dowiedzieć się "
+"więcej, przeczytaj <a href=\"https://wiedza.cert.pl/odpornosc-"
+"infrastruktury/bezpieczenstwo-webowe/cross-site-scripting/\">artykuł</a> "
+"CERT Polska na temat tej podatności."
 
 #: autoreporter_addons/xss_scanner/template_xss_vulnerability.jinja2:27
 msgid ""

@@ -28,7 +28,10 @@ msgstr ""
 "Taka podatność może umożliwiać atakującemu pobranie całej zawartości bazy"
 " danych, w tym danych osobowych czy haseł dostępowych. Rekomendujemy "
 "niezwłoczne usunięcie tej podatności, jak również sprawdzenie systemu, "
-"czy podobne podatności nie występują w innych miejscach."
+"czy podobne podatności nie występują w innych miejscach.<br/><br/>Aby "
+"dowiedzieć się więcej, przeczytaj <a href=\"https://wiedza.cert.pl"
+"/odpornosc-infrastruktury/bezpieczenstwo-webowe/sql-"
+"injection/\">artykuł</a> CERT Polska na temat tej podatności."
 
 #: autoreporter_addons/sqlmap/template_sql_injection.jinja2:32
 msgid ""
