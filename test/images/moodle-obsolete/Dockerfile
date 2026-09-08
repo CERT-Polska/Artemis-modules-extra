@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y \
 
 RUN docker-php-ext-install mysqli
 
-RUN cop moodle-4.5.zip /tmp/moodle.zip
+RUN cp moodle-4.5-stripped.zip /tmp/moodle.zip
 RUN unzip /tmp/moodle.zip -d /tmp && \
     cp -R /tmp/moodle/* /var/www/html/ && \
     rm -rf /tmp/moodle /tmp/moodle.zip
