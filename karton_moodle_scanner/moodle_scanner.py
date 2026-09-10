@@ -145,7 +145,7 @@ class MoodleScanner(BaseNewerVersionComparerModule):  # type: ignore
         else:
             status = TaskStatus.ERROR
             status_reason = "Cannot identify moodle version."
-            self.save_task_result(task=current_task, status=status, status_reason=status_reason)
+            self.save_task_result(task=current_task, status=status, status_reason=status_reason, data={})
 
 
 if __name__ == "__main__":
