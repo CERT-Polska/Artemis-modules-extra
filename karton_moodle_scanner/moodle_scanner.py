@@ -136,7 +136,12 @@ class MoodleScanner(BaseNewerVersionComparerModule):  # type: ignore
             else:
                 status = TaskStatus.OK
                 status_reason = f"Moodle version: {version} is up to date."
-                self.save_task_result(task=current_task, status=status, status_reason=status_reason)
+                self.save_task_result(
+                    task=current_task,
+                    status=status,
+                    status_reason=status_reason,
+                    data={"version": version, "reason": reason},
+                )
         else:
             status = TaskStatus.ERROR
             status_reason = "Cannot identify moodle version."

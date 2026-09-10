@@ -20,9 +20,6 @@ class MoodleScannerReporter(Reporter):  # type: ignore
         if task_result["headers"]["receiver"] != "moodle_scanner":
             return []
 
-        if task_result.get("status") != "INTERESTING":
-            return []
-
         if not isinstance(task_result.get("result"), dict):
             return []
 
