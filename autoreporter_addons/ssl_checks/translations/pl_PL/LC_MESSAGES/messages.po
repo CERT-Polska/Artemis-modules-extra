@@ -54,6 +54,16 @@ msgstr ""
 "Jeśli strona nie jest już używana, rekomendujemy jej wyłączenie. Jeśli "
 "zaś jest używana, rekomendujemy wygenerowanie nowego certyfikatu."
 
+#: autoreporter_addons/ssl_checks/template_heartbleed.jinja2:2
+msgid "The following addresses are vulnerable to Heartbleed:"
+msgstr "Następujące adresy są podatne na Heartbleed:"
+
+#: autoreporter_addons/ssl_checks/template_heartbleed.jinja2:14
+msgid "We recommend upgrading OpenSSL library to version 1.0.1g or later."
+msgstr ""
+"Rekomendujemy aktualizację biblioteki OpenSSL do wersji 1.0.1g lub "
+"nowszej."
+
 #: autoreporter_addons/ssl_checks/template_no_https_redirect.jinja2:2
 msgid "The following addresses don't redirect from http:// to https://:"
 msgstr "Następujące adresy nie przekierowują z http:// na https://:"
