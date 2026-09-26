@@ -158,7 +158,8 @@ class SSLChecks(ArtemisBase):  # type: ignore
         def scan() -> List[ServerScanResult]:
             server_scan_req = ServerScanRequest(
                 server_location=server_location,
-                scan_commands={ScanCommand.CERTIFICATE_INFO, ScanCommand.HEARTBLEED, ScanCommand.ROBOT},
+                scan_commands={ScanCommand.CERTIFICATE_INFO, ScanCommand.HEARTBLEED, ScanCommand.OPENSSL_CCS_INJECTION,
+                               ScanCommand.ROBOT},
             )
             scanner = Scanner(concurrent_server_scans_limit=1)
             scanner.queue_scans([server_scan_req])
@@ -217,6 +218,11 @@ class SSLChecks(ArtemisBase):  # type: ignore
             if heartbleed_result.is_vulnerable_to_heartbleed:
                 messages.append(f"{domain} : Heartbleed vulnerable")
                 result["heartbleed"] = True
+
+            openssl_ccs_injection_result = server_scan_result.scan_result.openssl_ccs_injection.result
+            if openssl_ccs_injection_result.is_vulnerable_to_ccs_injection:
+                messages.append(f"{domain}: OpenSSL CCS Injection vulnerable")
+                result["openssl_ccs_injection"] = True
 
             robot_result = server_scan_result.scan_result.robot.result
             if robot_result.robot_result in [
