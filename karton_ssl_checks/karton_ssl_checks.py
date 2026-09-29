@@ -15,7 +15,7 @@ from artemis.module_base import ArtemisBase
 from artemis.utils import throttle_request
 from cryptography import x509
 from karton.core import Task
-from sslyze import ServerNetworkLocation, RobotScanResultEnum
+from sslyze import RobotScanResultEnum, ServerNetworkLocation
 from sslyze.plugins.certificate_info._certificate_utils import get_common_names
 from sslyze.plugins.scan_commands import ScanCommand
 from sslyze.scanner.scanner import Scanner, ServerScanRequest, ServerScanResult

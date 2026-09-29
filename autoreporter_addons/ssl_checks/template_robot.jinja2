@@ -1,0 +1,19 @@
+{% if "robot" in data.contains_type %}
+    <li>{% trans %}The following addresses are vulnerable to ROBOT:{% endtrans %}
+        <ul>
+            {% for report in data.reports %}
+                {% if report.report_type == "robot" %}
+                    <li>
+                        {{ report.target }}
+                        {{ report_meta(report) }}
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+        <p>
+            {% trans trimmed %}
+                We recommend upgrading server software or disabling TLS_RSA cipher suites.
+            {% endtrans %}
+        </p>
+    </li>
+{% endif %}
