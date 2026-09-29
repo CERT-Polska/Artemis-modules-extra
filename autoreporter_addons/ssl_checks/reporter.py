@@ -182,9 +182,7 @@ class SSLChecksReporter(Reporter):  # type: ignore
             ReportEmailTemplateFragment.from_file(
                 str(Path(__file__).parents[0] / "template_bad_certificate_names.jinja2"), priority=2
             ),
-            ReportEmailTemplateFragment.from_file(
-                str(Path(__file__).parents[0] / "template_robot.jinja2"), priority=2
-            ),
+            ReportEmailTemplateFragment.from_file(str(Path(__file__).parents[0] / "template_robot.jinja2"), priority=2),
             ReportEmailTemplateFragment.from_file(
                 str(Path(__file__).parents[0] / "template_no_https_redirect.jinja2"), priority=1
             ),

@@ -219,8 +219,10 @@ class SSLChecks(ArtemisBase):  # type: ignore
                 result["heartbleed"] = True
 
             robot_result = server_scan_result.scan_result.robot.result
-            if robot_result.robot_result in [RobotScanResultEnum.VULNERABLE_WEAK_ORACLE,
-                                             RobotScanResultEnum.VULNERABLE_STRONG_ORACLE]:
+            if robot_result.robot_result in [
+                RobotScanResultEnum.VULNERABLE_WEAK_ORACLE,
+                RobotScanResultEnum.VULNERABLE_STRONG_ORACLE,
+            ]:
                 messages.append(f"{domain}: ROBOT vulnerable")
                 result["robot"] = True
 
