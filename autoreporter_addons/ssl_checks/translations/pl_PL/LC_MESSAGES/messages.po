@@ -73,7 +73,9 @@ msgid "The following addresses are vulnerable to ROBOT:"
 msgstr "Następujące adresy są podatne na atak ROBOT:"
 
 #: autoreporter_addons/ssl_checks/template_robot.jinja2:14
-msgid "We recommend upgrading server software or disabling TLS_RSA cipher suites."
+msgid ""
+"We recommend upgrading server software or disabling TLS_RSA cipher "
+"suites. More information about the vulnerability:"
 msgstr ""
 "Rekomendujemy aktualizację oprogramowania serwera lub wyłączenie zestawu "
-"szyfrów TLS_RSA."
+"szyfrów TLS_RSA. Więcej informacji o podatności:"
