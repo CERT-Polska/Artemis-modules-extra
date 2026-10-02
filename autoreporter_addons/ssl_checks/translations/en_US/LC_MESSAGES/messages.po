@@ -61,3 +61,13 @@ msgid ""
 " that the communication between the user and the server (which may "
 "contain e.g. personal identifiable information) will be encrypted."
 msgstr ""
+
+#: autoreporter_addons/ssl_checks/template_robot.jinja2:2
+msgid "The following addresses are vulnerable to ROBOT:"
+msgstr ""
+
+#: autoreporter_addons/ssl_checks/template_robot.jinja2:14
+msgid ""
+"We recommend upgrading server software or disabling TLS_RSA cipher "
+"suites. More information about the vulnerability:"
+msgstr ""
