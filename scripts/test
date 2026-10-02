@@ -1,11 +1,15 @@
 #!/bin/bash
 
+set -e
+
 docker compose -f docker-compose.test.yaml down --remove-orphans
 
-# Let's first start everything except the test container and perform relevant setup
-docker compose -f docker-compose.test.yaml up -d --build --scale test-sqlmap=0
+# Let's first start everything except the test containers and perform relevant setup
+docker compose -f docker-compose.test.yaml up -d --build --scale test-xss_scanner=0 --scale test-ssl_checks=0 \
+ --scale test-sqlmap=0 --scale test-moodle-scanner=0 --scale test-leak-scanner=0
 
 # Wait for the dependency services to be available
+docker compose -f docker-compose.test.yaml run --entrypoint '/bin/bash' test-ssl_checks /wait-for-it.sh test-service-with-heartbleed:443
 docker compose -f docker-compose.test.yaml run --entrypoint '/bin/bash' test-sqlmap /wait-for-it.sh test-service-with-sql-injection-mysql:80
 docker compose -f docker-compose.test.yaml run --entrypoint '/bin/bash' test-sqlmap /wait-for-it.sh test-service-with-sql-injection-postgres:80
 docker compose -f docker-compose.test.yaml run --entrypoint '/bin/bash' test-sqlmap /wait-for-it.sh test-service-with-sql-injection-mysql-db:3306
@@ -17,28 +21,10 @@ docker compose -f docker-compose.test.yaml run --entrypoint '/bin/bash' test-lea
 # Now we are ready to start the tests
 docker compose -f docker-compose.test.yaml run test-xss_scanner
 
-if [ $? -ne 0 ]; then
-    exit 1
-fi
-
 docker compose -f docker-compose.test.yaml run test-ssl_checks
-
-if [ $? -ne 0 ]; then
-    exit 1
-fi
 
 docker compose -f docker-compose.test.yaml run test-sqlmap
 
-if [ $? -ne 0 ]; then
-    exit 1
-fi
-
 docker compose -f docker-compose.test.yaml run test-moodle-scanner
 
-if [ $? -ne 0 ]; then
-    exit 1
-fi
-
 docker compose -f docker-compose.test.yaml run test-leak-scanner
-
-exit $?
