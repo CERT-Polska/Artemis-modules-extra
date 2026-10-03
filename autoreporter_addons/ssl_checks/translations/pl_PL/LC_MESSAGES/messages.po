@@ -56,7 +56,7 @@ msgstr ""
 
 #: autoreporter_addons/ssl_checks/template_heartbleed.jinja2:2
 msgid "The following addresses are vulnerable to Heartbleed:"
-msgstr "Następujące adresy są podatne na Heartbleed:"
+msgstr "Następujące adresy zawierają podatność Heartbleed:"
 
 #: autoreporter_addons/ssl_checks/template_heartbleed.jinja2:14
 msgid ""
