@@ -42,6 +42,7 @@ class SSLChecksReporter(Reporter):  # type: ignore
     BAD_CERTIFICATE_NAMES = ReportType("bad_certificate_names")
     EXPIRED_SSL_CERTIFICATE = ReportType("expired_ssl_certificate")
     ROBOT = ReportType("robot")
+    HEARTBLEED = ReportType("heartbleed")
 
     @staticmethod
     def create_reports(task_result: Dict[str, Any], language: Language) -> List[Report]:
@@ -168,6 +169,17 @@ class SSLChecksReporter(Reporter):  # type: ignore
                     timestamp=task_result["created_at"],
                 )
             )
+
+        if result.get("heartbleed", False):
+            reports.append(
+                Report(
+                    top_level_target=get_top_level_target(task_result),
+                    target=f'https://{payload["domain"]}:443/',
+                    report_type=SSLChecksReporter.HEARTBLEED,
+                    additional_data={},
+                    timestamp=task_result["created_at"],
+                )
+            )
         return reports
 
     @staticmethod
@@ -183,6 +195,9 @@ class SSLChecksReporter(Reporter):  # type: ignore
                 str(Path(__file__).parents[0] / "template_bad_certificate_names.jinja2"), priority=2
             ),
             ReportEmailTemplateFragment.from_file(str(Path(__file__).parents[0] / "template_robot.jinja2"), priority=2),
+            ReportEmailTemplateFragment.from_file(
+                str(Path(__file__).parents[0] / "template_heartbleed.jinja2"), priority=2
+            ),
             ReportEmailTemplateFragment.from_file(
                 str(Path(__file__).parents[0] / "template_no_https_redirect.jinja2"), priority=1
             ),

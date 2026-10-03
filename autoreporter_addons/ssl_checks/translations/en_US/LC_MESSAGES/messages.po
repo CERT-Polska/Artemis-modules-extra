@@ -43,6 +43,16 @@ msgid ""
 "used, we recommend creating a new certificate."
 msgstr ""
 
+#: autoreporter_addons/ssl_checks/template_heartbleed.jinja2:2
+msgid "The following addresses are vulnerable to Heartbleed:"
+msgstr ""
+
+#: autoreporter_addons/ssl_checks/template_heartbleed.jinja2:14
+msgid ""
+"We recommend upgrading OpenSSL library to version 1.0.1g or later. More "
+"information about the vulnerability:"
+msgstr ""
+
 #: autoreporter_addons/ssl_checks/template_no_https_redirect.jinja2:2
 msgid "The following addresses don't redirect from http:// to https://:"
 msgstr ""

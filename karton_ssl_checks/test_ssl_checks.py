@@ -76,3 +76,17 @@ class SSLChecksTestCase(ArtemisModuleTestCase):
             "No https redirect from http://http.badssl.com to https detected, final url: http://http.badssl.com/",
             call.kwargs["status_reason"],
         )
+
+    def test_heartbleed(self) -> None:
+        task = Task(
+            {"type": TaskType.DOMAIN.value},
+            payload={"domain": "test-service-with-heartbleed"},
+        )
+        self.run_task(task)
+        (call,) = self.mock_db.save_task_result.call_args_list
+        self.assertEqual(call.kwargs["status"], TaskStatus.INTERESTING)
+        self.assertEqual(call.kwargs["data"]["heartbleed"], True)
+        self.assertIn(
+            "test-service-with-heartbleed : Heartbleed vulnerable",
+            call.kwargs["status_reason"],
+        )

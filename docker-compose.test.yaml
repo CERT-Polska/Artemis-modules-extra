@@ -46,6 +46,9 @@ services:
     volumes:
       - ./test/data/sql_injection_mysql/:/var/www/html/
 
+  test-service-with-heartbleed:
+    image: vulhub/openssl:1.0.1c-with-nginx
+
   test-service-with-sql-injection-mysql-db:
     image: mysql:5.6
     environment:

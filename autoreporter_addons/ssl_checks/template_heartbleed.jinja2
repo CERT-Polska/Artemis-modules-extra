@@ -1,0 +1,21 @@
+{% if "heartbleed" in data.contains_type %}
+    <li>{% trans %}The following addresses are vulnerable to Heartbleed:{% endtrans %}
+        <ul>
+            {% for report in data.reports %}
+                {% if report.report_type == "heartbleed" %}
+                    <li>
+                        {{ report.target }}
+                        {{ report_meta(report) }}
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+        <p>
+            {% trans trimmed %}
+                We recommend upgrading OpenSSL library to version 1.0.1g or later. More information about the
+                vulnerability:
+            {% endtrans %}
+            <a href="https://www.heartbleed.com/">https://www.heartbleed.com/</a>
+        </p>
+    </li>
+{% endif %}
