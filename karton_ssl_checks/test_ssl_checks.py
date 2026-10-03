@@ -87,6 +87,6 @@ class SSLChecksTestCase(ArtemisModuleTestCase):
         self.assertEqual(call.kwargs["status"], TaskStatus.INTERESTING)
         self.assertEqual(call.kwargs["data"]["heartbleed"], True)
         self.assertIn(
-            "test-service-with-heartbleed : Heartblee vulnerable",
+            "test-service-with-heartbleed : Heartbleed vulnerable",
             call.kwargs["status_reason"],
         )
