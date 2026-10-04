@@ -25,6 +25,10 @@ and is licensed under AGPL-3.0.
 Uses https://github.com/nabla-c0d3/sslyze under the hood. Finds SSL misconfigurations and is licensed under
 AGPL-3.0.
 
+### `testssl`
+Uses https://github.com/testssl/testssl.sh under the hood. Checks TLS/SSL ciphers, protocols as well as some 
+cryptographic flaws and is licensed under GPL-2.0.
+
 ### `sqlmap`
 Uses https://github.com/sqlmapproject/sqlmap under the hood. Finds SQL injection vulnerabilities and is
 licensed under GPL-2.0.
@@ -82,6 +86,7 @@ We kindly remind you that:
 
 * by contributing to the `dns_reaper` module you agree that the AGPL-3.0 License shall apply to your input automatically, without the need for any additional declarations to be made.
 * by contributing to the `ssl_checks` module you agree that the AGPL-3.0 License shall apply to your input automatically, without the need for any additional declarations to be made.
+* by contributing to the `testssl` module you agree that the GPL-2.0 License shall apply to your input automatically, without the need for any additional declarations to be made.
 * by contributing to the `sqlmap` module you agree that the GPL-2.0 License shall apply to your input automatically, without the need for any additional declarations to be made.
 * by contributing to the `forti_vuln` module you agree that the GPL-3.0 license shall apply to your input automatically, without the need for any additional declarations to be made.
 * by contributing to the `xss_scanner` module you agree that the GPL-3.0 license shall apply to your input automatically, without the need for any additional declarations to be made.

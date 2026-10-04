@@ -38,6 +38,14 @@ services:
     entrypoint: ""
     env_file: env.test
 
+  test-testssl:
+    build:
+      context: .
+      dockerfile: karton_testssl/Dockerfile
+    command: python -m unittest discover
+    entrypoint: ""
+    env_file: env.test
+
   test-redis:
     image: redis:7.0.5
 
@@ -45,6 +53,9 @@ services:
     build: test/images/php-mysql
     volumes:
       - ./test/data/sql_injection_mysql/:/var/www/html/
+
+  test-service-with-poodle:
+    build: test/images/ssl_poodle
 
   test-service-with-heartbleed:
     image: vulhub/openssl:1.0.1c-with-nginx
