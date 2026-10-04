@@ -26,7 +26,7 @@ Uses https://github.com/nabla-c0d3/sslyze under the hood. Finds SSL misconfigura
 AGPL-3.0.
 
 ### `testssl`
-Uses https://github.com/testssl/testssl.sh under the hood. Checks TLS/SSL ciphers, protocols as well as some 
+Uses https://github.com/testssl/testssl.sh under the hood. Checks TLS/SSL ciphers, protocols as well as some
 cryptographic flaws and is licensed under GPL-2.0.
 
 ### `sqlmap`

@@ -9,7 +9,7 @@ from artemis.reporting.base.templating import ReportEmailTemplateFragment
 from artemis.reporting.utils import get_top_level_target
 
 
-class TestSSLReporter(Reporter):
+class TestSSLReporter(Reporter):  # type: ignore
     POODLE = ReportType("poodle")
 
     @staticmethod

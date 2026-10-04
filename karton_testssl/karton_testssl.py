@@ -4,20 +4,19 @@ import tempfile
 from difflib import SequenceMatcher
 from typing import Dict, List
 
-from karton.core import Task
-from typing_extensions import Any
-
-from artemis import load_risk_class, http_requests
+from artemis import http_requests, load_risk_class
 from artemis.binds import TaskStatus, TaskType
 from artemis.config import Config
 from artemis.module_base import ArtemisBase
 from artemis.utils import throttle_request
+from karton.core import Task
+from typing_extensions import Any
 
 from extra_modules_config import ExtraModulesConfig
 
 
 @load_risk_class.load_risk_class(load_risk_class.LoadRiskClass.LOW)
-class TestSSL(ArtemisBase):
+class TestSSL(ArtemisBase):  # type: ignore
     """
     Testing TLS/SSL
     """
@@ -27,7 +26,7 @@ class TestSSL(ArtemisBase):
         {"type": TaskType.DOMAIN.value},
     ]
 
-    def _call_testssl(self, domain: str, arguments: List[str], timeout_seconds: int) -> list:
+    def _call_testssl(self, domain: str, arguments: List[str], timeout_seconds: int) -> list[dict[str, str]]:
         with tempfile.NamedTemporaryFile() as f:
             subprocess.run(
                 [
@@ -45,7 +44,8 @@ class TestSSL(ArtemisBase):
             f.seek(0)
             data = f.read()
 
-        return json.loads(data)
+        results: list[dict[str, str]] = json.loads(data)
+        return results
 
     def run(self, current_task: Task) -> None:
         domain = current_task.payload["domain"]
