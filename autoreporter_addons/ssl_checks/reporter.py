@@ -43,6 +43,7 @@ class SSLChecksReporter(Reporter):  # type: ignore
     EXPIRED_SSL_CERTIFICATE = ReportType("expired_ssl_certificate")
     ROBOT = ReportType("robot")
     HEARTBLEED = ReportType("heartbleed")
+    OPENSSL_CCS_INJECTION = ReportType("openssl_ccs_injection")
 
     @staticmethod
     def create_reports(task_result: Dict[str, Any], language: Language) -> List[Report]:
@@ -180,6 +181,17 @@ class SSLChecksReporter(Reporter):  # type: ignore
                     timestamp=task_result["created_at"],
                 )
             )
+
+        if result.get("openssl_ccs_injection", False):
+            reports.append(
+                Report(
+                    top_level_target=get_top_level_target(task_result),
+                    target=f'https://{payload["domain"]}:443/',
+                    report_type=SSLChecksReporter.OPENSSL_CCS_INJECTION,
+                    additional_data={},
+                    timestamp=task_result["created_at"],
+                )
+            )
         return reports
 
     @staticmethod
@@ -197,6 +209,9 @@ class SSLChecksReporter(Reporter):  # type: ignore
             ReportEmailTemplateFragment.from_file(str(Path(__file__).parents[0] / "template_robot.jinja2"), priority=2),
             ReportEmailTemplateFragment.from_file(
                 str(Path(__file__).parents[0] / "template_heartbleed.jinja2"), priority=2
+            ),
+            ReportEmailTemplateFragment.from_file(
+                str(Path(__file__).parents[0] / "template_openssl_ccs_injection.jinja2"), priority=2
             ),
             ReportEmailTemplateFragment.from_file(
                 str(Path(__file__).parents[0] / "template_no_https_redirect.jinja2"), priority=1

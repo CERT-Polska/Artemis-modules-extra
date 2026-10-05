@@ -1,0 +1,21 @@
+{% if "openssl_ccs_injection" in data.contains_type %}
+    <li>{% trans %}The following addresses are vulnerable to OpenSSL CCS Injection:{% endtrans %}
+        <ul>
+            {% for report in data.reports %}
+                {% if report.report_type == "openssl_ccs_injection" %}
+                    <li>
+                        {{ report.target }}
+                        {{ report_meta(report) }}
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+        <p>
+            {% trans trimmed %}
+                We recommend upgrading OpenSSL library to version 1.0.1h or later. More information about the
+                vulnerability:
+            {% endtrans %}
+            <a href="https://nvd.nist.gov/vuln/detail/cve-2014-0224">https://nvd.nist.gov/vuln/detail/cve-2014-0224</a>
+        </p>
+    </li>
+{% endif %}
