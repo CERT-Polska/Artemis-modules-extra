@@ -21,7 +21,10 @@ msgstr ""
 "użytkownikowi ostrzeżenie o niepoprawnym certyfikacie. Rekomendujemy "
 "poprawną konfigurację SSL/TLS, wraz z przekierowaniem z http:// na "
 "https://, tak, żeby komunikacja użytkowników z serwisem (która może "
-"zawierać np. dane osobowe) była szyfrowana."
+"zawierać np. dane osobowe) była szyfrowana. Mogą Państwo przeczytać "
+"więcej pod adresem <a href='https://wiedza.cert.pl/odpornosc-"
+"infrastruktury/bezpieczenstwo-webowe/tls/'>https://wiedza.cert.pl"
+"/odpornosc-infrastruktury/bezpieczenstwo-webowe/tls/</a>."
 
 #: autoreporter_addons/ssl_checks/template_bad_certificate_names.jinja2:29
 #: autoreporter_addons/ssl_checks/template_certificate_authority_invalid.jinja2:22
@@ -52,7 +55,11 @@ msgid ""
 "used, we recommend creating a new certificate."
 msgstr ""
 "Jeśli strona nie jest już używana, rekomendujemy jej wyłączenie. Jeśli "
-"zaś jest używana, rekomendujemy wygenerowanie nowego certyfikatu."
+"zaś jest używana, rekomendujemy wygenerowanie nowego certyfikatu. Mogą "
+"Państwo przeczytać więcej pod adresem <a href='https://wiedza.cert.pl"
+"/odpornosc-infrastruktury/bezpieczenstwo-"
+"webowe/tls/'>https://wiedza.cert.pl/odpornosc-infrastruktury"
+"/bezpieczenstwo-webowe/tls/</a>."
 
 #: autoreporter_addons/ssl_checks/template_heartbleed.jinja2:2
 msgid "The following addresses are vulnerable to Heartbleed:"
@@ -78,7 +85,10 @@ msgid ""
 msgstr ""
 "Rekomendujemy przekierowanie użytkownika do adresu zaczynającego się od "
 "https://, tak, żeby komunikacja użytkowników z serwisem (która może "
-"zawierać np. dane osobowe) była szyfrowana."
+"zawierać np. dane osobowe) była szyfrowana. Mogą Państwo przeczytać "
+"więcej pod adresem <a href='https://wiedza.cert.pl/odpornosc-"
+"infrastruktury/bezpieczenstwo-webowe/tls/'>https://wiedza.cert.pl"
+"/odpornosc-infrastruktury/bezpieczenstwo-webowe/tls/</a>."
 
 #: autoreporter_addons/ssl_checks/template_robot.jinja2:2
 msgid "The following addresses are vulnerable to ROBOT:"
