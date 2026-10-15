@@ -1,0 +1,22 @@
+{% if "poodle" in data.contains_type %}
+    <li>{% trans %}The following addresses are vulnerable to POODLE:{% endtrans %}
+        <ul>
+            {% for report in data.reports %}
+                {% if report.report_type == "poodle" %}
+                    <li>
+                        {{ report.target }}
+                        {{ report_meta(report) }}
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+        <p>
+            {% trans trimmed %}
+                We recommend disabling SSLv3 protocol. More information about the vulnerability:
+            {% endtrans %}
+            <a href="https://www.cisa.gov/news-events/alerts/2014/10/17/ssl-30-protocol-vulnerability-and-poodle-attack">
+                https://www.cisa.gov/news-events/alerts/2014/10/17/ssl-30-protocol-vulnerability-and-poodle-attack
+            </a>
+        </p>
+    </li>
+{% endif %}

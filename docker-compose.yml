@@ -50,6 +50,16 @@ services:
     command: "python3 -m artemis.modules.karton_ssl_checks"
     profiles: [not-arm]
 
+  karton-testssl:
+    build:
+      context: Artemis-modules-extra
+      dockerfile: karton_testssl/Dockerfile
+    volumes:
+      - "${DOCKER_COMPOSE_ADDITIONAL_SHARED_DIRECTORY:-./shared}:/shared/"
+    env_file: .env
+    restart: always
+    command: "python3 -m artemis.modules.karton_testssl"
+
   karton-whatvpn:
     build:
       context: Artemis-modules-extra
@@ -88,5 +98,6 @@ services:
       - ./Artemis-modules-extra/autoreporter_addons/sqlmap/:/opt/artemis/reporting/modules/sqlmap/
       - ./Artemis-modules-extra/autoreporter_addons/moodle_scanner/:/opt/artemis/reporting/modules/moodle_scanner/
       - ./Artemis-modules-extra/autoreporter_addons/ssl_checks/:/opt/artemis/reporting/modules/ssl_checks/
+      - ./Artemis-modules-extra/autoreporter_addons/testssl/:/opt/artemis/reporting/modules/testssl/
       - ./Artemis-modules-extra/autoreporter_addons/xss_scanner/:/opt/artemis/reporting/modules/xss_scanner/
       - ./Artemis-modules-extra/autoreporter_addons/whatvpn/:/opt/artemis/reporting/modules/whatvpn/
