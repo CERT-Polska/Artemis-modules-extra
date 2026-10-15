@@ -90,6 +90,18 @@ msgstr ""
 "infrastruktury/bezpieczenstwo-webowe/tls/'>https://wiedza.cert.pl"
 "/odpornosc-infrastruktury/bezpieczenstwo-webowe/tls/</a>."
 
+#: autoreporter_addons/ssl_checks/template_openssl_ccs_injection.jinja2:2
+msgid "The following addresses are vulnerable to OpenSSL CCS Injection:"
+msgstr "Następujące adresy zawierają podatność OpenSSL CCS Injection:"
+
+#: autoreporter_addons/ssl_checks/template_openssl_ccs_injection.jinja2:14
+msgid ""
+"We recommend upgrading OpenSSL library to version 1.0.1h or later. More "
+"information about the vulnerability:"
+msgstr ""
+"Rekomendujemy aktualizację biblioteki OpenSSL do wersji 1.0.1h lub "
+"nowszej. Więcej informacji o podatności:"
+
 #: autoreporter_addons/ssl_checks/template_robot.jinja2:2
 msgid "The following addresses are vulnerable to ROBOT:"
 msgstr "Następujące adresy są podatne na atak ROBOT:"
