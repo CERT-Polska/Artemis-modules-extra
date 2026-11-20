@@ -48,6 +48,10 @@ services:
 
   test-service-with-heartbleed:
     image: vulhub/openssl:1.0.1c-with-nginx
+    networks:
+      default:
+        aliases:
+          - test-service-with-openssl-ccs-injection
 
   test-service-with-sql-injection-mysql-db:
     image: mysql:5.6

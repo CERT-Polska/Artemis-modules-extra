@@ -90,3 +90,17 @@ class SSLChecksTestCase(ArtemisModuleTestCase):
             "test-service-with-heartbleed : Heartbleed vulnerable",
             call.kwargs["status_reason"],
         )
+
+    def test_openssl_ccs_injection(self) -> None:
+        task = Task(
+            {"type": TaskType.DOMAIN.value},
+            payload={"domain": "test-service-with-openssl-ccs-injection"},
+        )
+        self.run_task(task)
+        (call,) = self.mock_db.save_task_result.call_args_list
+        self.assertEqual(call.kwargs["status"], TaskStatus.INTERESTING)
+        self.assertEqual(call.kwargs["data"]["openssl_ccs_injection"], True)
+        self.assertIn(
+            "test-service-with-openssl-ccs-injection: OpenSSL CCS Injection vulnerable",
+            call.kwargs["status_reason"],
+        )
