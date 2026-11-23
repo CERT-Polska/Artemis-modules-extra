@@ -90,3 +90,9 @@ class ExtraModulesConfig:
     LEAK_SCANNER_MAX_DOCUMENT_SIZE_BYTES = decouple.config(
         "LEAK_SCANNER_MAX_DOCUMENT_SIZE_BYTES", default=20 * 1024 * 1024, cast=int
     )
+
+    # Maximum number of documents to check inside a single archive (e.g. a ZIP file). Each document
+    # is also subject to LEAK_SCANNER_MAX_DOCUMENT_SIZE_BYTES after unpacking.
+    LEAK_SCANNER_MAX_ARCHIVE_MEMBERS_TO_CHECK = decouple.config(
+        "LEAK_SCANNER_MAX_ARCHIVE_MEMBERS_TO_CHECK", default=20, cast=int
+    )

@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
+import io
 import subprocess
 import urllib.parse
+import zipfile
 from collections import deque
 from typing import Any, Callable, Dict, List, Set, Tuple
 
@@ -19,6 +21,10 @@ from extra_modules_config import ExtraModulesConfig
 # Document extensions to scan. This list will grow as more check types
 # are added (e.g. .docx, .xlsx, .pptx for metadata leaks).
 DOCUMENT_EXTENSIONS = [".pdf"]
+
+# Archive extensions to download and unpack. The documents inside are scanned
+# with the same checks as standalone documents.
+ARCHIVE_EXTENSIONS = [".zip"]
 
 # Type for a check function: takes file bytes, returns list of findings.
 CheckFunction = Callable[[bytes], List[Dict[str, Any]]]
@@ -50,9 +56,14 @@ DOCUMENT_CHECKS: List[Tuple[str, List[str], CheckFunction]] = [
 
 
 def _is_document_url(url: str) -> bool:
-    """Check if a URL points to a document we want to scan."""
+    """Check if a URL points to a document (or an archive of documents) we want to scan."""
     path_lower = urllib.parse.urlparse(url).path.lower()
-    return any(path_lower.endswith(ext) for ext in DOCUMENT_EXTENSIONS)
+    return any(path_lower.endswith(ext) for ext in DOCUMENT_EXTENSIONS + ARCHIVE_EXTENSIONS)
+
+
+def _is_archive_path(path: str) -> bool:
+    path_lower = path.lower()
+    return any(path_lower.endswith(ext) for ext in ARCHIVE_EXTENSIONS)
 
 
 @load_risk_class.load_risk_class(load_risk_class.LoadRiskClass.LOW)
@@ -158,8 +169,76 @@ class LeakScanner(ArtemisBase):  # type: ignore[misc]
 
         return document_urls
 
+    def _run_checks(self, file_bytes: bytes, path: str, description: str) -> Dict[str, List[Dict[str, Any]]]:
+        """Run all checks applicable to the extension of `path` against `file_bytes`."""
+        path_lower = path.lower()
+        all_findings: Dict[str, List[Dict[str, Any]]] = {}
+        for check_name, applicable_extensions, check_fn in DOCUMENT_CHECKS:
+            if not any(path_lower.endswith(ext) for ext in applicable_extensions):
+                continue
+            try:
+                findings = check_fn(file_bytes)
+            except Exception as e:
+                self.log.warning(f"Check '{check_name}' failed on {description}: {e}")
+                continue
+            if findings:
+                all_findings[check_name] = findings
+        return all_findings
+
+    def _scan_archive(self, archive_bytes: bytes, archive_url: str) -> Dict[str, List[Dict[str, Any]]]:
+        """Unpack a ZIP archive in memory and run the document checks on the documents inside.
+
+        Each finding gets a "file" key with the path of the document inside the archive.
+        Nested archives, encrypted members and members larger than
+        LEAK_SCANNER_MAX_DOCUMENT_SIZE_BYTES are skipped, and at most
+        LEAK_SCANNER_MAX_ARCHIVE_MEMBERS_TO_CHECK documents are checked per archive.
+        """
+        max_size = ExtraModulesConfig.LEAK_SCANNER_MAX_DOCUMENT_SIZE_BYTES
+        max_members = ExtraModulesConfig.LEAK_SCANNER_MAX_ARCHIVE_MEMBERS_TO_CHECK
+
+        try:
+            archive = zipfile.ZipFile(io.BytesIO(archive_bytes))
+        except (zipfile.BadZipFile, zipfile.LargeZipFile) as e:
+            self.log.info(f"Skipping {archive_url}: not a readable ZIP archive ({e})")
+            return {}
+
+        all_findings: Dict[str, List[Dict[str, Any]]] = {}
+        members_checked = 0
+        with archive:
+            for member in archive.infolist():
+                if member.is_dir() or not any(member.filename.lower().endswith(ext) for ext in DOCUMENT_EXTENSIONS):
+                    continue
+                if members_checked >= max_members:
+                    self.log.info(f"Checked {max_members} documents in {archive_url}, skipping the rest")
+                    break
+                if member.flag_bits & 0x1:
+                    self.log.info(f"Skipping encrypted {member.filename} in {archive_url}")
+                    continue
+                if member.file_size > max_size:
+                    self.log.info(f"Skipping {member.filename} in {archive_url}: {member.file_size} bytes")
+                    continue
+
+                description = f"{member.filename} in {archive_url}"
+                try:
+                    with archive.open(member) as f:
+                        # Don't trust the size in the header: read at most one byte more than allowed.
+                        file_bytes = f.read(max_size + 1)
+                except (zipfile.BadZipFile, NotImplementedError, RuntimeError, ValueError, OSError) as e:
+                    self.log.info(f"Unable to unpack {description}: {e}")
+                    continue
+                if len(file_bytes) > max_size:
+                    self.log.info(f"Skipping {description}: larger than {max_size} bytes")
+                    continue
+
+                members_checked += 1
+                for check_name, findings in self._run_checks(file_bytes, member.filename, description).items():
+                    all_findings.setdefault(check_name, []).extend(
+                        {**finding, "file": member.filename} for finding in findings
+                    )
+        return all_findings
+
     def _scan_document(self, document_url: str) -> Dict[str, Any]:
-        """Download a document and run all applicable checks against it."""
+        """Download a document (or an archive of documents) and run all applicable checks against it."""
         response = self.http_get(
             document_url,
             max_size=ExtraModulesConfig.LEAK_SCANNER_MAX_DOCUMENT_SIZE_BYTES,
@@ -170,19 +249,12 @@ class LeakScanner(ArtemisBase):  # type: ignore[misc]
             return {}
 
         file_bytes = response.content_bytes
-        path_lower = urllib.parse.urlparse(document_url).path.lower()
+        path = urllib.parse.urlparse(document_url).path
 
-        all_findings: Dict[str, List[Dict[str, Any]]] = {}
-        for check_name, applicable_extensions, check_fn in DOCUMENT_CHECKS:
-            if not any(path_lower.endswith(ext) for ext in applicable_extensions):
-                continue
-            try:
-                findings = check_fn(file_bytes)
-            except Exception as e:
-                self.log.warning(f"Check '{check_name}' failed on {document_url}: {e}")
-                continue
-            if findings:
-                all_findings[check_name] = findings
+        if _is_archive_path(path):
+            all_findings = self._scan_archive(file_bytes, document_url)
+        else:
+            all_findings = self._run_checks(file_bytes, path, document_url)
 
         if all_findings:
             return {"url": document_url, "findings": all_findings}
